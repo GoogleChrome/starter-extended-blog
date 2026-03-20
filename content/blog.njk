@@ -1,0 +1,22 @@
+---js
+export const pagination = {
+	data: "locales.locales",
+	size: 1,
+	alias: "locale",
+	addAllPagesToCollections: true
+};
+
+export const eleventyComputed = {
+	eleventyNavigation: {
+		key: data => `Archive-${data.locale}`,
+		title: "archive",
+		order: 2
+	},
+	title: "archive",
+	permalink: data => `/${data.locale}/blog/index.html`
+};
+---
+<h1>{{ 'archive' | i18n({}, locale) }}</h1>
+
+{% set postslist = collections.posts | filterByLocale(locale) %}
+{% include "postslist.njk" %}

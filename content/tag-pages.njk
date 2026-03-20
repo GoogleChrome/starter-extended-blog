@@ -1,0 +1,24 @@
+---js
+export const pagination = {
+	data: "collections.tagLocaleCombos",
+	size: 1,
+	alias: "item",
+};
+
+export const eleventyExcludeFromCollections = true;
+
+export const eleventyComputed = {
+	tag: data => data.item.tag,
+	locale: data => data.item.locale,
+	title: "tagged_tag",
+	permalink: function(data) {
+		if (!data.item || !data.item.tag || !data.item.locale) {
+			return false;
+		}
+		const slugified = this.slugify(data.item.tag) || data.item.tag.toLowerCase();
+		return `/${data.item.locale}/tags/${slugified}/`;
+	}
+};
+
+export const layout = "layouts/tag-page.njk";
+---
