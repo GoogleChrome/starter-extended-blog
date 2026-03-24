@@ -31,7 +31,7 @@ export async function initAIWriter(ui, updateCallback) {
       outputLanguage: 'en',
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/task-apis/writer.js');
+    await import('built-in-ai-task-apis-polyfills/writer.js');
   }
   if (typeof Writer !== 'undefined') {
     try {

@@ -755,6 +755,7 @@ dialog p {
     border: none;
     padding: 0;
     order: 3;
+    margin-top: 2rem;
   }
   .editor-main {
     order: 2;

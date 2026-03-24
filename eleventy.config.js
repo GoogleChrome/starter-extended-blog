@@ -28,51 +28,42 @@ export default async function (eleventyConfig) {
 
   // Copy the contents of the `public` folder to the output folder
   // For example, `./public/css/` ends up in `_site/css/`
+  // prettier-ignore-start
   eleventyConfig.addPassthroughCopy({
     './public/': '/',
-    './node_modules/@google/genai/dist/web/index.mjs': '/js/google-genai.js',
-    './node_modules/@huggingface/transformers/dist/':
-      '/js/huggingface-transformers/',
-    './node_modules/browser-fs-access/dist/index.modern.js':
-      '/js/browser-fs-access.js',
-    './node_modules/built-in-ai-task-apis-polyfills/dist/': '/js/task-apis/',
-    './node_modules/dompurify/dist/purify.min.js': '/js/purify.min.js',
-    './node_modules/firebase/': '/js/firebase/',
-    './node_modules/firebase/firebase-ai.js': '/js/firebase-ai.js',
-    './node_modules/firebase/firebase-app.js': '/js/firebase-app.js',
-    './node_modules/input-switch-polyfill/input-switch-polyfill.css':
-      '/js/input-switch-polyfill.css',
-    './node_modules/input-switch-polyfill/input-switch-polyfill.js':
-      '/js/input-switch-polyfill.js',
-    './node_modules/jszip/dist/jszip.js': '/js/jszip.js',
-    './node_modules/marked/lib/marked.umd.js': '/js/marked.js',
-    './node_modules/onnxruntime-web/dist/': '/js/onnxruntime-web/',
-    './node_modules/onnxruntime-web/dist/ort.webgpu.min.mjs':
-      '/js/onnxruntime-web/webgpu.js',
-    './node_modules/openai/': '/js/openai/',
-    './node_modules/prismjs/prism.js': '/js/prism.js',
-    './node_modules/prismjs/themes/prism-okaidia.css': '/css/prism-okaidia.css',
-    './node_modules/prompt-api-polyfill/dist/backends/': '/js/backends/',
-    './node_modules/prompt-api-polyfill/dist/chunks/': '/js/chunks/',
-    './node_modules/prompt-api-polyfill/dist/prompt-api-polyfill.js':
-      '/js/prompt-api-polyfill.js',
-    './node_modules/prompt-api-polyfill/dot_env.json': '/dot_env.json',
-    './node_modules/turndown/dist/turndown.js': '/js/turndown.js',
-    './node_modules/xslt-polyfill/xslt-polyfill.min.js': '/js/xslt-polyfill.min.js',
+    './node_modules/@google/genai/dist/web/': '/assets/js/google-genai/',
+    './node_modules/@huggingface/transformers/dist/': '/assets/js/huggingface-transformers/',
+    './node_modules/browser-fs-access/dist/': '/assets/js/browser-fs-access/',
+    './node_modules/built-in-ai-task-apis-polyfills/dist/': '/assets/js/built-in-ai-task-apis-polyfills/',
+    './node_modules/dompurify/dist/': '/assets/js/dompurify/',
+    './node_modules/firebase/': '/assets/js/firebase/',
+    './node_modules/input-switch-polyfill/': '/assets/js/input-switch-polyfill/',
+    './node_modules/jszip/dist/': '/assets/js/jszip/',
+    './node_modules/marked/lib/': '/assets/js/marked/',
+    './node_modules/onnxruntime-web/dist/': '/assets/js/onnxruntime-web/',
+    './node_modules/onnxruntime-common/dist/esm/': '/assets/js/onnxruntime-common/',
+    './node_modules/openai/': '/assets/js/openai/',
+    './node_modules/prismjs/': '/assets/js/prismjs/',
+    './node_modules/prompt-api-polyfill/dist/': '/assets/js/prompt-api-polyfill/',
+    './node_modules/turndown/dist/': '/assets/js/turndown/',
+    './node_modules/xslt-polyfill/': '/assets/js/xslt-polyfill/',
   });
+  // prettier-ignore-end
 
   // Run Eleventy when these files change:
   // https://www.11ty.dev/docs/watch-serve/#add-your-own-watch-targets
 
   // Watch CSS files
   eleventyConfig.addWatchTarget('css/**/*.css');
+  // Watch JS files
+  eleventyConfig.addWatchTarget('js/**/*.js');
   // Watch images for the image pipeline.
   eleventyConfig.addWatchTarget('content/**/*.{svg,webp,png,jpg,jpeg,gif}');
 
   // Per-page bundles, see https://github.com/11ty/eleventy-plugin-bundle
   // Bundle <style> content and adds a {% css %} paired shortcode
   eleventyConfig.addBundle('css', {
-    toFileDirectory: 'dist',
+    toFileDirectory: 'assets/css/',
     // Add all <style> content to `css` bundle (use <style eleventy:ignore> to opt-out)
     // Supported selectors: https://www.npmjs.com/package/posthtml-match-helper
     bundleHtmlContentFromSelector: 'style',
@@ -80,7 +71,7 @@ export default async function (eleventyConfig) {
 
   // Bundle <script> content and adds a {% js %} paired shortcode
   eleventyConfig.addBundle('js', {
-    toFileDirectory: 'dist',
+    toFileDirectory: 'assets/js/bundles/',
     // Add all <script> content to the `js` bundle (use <script eleventy:ignore> to opt-out)
     // Supported selectors: https://www.npmjs.com/package/posthtml-match-helper
     bundleHtmlContentFromSelector: 'script',
@@ -109,7 +100,7 @@ export default async function (eleventyConfig) {
       outputPath: `/${lang}/feed/feed.xml`,
       inputPath: `eleventy-plugin-feed-${lang}-atom.njk`,
       stylesheet: '../../feed/pretty-atom-feed.xsl',
-      script: '/js/xslt-polyfill.min.js',
+      script: '/assets/js/xslt-polyfill/xslt-polyfill.min.js',
       templateData: {
         locale: lang,
         eleventyNavigation: {
@@ -200,7 +191,7 @@ export default async function (eleventyConfig) {
     translations,
     fallbackLocales: {
       ...fallbackLocales,
-      '*': 'en',
+      '*': metadata.language,
     },
   });
 

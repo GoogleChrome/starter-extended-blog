@@ -6,7 +6,10 @@ import { getMonitor } from './ai-features.js';
  * @return {Array<string>} The supported locales.
  */
 export const getSupportedLocales = () => {
-  const locales = window.APP_LOCALES || ['en', 'es', 'ja'];
+  const appLocales = window.APP_LOCALES || {};
+  const locales = Array.isArray(appLocales)
+    ? appLocales
+    : appLocales.locales || ['en'];
   const defaultLocale = window.DEFAULT_LOCALE || 'en';
   const defaultBase = defaultLocale.split('-')[0];
   return locales.filter((l) => {

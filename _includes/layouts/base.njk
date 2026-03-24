@@ -1,3 +1,5 @@
+{%- set locale = locale or metadata.language -%}
+{%- set dir = dir or 'ltr' -%}
 <!doctype html>
 <html lang="{{ locale }}" dir="{{ dir }}">
 	<head>
@@ -7,7 +9,7 @@
 		<meta name="description" content="{{ description or metadata.description }}">
 		<meta name="color-scheme" content="light dark">
 		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="{{ metadata.title }}">
-		<link rel="icon" type="image/svg+xml" href="/blog/create/icon.svg">
+		<link rel="icon" type="image/svg+xml" href="/assets/img/icon.svg">
 
 		{#- Uncomment this if you’d like folks to know that you used Eleventy to build your site!  #}
 		{#- <meta name="generator" content="{{ eleventy.generator }}"> #}
@@ -27,7 +29,7 @@
 		<style>/* This is an arbitrary CSS string added to the bundle */</style>
 
 		{#- Add the contents of a file to the bundle #}
-		<style>{% include "css/index.css" %}</style>
+		<style>{% include "public/assets/css/index.css" %}</style>
 
 		{#- Or you can add from node_modules #}
 		{# <style>{% include "node_modules/something.css" %}</style> #}
@@ -55,7 +57,7 @@
 				{%- for entry in collections.all | filterByLocale(locale) | eleventyNavigation %}
 					<li class="nav-item"><a href="{{ entry.url }}"{% if entry.url == page.url %} aria-current="page"{% endif %}>{{ entry.title | i18n({}, locale) }}</a></li>
 				{%- endfor %}
-					<li class="nav-item admin-only" style="display: none;"><a href="/{{ locale }}/blog/create/"{% if page.url == '/' + locale + '/blog/create/' %} aria-current="page"{% endif %}>{{ 'create' | i18n({}, locale) }}</a></li>
+					<li class="nav-item admin-only" style="display: none;"><a href="/{{ locale }}/blog/admin/"{% if page.url == '/' + locale + '/blog/admin/' %} aria-current="page"{% endif %}>{{ 'admin' | i18n({}, locale) }}</a></li>
 					{% block extra_nav %}{% endblock %}
 				</ul>
 			</nav>
@@ -102,7 +104,7 @@
 			if(isAdmin) {
 				document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'initial');
 				// Append ?admin=true to all internal links to maintain state
-				document.querySelectorAll('a[href^="/"]').forEach(a => {
+				document.querySelectorAll('a[href^="/"]').forEach(a => {					
 					const url = new URL(a.href, window.location.origin);
 					if (!url.searchParams.has('admin')) {
 						url.searchParams.set('admin', 'true');

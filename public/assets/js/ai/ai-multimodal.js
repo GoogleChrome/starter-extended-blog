@@ -31,7 +31,7 @@ export async function generateImageMetadata(imageSource, ui) {
       expectedOutputs: [{ type: 'text', languages: ['en'] }],
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/prompt-api-polyfill.js');
+    await import('/assets/js/prompt-api-polyfill.js');
   }
 
   if (typeof LanguageModel === 'undefined') {

@@ -33,7 +33,7 @@ export async function initAIRewriter(ui, updateCallback) {
       outputLanguage: 'en',
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/task-apis/rewriter.js');
+    await import('built-in-ai-task-apis-polyfills/rewriter.js');
   }
   if (typeof Rewriter !== 'undefined') {
     try {

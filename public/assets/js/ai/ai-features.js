@@ -80,7 +80,7 @@ export async function initAI(ui, updateCallback) {
       outputLanguage: 'en',
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/task-apis/summarizer.js');
+    await import('built-in-ai-task-apis-polyfills/summarizer.js');
   }
   if (typeof Summarizer !== 'undefined') {
     try {

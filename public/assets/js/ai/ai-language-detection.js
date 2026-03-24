@@ -10,7 +10,7 @@ export async function detectLanguage(text) {
       expectedInputLanguages: ['en'],
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/task-apis/language-detector.js');
+    await import('built-in-ai-task-apis-polyfills/language-detector.js');
   }
 
   if (typeof LanguageDetector === 'undefined') {

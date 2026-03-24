@@ -21,10 +21,10 @@ export async function initAIClassifier(ui, updateCallback) {
   if (
     !('Classifier' in self) ||
     (await self.Classifier.availability().catch(() => 'unavailable')) ===
-      'unavailable'
+    'unavailable'
   ) {
     try {
-      await import('/js/task-apis/classifier.js');
+      await import('built-in-ai-task-apis-polyfills/classifier.js');
     } catch (e) {
       console.error('Failed to load Classifier polyfill', e);
       return;

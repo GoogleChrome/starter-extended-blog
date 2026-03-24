@@ -18,7 +18,7 @@ export async function initTagSuggestions(ui, updateCallback) {
       expectedOutputs: [{ type: 'text', languages: ['en'] }],
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/prompt-api-polyfill.js');
+    await import('prompt-api-polyfill');
   }
   let tagsSchema = null;
   /**

@@ -34,10 +34,10 @@ export default {
     es: 'Sobre mí',
     ja: '概要',
   },
-  create: {
-    en: 'Create',
-    es: 'Crear',
-    ja: '作成',
+  admin: {
+    en: 'Admin',
+    es: 'Admin',
+    ja: '管理',
   },
   feed: {
     en: 'Feed',

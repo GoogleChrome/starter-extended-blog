@@ -45,15 +45,15 @@ Or you can run [debug mode](https://www.11ty.dev/docs/debugging/) to see all the
 
 ## Admin Page: Create Blog Posts
 
-This project includes a dedicated Admin Page at `/{locale}/blog/create/?admin=true` (for example, `/en/blog/create/?admin=true`) for composing new blog posts directly in the browser. It features a Markdown editor with a live preview and advanced asset handling.
+This project includes a dedicated Admin Page at `/{locale}/blog/admin/?admin=true` (for example, `/en/blog/admin/?admin=true`) for composing new blog posts directly in the browser. It features a Markdown editor with a live preview and advanced asset handling.
 
 ### Usage
 
-- Load your blog's admin page at `/{locale}/blog/create/?admin=true` (for example, `/en/blog/create/?admin=true`).
+- Load your blog's admin page at `/{locale}/blog/admin/?admin=true` (for example, `/en/blog/admin/?admin=true`).
 - Open the Settings pane and link the editor with your blog's GitHub repository to enable publishing to GitHub.
 - Optionally enable AI features and choose your AI backend. If available, the editor will use built-in AI APIs that work with a local model directly in the browser. Otherwise, you can use cloud or local AI backends.
-   - For cloud backends, enter your AI API keys in the **Settings** section of the admin Page.
-   - For local backends, no API keys are required.
+  - For cloud backends, enter your AI API keys in the **Settings** section of the admin Page.
+  - For local backends, no API keys are required.
 - Create new blog posts, or edit existing ones by clicking the "Edit" button in the Archive or on the Home page.
 
 ### Features

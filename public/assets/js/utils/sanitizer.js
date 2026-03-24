@@ -35,17 +35,17 @@ export async function sanitizeHTML(container, html) {
   if (!window.DOMPurify && !domPurifyPromise) {
     const link = document.createElement('link');
     link.rel = 'modulepreload';
-    link.href = '/js/purify.min.js';
+    link.href = '/assets/js/dompurify/purify.es.mjs';
     document.head.appendChild(link);
 
     domPurifyPromise = (async () => {
       try {
-        await import('/js/purify.min.js');
+        await import('dompurify');
         return window.DOMPurify;
       } catch (e) {
         return new Promise((resolve, reject) => {
           const script = document.createElement('script');
-          script.src = '/js/purify.min.js';
+          script.src = 'dompurify';
           script.onload = () => resolve(window.DOMPurify);
           script.onerror = reject;
           document.head.appendChild(script);

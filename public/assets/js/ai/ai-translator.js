@@ -24,7 +24,7 @@ export async function initAITranslator(ui, updateCallback) {
       targetLanguage: 'es',
     }).catch(() => 'unavailable')) === 'unavailable'
   ) {
-    await import('/js/task-apis/translator.js');
+    await import('built-in-ai-task-apis-polyfills/translator.js');
   }
 
   // Restore state
