@@ -13,7 +13,8 @@
     "debug": "cross-env DEBUG=Eleventy* npx @11ty/eleventy",
     "debugstart": "cross-env DEBUG=Eleventy* npx @11ty/eleventy --serve --quiet",
     "benchmark": "cross-env DEBUG=Eleventy:Benchmark* npx @11ty/eleventy",
-    "format": "npx prettier --write ."
+    "format": "npx prettier --write .",
+    "deploy": "npm run build && npx surge _site"
   },
   "repository": {
     "type": "git",

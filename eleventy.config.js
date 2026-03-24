@@ -32,19 +32,24 @@ export default async function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({
     './public/': '/',
     './node_modules/@google/genai/dist/web/': '/assets/js/google-genai/',
-    './node_modules/@huggingface/transformers/dist/': '/assets/js/huggingface-transformers/',
+    './node_modules/@huggingface/transformers/dist/':
+      '/assets/js/huggingface-transformers/',
     './node_modules/browser-fs-access/dist/': '/assets/js/browser-fs-access/',
-    './node_modules/built-in-ai-task-apis-polyfills/dist/': '/assets/js/built-in-ai-task-apis-polyfills/',
+    './node_modules/built-in-ai-task-apis-polyfills/dist/':
+      '/assets/js/built-in-ai-task-apis-polyfills/',
     './node_modules/dompurify/dist/': '/assets/js/dompurify/',
     './node_modules/firebase/': '/assets/js/firebase/',
-    './node_modules/input-switch-polyfill/': '/assets/js/input-switch-polyfill/',
+    './node_modules/input-switch-polyfill/':
+      '/assets/js/input-switch-polyfill/',
     './node_modules/jszip/dist/': '/assets/js/jszip/',
     './node_modules/marked/lib/': '/assets/js/marked/',
     './node_modules/onnxruntime-web/dist/': '/assets/js/onnxruntime-web/',
-    './node_modules/onnxruntime-common/dist/esm/': '/assets/js/onnxruntime-common/',
+    './node_modules/onnxruntime-common/dist/esm/':
+      '/assets/js/onnxruntime-common/',
     './node_modules/openai/': '/assets/js/openai/',
     './node_modules/prismjs/': '/assets/js/prismjs/',
-    './node_modules/prompt-api-polyfill/dist/': '/assets/js/prompt-api-polyfill/',
+    './node_modules/prompt-api-polyfill/dist/':
+      '/assets/js/prompt-api-polyfill/',
     './node_modules/turndown/dist/': '/assets/js/turndown/',
     './node_modules/xslt-polyfill/': '/assets/js/xslt-polyfill/',
   });

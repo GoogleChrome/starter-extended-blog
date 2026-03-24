@@ -5,4 +5,5 @@ node_modules/
 # Built-in AI Agent instructions
 AGENTS.md
 SKILL.md
-
+# Surge deployment
+public/CNAME
