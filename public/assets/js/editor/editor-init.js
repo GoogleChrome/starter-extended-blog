@@ -26,12 +26,22 @@ import { initAITranslator } from '../ai/ai-translator.js';
  * @param {Object} tagEditor - The tag editor component instance.
  */
 export async function initEditor(ui, loadDraft, renderList, sync, tagEditor) {
-  initGitHubSync(ui);
-
   const editPath = new URLSearchParams(window.location.search).get('edit');
-  if (editPath) {
+  let hasAttemptedImport = false;
+  let isFetching = false;
+
+  const tryLoadFromGitHub = async (path) => {
+    if (hasAttemptedImport || isFetching) return;
     try {
-      const postData = await loadPostFromGitHub(ui, editPath);
+      isFetching = true;
+      if (ui.aiStatus) {
+        ui.aiStatus.style.display = 'initial';
+        ui.aiStatusText.textContent = 'Importing from GitHub...';
+      }
+
+      const postData = await loadPostFromGitHub(ui, path);
+      hasAttemptedImport = true;
+
       const existingDraft = drafts.find((d) => d.path === postData.path);
       const id = existingDraft ? existingDraft.id : Date.now().toString();
 
@@ -70,11 +80,22 @@ export async function initEditor(ui, loadDraft, renderList, sync, tagEditor) {
       setCurrentDraftId(id);
       saveDrafts();
 
+      await loadDraft(id);
+      renderList();
+
       const url = new URL(window.location);
       url.searchParams.delete('edit');
       window.history.replaceState({}, '', url);
+
+      if (ui.aiStatus) {
+        ui.aiStatusText.textContent = 'Ready';
+        setTimeout(() => (ui.aiStatus.style.display = 'none'), 2000);
+      }
     } catch (e) {
       console.error(e);
+      isFetching = false;
+      if (ui.aiStatus) ui.aiStatus.style.display = 'none';
+
       if (e.message.includes('fill in GitHub settings')) {
         ui.settingsDetails.open = true;
         ui.ghTokenInput.focus();
@@ -82,11 +103,17 @@ export async function initEditor(ui, loadDraft, renderList, sync, tagEditor) {
         customAlert(ui, `Failed to load post: ${e.message}`);
       }
     }
+  };
+
+  initGitHubSync(ui);
+
+  if (editPath) {
+    await tryLoadFromGitHub(editPath);
   }
 
   if (drafts.length === 0) {
     await createNewDraft(ui, loadDraft, renderList);
-  } else {
+  } else if (!hasAttemptedImport) {
     await loadDraft(localStorage.getItem('current-draft-id') || drafts[0].id);
   }
 

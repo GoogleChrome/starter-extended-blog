@@ -4,7 +4,7 @@
 		<a href="{{ post.url }}" class="postlist-link">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
 		<time class="postlist-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate(locale, { day: undefined, month: "long", year: "numeric" }) }}</time>
 		{%- if not post.data.draft %}
-		<a href="/blog/admin/?edit={{ post.inputPath | urlencode }}" class="admin-only edit-post-link btn" style="display: none;">✏️ {{ 'edit' | i18n({}, locale) }}</a>
+		<a href="/{% if locale %}{{ locale }}{% else %}{{ metadata.language }}{% endif %}/blog/admin/?edit={{ post.inputPath | urlencode }}" class="admin-only edit-post-link btn" style="display: none;">✏️ {{ 'edit' | i18n({}, locale) }}</a>
 		{%- endif %}
 	</li>
 {%- endfor %}

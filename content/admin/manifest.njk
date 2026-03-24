@@ -1,12 +1,16 @@
 ---
-permalink: "/{{ metadata.language }}/blog/admin/manifest.json"
+pagination:
+  data: locales.locales
+  size: 1
+  alias: locale
+permalink: "/{{ locale }}/blog/admin/manifest.json"
 eleventyExcludeFromCollections: true
 layout: false
 ---
 {
   "name": "Starter Extended Blog",
   "short_name": "Extended Blog",
-  "start_url": "/{{ metadata.language }}/blog/admin/",
+  "start_url": "/{{ locale }}/blog/admin/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
@@ -24,5 +28,5 @@ layout: false
       "purpose": "any"
     }
   ],
-  "scope": "/{{ metadata.language }}/blog/admin/"
+  "scope": "/{{ locale }}/blog/admin/"
 }

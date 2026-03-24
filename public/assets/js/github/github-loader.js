@@ -20,7 +20,7 @@ export async function loadPostFromGitHub(ui, path) {
     const content = fromBase64(file.content);
     const sha = file.sha;
 
-    const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    const match = content.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
     if (!match) {
       return { content, sha, path: cleanPath };
     }
@@ -28,7 +28,7 @@ export async function loadPostFromGitHub(ui, path) {
     const frontMatter = match[1];
     const body = match[2];
     const data = {};
-    frontMatter.split('\n').forEach((line) => {
+    frontMatter.split(/\r?\n/).forEach((line) => {
       const colonIndex = line.indexOf(':');
       if (colonIndex === -1) {
         return;
@@ -36,6 +36,9 @@ export async function loadPostFromGitHub(ui, path) {
       const key = line.substring(0, colonIndex).trim();
       let value = line.substring(colonIndex + 1).trim();
       if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.substring(1, value.length - 1);
+      }
+      if (value.startsWith("'") && value.endsWith("'")) {
         value = value.substring(1, value.length - 1);
       }
       if (value.startsWith('[') && value.endsWith(']')) {
@@ -51,9 +54,30 @@ export async function loadPostFromGitHub(ui, path) {
     const images = [];
     try {
       const dirContents = await ghFetch(ui, `/contents/${dirPath}`);
-      const imageFiles = dirContents.filter(
+      let imageFiles = dirContents.filter(
         (f) => f.type === 'file' && /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name),
       );
+
+      // Also check for an 'images' subfolder
+      const imagesDir = dirContents.find(
+        (f) => f.type === 'dir' && f.name === 'images',
+      );
+      if (imagesDir) {
+        try {
+          const subDirContents = await ghFetch(
+            ui,
+            `/contents/${imagesDir.path}`,
+          );
+          const subDirImages = subDirContents.filter(
+            (f) =>
+              f.type === 'file' && /\.(jpe?g|png|gif|webp|svg)$/i.test(f.name),
+          );
+          imageFiles = [...imageFiles, ...subDirImages];
+        } catch (e) {
+          console.warn('Could not fetch images subfolder', e);
+        }
+      }
+
       for (const imgFile of imageFiles) {
         const imgData = await ghFetch(ui, `/contents/${imgFile.path}`);
         images.push({
