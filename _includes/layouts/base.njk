@@ -80,6 +80,12 @@
 					initPagefind();
 				}
 				function initPagefind() {
+					const urlParams = new URLSearchParams(window.location.search);
+					if (urlParams.get('admin') === 'true' && window.location.pathname.includes('/blog/admin/')) {
+						const searchEl = document.getElementById('search');
+						if (searchEl) searchEl.style.display = 'none';
+						return;
+					}
 					new PagefindUI({ element: "#search", showSubResults: true });
 				}
 			</script>

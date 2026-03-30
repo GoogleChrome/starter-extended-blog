@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "clean": "shx rm -rf _site",
-    "build": "npm run clean && npx @11ty/eleventy && pagefind --site _site",
+    "build": "npm run clean && npx @11ty/eleventy && npx pagefind --site _site",
     "build-nocolor": "npm run clean && cross-env NODE_DISABLE_COLORS=1 npx @11ty/eleventy",
     "build-ghpages": "npm run clean && npx @11ty/eleventy --pathprefix=/starter-extended-blog/",
     "start": "npx @11ty/eleventy --serve --quiet",

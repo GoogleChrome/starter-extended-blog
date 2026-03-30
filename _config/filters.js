@@ -1,4 +1,11 @@
 import { DateTime } from 'luxon';
+import { locales } from '../_data/locales.js';
+
+const internalTags = [
+  'all',
+  'posts',
+  ...locales.map((lang) => `posts_${lang}`),
+];
 
 export default function (eleventyConfig) {
   eleventyConfig.addFilter(
@@ -45,11 +52,7 @@ export default function (eleventyConfig) {
   });
 
   eleventyConfig.addFilter('filterTagList', function filterTagList(tags) {
-    return (tags || []).filter(
-      (tag) =>
-        ['all', 'posts', 'posts_en', 'posts_es', 'posts_ja'].indexOf(tag) ===
-        -1,
-    );
+    return (tags || []).filter((tag) => internalTags.indexOf(tag) === -1);
   });
 
   eleventyConfig.addFilter(
@@ -58,10 +61,7 @@ export default function (eleventyConfig) {
       const tags = Object.keys(collections);
       return tags.filter((tag) => {
         // Filter out internal tags
-        if (
-          ['all', 'posts', 'posts_en', 'posts_es', 'posts_ja'].indexOf(tag) !==
-          -1
-        ) {
+        if (internalTags.indexOf(tag) !== -1) {
           return false;
         }
         // Check if this tag has any posts in the target locale
