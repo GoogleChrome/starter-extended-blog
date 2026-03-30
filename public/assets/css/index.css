@@ -335,3 +335,32 @@ header {
 .post-metadata time {
   margin-right: 1em;
 }
+
+#search {
+  --pagefind-ui-text: var(--text-color);
+  --pagefind-ui-background: var(--background-color);
+  --pagefind-ui-border: var(--color-gray-20);
+  --pagefind-ui-primary: var(--text-color-link);
+}
+
+.pagefind-ui__search-clear {
+  color: transparent !important;
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagefind-ui__search-clear::after {
+  content: '×';
+  color: var(--text-color);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  font-weight: bold;
+}

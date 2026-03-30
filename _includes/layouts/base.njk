@@ -70,6 +70,19 @@
 		</main>
 
 		<footer>
+			<div id="search" style="margin: 1rem 0;"></div>
+			<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+			<script src="/pagefind/pagefind-ui.js"></script>
+			<script>
+				if (document.readyState === "loading") {
+					document.addEventListener("DOMContentLoaded", initPagefind);
+				} else {
+					initPagefind();
+				}
+				function initPagefind() {
+					new PagefindUI({ element: "#search", showSubResults: true });
+				}
+			</script>
 			<p>
 				<em>{{ 'built_with' | i18n({}, locale) }} <a href="https://www.11ty.dev/">{{ eleventy.generator }}</a></em>
 			</p>
