@@ -48,9 +48,7 @@ export function generateMarkdown(
   const authors = Array.isArray(draft.authors) ? draft.authors : [];
   const escapedAuthors = authors.map((a) => `"${a.replace(/"/g, '\\"')}"`);
   const authorsYaml =
-    escapedAuthors.length > 0
-      ? `authors: [${escapedAuthors.join(', ')}]`
-      : '';
+    escapedAuthors.length > 0 ? `authors: [${escapedAuthors.join(', ')}]` : '';
 
   const frontmatter = [
     '---',

@@ -105,14 +105,11 @@ export default function (eleventyConfig) {
     return parts.join('/');
   });
 
-  eleventyConfig.addFilter(
-    'joinList',
-    (arr, locale = 'en', options = {}) => {
-      if (!arr || arr.length === 0) return '';
-      const defaultOptions = { style: 'long', type: 'conjunction', ...options };
-      return new Intl.ListFormat(locale, defaultOptions).format(arr);
-    },
-  );
+  eleventyConfig.addFilter('joinList', (arr, locale = 'en', options = {}) => {
+    if (!arr || arr.length === 0) return '';
+    const defaultOptions = { style: 'long', type: 'conjunction', ...options };
+    return new Intl.ListFormat(locale, defaultOptions).format(arr);
+  });
 
   eleventyConfig.addFilter('plural', function (key, count, locale = 'en') {
     const pluralRules = new Intl.PluralRules(locale);

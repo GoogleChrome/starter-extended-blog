@@ -125,9 +125,10 @@ export default async function (eleventyConfig) {
         authors: metadata.authors,
         // Singular author for plugin compat (metadata.author.name expected by @11ty/eleventy-plugin-rss)
         author: {
-          name: new Intl.ListFormat(lang, { style: 'long', type: 'conjunction' }).format(
-            metadata.authors.map((a) => a.name),
-          ),
+          name: new Intl.ListFormat(lang, {
+            style: 'long',
+            type: 'conjunction',
+          }).format(metadata.authors.map((a) => a.name)),
         },
       },
     });

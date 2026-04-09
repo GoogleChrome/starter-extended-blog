@@ -22,7 +22,8 @@ export async function updatePreview(textarea, preview) {
 
   let content = textarea.value;
 
-  const locale = details?.getAttribute('data-locale') || window.CURRENT_LOCALE || 'en';
+  const locale =
+    details?.getAttribute('data-locale') || window.CURRENT_LOCALE || 'en';
 
   const dateInput = document.querySelector('#post-date');
   const dateValue = dateInput ? dateInput.value : '';
