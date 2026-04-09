@@ -43,6 +43,12 @@ export async function loadDraft(id, ui, renderList, tagEditor) {
   ui.titleInput.value = d.title || '';
   ui.descInput.value = d.description || '';
   ui.dateInput.value = d.date || '';
+  if (ui.authorsSelect) {
+    const selectedAuthors = d.authors || [];
+    for (const option of ui.authorsSelect.options) {
+      option.selected = selectedAuthors.includes(option.value);
+    }
+  }
   ui.tagsInput.value = d.tags || '';
 
   const content = d.content || '';

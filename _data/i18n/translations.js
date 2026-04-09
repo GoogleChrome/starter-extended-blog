@@ -79,6 +79,11 @@ export default {
     es: 'Siguiente',
     ja: '次',
   },
+  by: {
+    en: 'By',
+    es: 'Por',
+    ja: '著者:',
+  },
   see: {
     en: 'See ',
     es: 'Ver ',

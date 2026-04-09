@@ -1,16 +1,18 @@
 /**
  * Formats a date string for the preview.
  * @param {string} dateStr - The date string from the input.
+ * @param {string} [locale='en'] - BCP 47 locale tag for formatting.
  * @return {string} The formatted date string.
  */
-export function formatPreviewDate(dateStr) {
+export function formatPreviewDate(dateStr, locale = 'en') {
   if (!dateStr) {
     return '';
   }
   const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', {
+  return new Intl.DateTimeFormat(locale, {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
-  });
+    timeZone: 'UTC',
+  }).format(date);
 }

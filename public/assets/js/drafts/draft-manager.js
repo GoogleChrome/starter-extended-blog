@@ -46,6 +46,7 @@ export async function createNewDraft(ui, loadDraftFn, renderListFn) {
     title: '',
     description: '',
     date: '',
+    authors: [],
     tags: '',
     content: '',
     imageFiles: [],
@@ -119,6 +120,7 @@ export function updateDraftData(id, ui) {
   draft.title = ui.titleInput.value;
   draft.description = ui.descInput.value;
   draft.date = ui.dateInput.value;
+  draft.authors = ui.getAuthors ? ui.getAuthors() : [];
   draft.tags = ui.tagsInput.value;
   draft.content = ui.contentInput.value;
 

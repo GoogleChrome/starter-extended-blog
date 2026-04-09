@@ -22,19 +22,31 @@ export async function updatePreview(textarea, preview) {
 
   let content = textarea.value;
 
+  const locale = details?.getAttribute('data-locale') || window.CURRENT_LOCALE || 'en';
+
   const dateInput = document.querySelector('#post-date');
   const dateValue = dateInput ? dateInput.value : '';
   const dateHtml = dateValue
-    ? `<time datetime="${dateValue}">${formatPreviewDate(dateValue)}</time>`
+    ? `<time datetime="${dateValue}">${formatPreviewDate(dateValue, locale)}</time>`
     : '';
+
+  const authorsSelect = document.querySelector('#post-authors');
+  const selectedAuthors = authorsSelect
+    ? Array.from(authorsSelect.selectedOptions).map((o) => o.value)
+    : [];
+  const byLabel = (window.BY_I18N && window.BY_I18N[locale]) || 'By';
+  const authorsHtml =
+    selectedAuthors.length > 0
+      ? `<li>${byLabel} ${new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(selectedAuthors)}</li>`
+      : '';
 
   const tagsHtml = tags
     .map((t) => `<li><a href="#" class="post-tag">${t}</a></li>`)
     .join('');
   const titleHtml = title ? `<h1>${title}</h1>` : '';
   const metadataHtml =
-    dateHtml || tagsHtml
-      ? `<ul class="post-metadata"><li>${dateHtml}</li>${tagsHtml}</ul>`
+    dateHtml || authorsHtml || tagsHtml
+      ? `<ul class="post-metadata"><li>${dateHtml}</li>${authorsHtml}${tagsHtml}</ul>`
       : '';
 
   const draft = drafts.find((d) => d.id === currentDraftId);

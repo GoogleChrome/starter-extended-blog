@@ -12,6 +12,7 @@ export const ui = {
     'ai-suggest-description-btn',
   ),
   dateInput: document.getElementById('post-date'),
+  authorsSelect: document.getElementById('post-authors'),
   tagsInput: document.getElementById('post-tags'),
   tagPills: document.getElementById('tag-pills'),
   tagInput: document.getElementById('tag-input'),
@@ -79,6 +80,10 @@ export const ui = {
       .split(',')
       .map((t) => t.trim())
       .filter((t) => t && t !== 'posts'),
+  getAuthors: () =>
+    ui.authorsSelect
+      ? Array.from(ui.authorsSelect.selectedOptions).map((o) => o.value)
+      : [],
   getSlug: (title) =>
     (title || 'untitled')
       .toLowerCase()

@@ -95,6 +95,7 @@ export async function loadPostFromGitHub(ui, path) {
       title: data.title,
       description: data.description,
       date: data.date,
+      authors: Array.isArray(data.authors) ? data.authors : (data.authors ? [data.authors] : []),
       tags: Array.isArray(data.tags) ? data.tags.join(', ') : data.tags,
       ad_categories: data.ad_categories,
       ad_confidences: data.ad_confidences,

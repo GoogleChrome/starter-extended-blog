@@ -45,11 +45,19 @@ export function generateMarkdown(
   const classifierIds = classifierResults.map((r) => r.id);
   const classifierConfidences = classifierResults.map((r) => r.confidence);
 
+  const authors = Array.isArray(draft.authors) ? draft.authors : [];
+  const escapedAuthors = authors.map((a) => `"${a.replace(/"/g, '\\"')}"`);
+  const authorsYaml =
+    escapedAuthors.length > 0
+      ? `authors: [${escapedAuthors.join(', ')}]`
+      : '';
+
   const frontmatter = [
     '---',
     `title: ${escapeYamlValue(title)}`,
     `description: ${escapeYamlValue(description)}`,
     `date: ${date}`,
+    authorsYaml,
     tagsYaml,
     classifierIds.length > 0
       ? `ad_categories: ${JSON.stringify(classifierIds)}`

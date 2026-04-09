@@ -14,10 +14,12 @@ locale: en
   <link href="{{ metadata.base }}" />
   <updated>{{ collections.posts | getNewestCollectionItemDate | dateToRfc3339 }}</updated>
   <id>{{ metadata.base }}</id>
+  {%- for a in metadata.authors %}
   <author>
-    <name>{{ metadata.author.name }}</name>
-    {% if metadata.author.email %}<email>{{ metadata.author.email }}</email>{% endif %}
+    <name>{{ a.name }}</name>
+    {%- if a.email %}<email>{{ a.email }}</email>{% endif %}
   </author>
+  {%- endfor %}
   {%- for post in collections.posts | reverse | head(10) %}
   {%- set absolutePostUrl %}{{ post.url | htmlBaseUrl(metadata.base) }}{% endset %}
   {%- set postLocale = post.data.locale or post.url.split('/')[1] or 'en' %}

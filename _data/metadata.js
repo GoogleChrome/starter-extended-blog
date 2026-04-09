@@ -3,9 +3,16 @@ export default {
   url: 'https://example.com/',
   language: 'en',
   description: 'I am writing about my experiences as a naval navel-gazer.',
-  author: {
-    name: 'Your Name Here',
-    email: 'youremailaddress@example.com',
-    url: 'https://example.com/about-me/',
-  },
+  authors: [
+    {
+      name: 'Jane Doe',
+      email: 'jane.doe@example.com',
+      url: 'https://example.com/about-jane/',
+    },
+    {
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      url: 'https://example.com/about-john/',
+    },
+  ],
 };

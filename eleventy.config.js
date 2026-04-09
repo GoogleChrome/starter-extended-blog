@@ -122,7 +122,13 @@ export default async function (eleventyConfig) {
         title: `${translations.posts[lang] || translations.posts[fallbackLocales[lang]] || 'Posts'} - ${metadata.title}`,
         subtitle: metadata.description,
         base: metadata.url,
-        author: metadata.author,
+        authors: metadata.authors,
+        // Singular author for plugin compat (metadata.author.name expected by @11ty/eleventy-plugin-rss)
+        author: {
+          name: new Intl.ListFormat(lang, { style: 'long', type: 'conjunction' }).format(
+            metadata.authors.map((a) => a.name),
+          ),
+        },
       },
     });
   }

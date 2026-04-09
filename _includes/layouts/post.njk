@@ -8,6 +8,9 @@ layout: layouts/base.njk
 
 <ul class="post-metadata">
 	<li><time datetime="{{ page.date | htmlDateString }}">{{ page.date | readableDate(locale) }}</time></li>
+	{%- if authors and authors.length %}
+	<li>{{ 'by' | i18n({}, locale) }} {{ authors | joinList(locale) }}</li>
+	{%- endif %}
 	{%- for tag in tags | filterTagList %}
 	{%- set tagUrl %}/{{ locale }}/tags/{{ tag | slugifyTag }}/{% endset %}
 	<li><a href="{{ tagUrl }}" class="post-tag">{{ tag }}</a>{%- if not loop.last %}, {% endif %}</li>

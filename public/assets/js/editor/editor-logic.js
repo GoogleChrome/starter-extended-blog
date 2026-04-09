@@ -45,14 +45,21 @@ export async function updatePreview(currentId, drafts, ui) {
     .map((t) => `<li><a href="#" class="post-tag">${t}</a></li>`)
     .join('');
   const dateHtml = ui.dateInput.value
-    ? `<time datetime="${ui.dateInput.value}">${formatPreviewDate(ui.dateInput.value)}</time>`
+    ? `<time datetime="${ui.dateInput.value}">${formatPreviewDate(ui.dateInput.value, window.CURRENT_LOCALE || 'en')}</time>`
     : '';
+  const selectedAuthors = ui.getAuthors ? ui.getAuthors() : [];
+  const previewLocale = window.CURRENT_LOCALE || 'en';
+  const byLabel = (window.BY_I18N && window.BY_I18N[previewLocale]) || 'By';
+  const authorsHtml =
+    selectedAuthors.length > 0
+      ? `<li>${byLabel} ${new Intl.ListFormat(previewLocale, { style: 'long', type: 'conjunction' }).format(selectedAuthors)}</li>`
+      : '';
   const titleHtml = ui.titleInput.value
     ? `<h1>${ui.titleInput.value}</h1>`
     : '';
   const metadataHtml =
-    dateHtml || tagsHtml
-      ? `<ul class="post-metadata"><li>${dateHtml}</li>${tagsHtml}</ul>`
+    dateHtml || authorsHtml || tagsHtml
+      ? `<ul class="post-metadata"><li>${dateHtml}</li>${authorsHtml}${tagsHtml}</ul>`
       : '';
 
   if (!ui.titleInput.value && !dateHtml && !tagsHtml && !content) {

@@ -181,6 +181,15 @@ permalink: "/{{ locale }}/blog/admin/index.html"
 				</div>
 
 				<div class="form-group">
+					<label for="post-authors">Authors</label>
+					<select id="post-authors" multiple size="{{ metadata.authors | length }}">
+						{%- for a in metadata.authors %}
+						<option value="{{ a.name }}">{{ a.name }}</option>
+						{%- endfor %}
+					</select>
+				</div>
+
+				<div class="form-group">
 					<label for="tag-input">Tags</label>
 					<div class="tag-container">
 						<div id="tag-pills" class="tag-pills"></div>
@@ -304,4 +313,10 @@ permalink: "/{{ locale }}/blog/admin/index.html"
 	window.APP_LOCALES = {{ locales | dump | safe }};
 	window.DEFAULT_LOCALE = {{ metadata.language | dump | safe }};
 	window.CURRENT_LOCALE = 'en';
+	window.AUTHORS = {{ metadata.authors | dump | safe }};
+	window.BY_I18N = {
+		{%- for loc in locales.locales %}
+		"{{ loc }}": {{ 'by' | i18n({}, loc) | dump | safe }}{% if not loop.last %},{% endif %}
+		{%- endfor %}
+	};
 </script>
