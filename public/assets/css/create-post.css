@@ -540,7 +540,7 @@ body {
   }
 }
 
-.form-group input,
+.form-group input:not([type='checkbox']),
 .form-group textarea,
 .form-group select {
   width: 100%;
@@ -569,7 +569,7 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-  .form-group input,
+  .form-group input:not([type='checkbox']),
   .form-group textarea,
   .form-group select {
     background-color: #2c3e50;
