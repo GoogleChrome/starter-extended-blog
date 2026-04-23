@@ -1,3 +1,40 @@
+function scheduleLanguageModelWarmup() {
+  let done = false;
+
+  const runWarmup = async () => {
+    if (done) return;
+    done = true;
+    try {
+      const session = await LanguageModel.create({
+        expectedInputs: [{ type: 'text', languages: ['en'] }],
+        expectedOutputs: [{ type: 'text', languages: ['en'] }],
+      });
+      await session.prompt('Respond with just the word "ok".');
+      console.log('Language model warmup completed.');
+      session.destroy();
+    } catch {
+      // No-op
+    }
+  };
+
+  if (navigator.userActivation?.isActive) {
+    runWarmup();
+    return;
+  }
+
+  const onUserActivation = () => {
+    if (navigator.userActivation?.isActive) runWarmup();
+  };
+
+  for (const type of ['click', 'keydown', 'touchstart']) {
+    document.addEventListener(type, onUserActivation, {
+      capture: true,
+      passive: true,
+      once: true,
+    });
+  }
+}
+
 /**
  * Dynamically imports and initializes all AI features.
  * @param {Object} ui - The UI elements.
@@ -10,6 +47,10 @@ export async function initAIFeatures(ui, sync, tagEditor) {
     return;
   }
   window.aiFeaturesInitialized = true;
+  const isNativeLanguageModel = 'LanguageModel' in self;
+  if (isNativeLanguageModel) {
+    scheduleLanguageModelWarmup();
+  }
   const link = document.createElement('link');
   link.rel = 'modulepreload';
   link.href = '/assets/js/ai/ai-multimodal.js';
