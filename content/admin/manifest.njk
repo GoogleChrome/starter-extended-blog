@@ -10,23 +10,23 @@ layout: false
 {
   "name": "Starter Extended Blog",
   "short_name": "Extended Blog",
-  "start_url": "/{{ locale }}/blog/admin/",
+  "start_url": "{{ ('/' + locale + '/blog/admin/') | url }}",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
   "icons": [
     {
-      "src": "/assets/img/icon.png",
+      "src": "{{ '/assets/img/icon.png' | url }}",
       "sizes": "400x400",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/assets/img/icon.svg",
+      "src": "{{ '/assets/img/icon.svg' | url }}",
       "sizes": "200x200",
       "type": "image/svg+xml",
       "purpose": "any"
     }
   ],
-  "scope": "/{{ locale }}/blog/admin/"
+  "scope": "{{ ('/' + locale + '/blog/admin/') | url }}"
 }

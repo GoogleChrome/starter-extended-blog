@@ -82,7 +82,7 @@
 <script eleventy:ignore>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('{{ '/' + metadata.language + '/blog/admin/sw.js' | url }}', { scope: '{{ '/' + metadata.language + '/blog/admin/' | url }}' });
+      navigator.serviceWorker.register('{{ ('/' + metadata.language + '/blog/admin/sw.js') | url }}', { scope: '{{ ('/' + metadata.language + '/blog/admin/') | url }}' });
     });
   }
 
