@@ -1,6 +1,6 @@
 /**
  * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: MIT
  */
 
 export const locales = ['en', 'es', 'ja', 'en-US', 'en-GB', 'es-ES', 'es-US'];

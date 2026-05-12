@@ -1,6 +1,6 @@
 /**
  * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: MIT
  */
 
 import { runTranslation } from './ai-translator-core.js';
@@ -34,7 +34,7 @@ export function createTranslationDetails(ui, locale, updateCallback) {
     <div class="translation-content-wrapper" style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
       <input type="text" class="translation-title" placeholder="Translated Title..." style="width: 100%; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px;">
       <textarea class="translation-description" placeholder="Translated Description..." style="width: 100%; height: 60px; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px;"></textarea>
-      
+
       <div class="translation-tags-wrapper">
         <div class="tag-pills translation-tag-pills" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px;"></div>
         <input type="text" class="translation-tag-input" placeholder="Add tag (Enter)..." style="width: 100%; padding: 0.4rem; border: 1px solid var(--border-color); border-radius: 4px;">
