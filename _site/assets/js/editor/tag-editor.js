@@ -18,7 +18,7 @@ export function initTagEditor(ui, onUpdate) {
   const fetchSchema = async () => {
     if (!tagsSchema) {
       const locale = window.CURRENT_LOCALE || 'en';
-      tagsSchema = await (await fetch(`/${locale}/tags-schema.json`)).json();
+      tagsSchema = await (await fetch(`${window.PATH_PREFIX || '/'}${locale}/tags-schema.json`)).json();
     }
     return tagsSchema;
   };

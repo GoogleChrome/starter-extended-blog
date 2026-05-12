@@ -237,6 +237,7 @@ export { HeadingAnchors }
 window.APP_LOCALES = {"fallbackLocales":{"en-US":"en","en-GB":"en","es-ES":"es","es-US":"es","404.html":"en"},"locales":["en","es","ja","en-US","en-GB","es-ES","es-US"]};
 	window.DEFAULT_LOCALE = "en";
 	window.CURRENT_LOCALE = 'en';
+	window.PATH_PREFIX = "/starter-extended-blog/_site/";
 	window.AUTHORS = [{"name":"Jane Doe","email":"jane.doe@example.com","url":"https://example.com/about-jane/"},{"name":"John Doe","email":"john.doe@example.com","url":"https://example.com/about-john/"}];
 	window.BY_I18N = {
 		"en": "By",
