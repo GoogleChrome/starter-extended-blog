@@ -16,7 +16,7 @@ cd my-blog-name
 2. Clone this Repository
 
 ```
-git clone https://github.com/11ty/starter-extended-blog.git .
+git clone https://github.com/GoogleChrome/starter-extended-blog.git .
 ```
 
 _Optional:_ Review `eleventy.config.js` and `_data/metadata.js` to configure the site’s options and data.
@@ -139,10 +139,10 @@ _Note: These features are privacy-focused and run entirely locally on your devic
 Deploy this Eleventy site in just a few clicks on these services:
 
 - Read more about [Deploying an Eleventy project](https://www.11ty.dev/docs/deployment/) to the web.
-- [Deploy this to **Netlify**](https://app.netlify.com/start/deploy?repository=https://github.com/11ty/starter-extended-blog)
+- [Deploy this to **Netlify**](https://app.netlify.com/start/deploy?repository=https://github.com/GoogleChrome/starter-extended-blog)
 - [Deploy this to **Vercel**](https://vercel.com/import/project?template=11ty%2Fstarter-extended-blog)
 - Look in `.github/workflows/gh-pages.yml.sample` for information on [Deploying to **GitHub Pages**](https://www.11ty.dev/docs/deployment/#deploy-an-eleventy-project-to-git-hub-pages).
-- [Try it out on **Stackblitz**](https://stackblitz.com/github/11ty/starter-extended-blog)
+- [Try it out on **Stackblitz**](https://stackblitz.com/github/GoogleChrome/starter-extended-blog)
 
 ### Implementation Notes
 

@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/11ty/starter-extended-blog.git"
+    "url": "git://github.com/GoogleChrome/starter-extended-blog.git"
   },
   "author": {
     "name": "Zach Leatherman",
@@ -41,9 +41,9 @@
     "url": "https://opencollective.com/11ty"
   },
   "bugs": {
-    "url": "https://github.com/11ty/starter-extended-blog/issues"
+    "url": "https://github.com/GoogleChrome/starter-extended-blog/issues"
   },
-  "homepage": "https://github.com/11ty/starter-extended-blog#readme",
+  "homepage": "https://github.com/GoogleChrome/starter-extended-blog#readme",
   "devDependencies": {
     "@11ty/eleventy": "^4.0.0-alpha.6",
     "@11ty/eleventy-img": "^6.0.4",
