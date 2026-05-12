@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { fileSave } from 'browser-fs-access';
 import { getImage } from '../utils/db-storage.js';
 import { generateMarkdown } from '../utils/markdown-utils.js';

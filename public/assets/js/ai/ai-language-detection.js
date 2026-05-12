@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Detects the language of a given text using the Language Detector API.
  * @param {string} text - The text to detect the language for.
  * @return {Promise<string>} The detected language code (defaults to 'en').

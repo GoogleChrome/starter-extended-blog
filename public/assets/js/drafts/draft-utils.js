@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Gathers translations from the UI and updates the draft.
  * @param {Object} draft - The draft to update.
  * @param {Object} ui - The UI elements.

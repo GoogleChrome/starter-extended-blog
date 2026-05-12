@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { refreshAIVisibility, updateUIFields } from './ai-ui-utils.js';
 import { aiKeys } from './ai-constants.js';
 import {

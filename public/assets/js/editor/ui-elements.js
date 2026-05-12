@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Object containing references to all major UI elements in the editor.
  */
 export const ui = {

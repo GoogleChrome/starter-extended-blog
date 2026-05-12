@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { runTranslation } from './ai-translator-core.js';
 import { updatePreview } from './ai-translator-preview.js';
 import { createTranslationDetails } from './ai-translator-details.js';

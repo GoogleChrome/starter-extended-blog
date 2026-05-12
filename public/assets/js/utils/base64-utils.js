@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Converts a string to a base64-encoded string.
  * @param {string} str - The string to encode.
  * @return {string} The base64-encoded string.

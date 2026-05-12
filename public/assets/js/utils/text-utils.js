@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Wraps text to a specify line length.
  * @param {string} text - The text to wrap.
  * @param {number} limit - The maximum character limit per line.

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { fileOpen } from 'browser-fs-access';
 import { parseFrontmatter } from '../editor/frontmatter-parser.js';
 import { drafts, saveDrafts, setCurrentDraftId } from './draft-manager.js';

@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { fromBase64 } from '../utils/base64-utils.js';
 import { ghFetch } from './github-api.js';
 

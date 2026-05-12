@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { customAlert } from '../utils/dialog-utils.js';
 import { refreshAIVisibility } from './ai-toggle.js';
 import { drafts, currentDraftId } from '../drafts/draft-manager.js';

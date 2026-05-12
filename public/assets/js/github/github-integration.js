@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { GH_CONFIG_KEY } from './github-api.js';
 
 export { ghFetch } from './github-api.js';

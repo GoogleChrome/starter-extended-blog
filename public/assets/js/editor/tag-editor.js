@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Initializes the tag editor, providing functionality to render tag pills and handle tag input.
  * @param {Object} ui - The UI elements.
  * @param {Function} onUpdate - Callback function triggered when tags are updated.

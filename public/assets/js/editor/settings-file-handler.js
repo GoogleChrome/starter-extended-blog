@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { fileOpen, fileSave } from 'browser-fs-access';
 import { customAlert } from '../utils/dialog-utils.js';
 import { applySettings } from './settings-loader.js';

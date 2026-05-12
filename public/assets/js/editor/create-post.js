@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { ui } from './ui-elements.js';
 import { drafts, createNewDraft } from '../drafts/draft-manager.js';
 import { updatePreview } from './editor-logic.js';

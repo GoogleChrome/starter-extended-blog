@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Parses Jekyll/Eleventy style frontmatter from a string.
  * @param {string} text - The input text containing frontmatter.
  * @return {Object} An object containing the parsed metadata and the remaining content.

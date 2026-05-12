@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { deleteImagesForDraft } from '../utils/db-storage.js';
 import { customConfirm } from '../utils/dialog-utils.js';
 import { performHousekeeping as h_performHousekeeping } from './draft-housekeeping.js';

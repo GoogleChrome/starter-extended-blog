@@ -1,4 +1,9 @@
 /**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/**
  * Runs the AI tag generation process using a streaming prompt.
  * @param {Object} session - The Language Model session.
  * @param {string} content - The content to generate tags for.

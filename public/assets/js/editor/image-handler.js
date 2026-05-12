@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { saveImage } from '../utils/db-storage.js';
 import { saveDrafts } from '../drafts/draft-manager.js';
 import { wrapText } from './editor-logic.js';
