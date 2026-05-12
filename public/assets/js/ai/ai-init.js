@@ -58,7 +58,7 @@ export async function initAIFeatures(ui, sync, tagEditor) {
   }
   const link = document.createElement('link');
   link.rel = 'modulepreload';
-  link.href = '/assets/js/ai/ai-multimodal.js';
+  link.href = new URL('./ai-multimodal.js', import.meta.url).href;
   document.head.appendChild(link);
   const [
     { initAI },
