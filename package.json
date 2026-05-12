@@ -14,7 +14,7 @@
     "debugstart": "cross-env DEBUG=Eleventy* npx @11ty/eleventy --serve --quiet",
     "benchmark": "cross-env DEBUG=Eleventy:Benchmark* npx @11ty/eleventy",
     "format": "npx prettier --write .",
-    "deploy": "npm run build && npx surge _site"
+    "deploy": "npm run build && git add . && git commit -m 'Deploy to GitHub Pages' && git push origin main"
   },
   "repository": {
     "type": "git",

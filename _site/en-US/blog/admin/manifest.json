@@ -1,0 +1,23 @@
+{
+  "name": "Starter Extended Blog",
+  "short_name": "Extended Blog",
+  "start_url": "/en-US/blog/admin/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/assets/img/icon.png",
+      "sizes": "400x400",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/icon.svg",
+      "sizes": "200x200",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "scope": "/en-US/blog/admin/"
+}

@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["otra etiqueta"]
+      }
+    }
+  },
+  "required": ["tags"],
+  "additionalProperties": false
+}

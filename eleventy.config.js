@@ -247,7 +247,7 @@ export const config = {
     input: 'content', // default: "."
     includes: '../_includes', // default: "_includes" (`input` relative)
     data: '../_data', // default: "_data" (`input` relative)
-    output: '_site',
+    output: '_site', // default: "_site"
   },
 
   // -----------------------------------------------------------------
@@ -261,5 +261,5 @@ export const config = {
   // it will transform any absolute URLs in your HTML to include this
   // folder name and does **not** affect where things go in the output folder.
 
-  // pathPrefix: "/",
+  pathPrefix: "/starter-extended-blog/_site/",
 };

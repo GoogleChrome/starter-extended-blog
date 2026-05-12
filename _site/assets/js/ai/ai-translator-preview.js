@@ -1,0 +1,83 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: MIT
+ */
+
+import { sanitizeHTML } from '../utils/sanitizer.js';
+import { getImage } from '../utils/db-storage.js';
+import { drafts, currentDraftId } from '../drafts/draft-manager.js';
+import { formatPreviewDate } from '../utils/date-utils.js';
+
+/**
+ * Cache for blob URLs to avoid redundant ObjectURL creations.
+ */
+const blobCache = new Map();
+
+/**
+ * Updates the HTML preview for a translation.
+ * @param {HTMLTextAreaElement} textarea - The markdown source.
+ * @param {HTMLElement} preview - The preview container.
+ */
+export async function updatePreview(textarea, preview) {
+  const details = textarea.closest('details');
+  const title = details?.querySelector('.translation-title')?.value || '';
+  const tagsStr =
+    details?.querySelector('.translation-tags-hidden')?.value || '';
+  const tags = tagsStr ? tagsStr.split(',').map((t) => t.trim()) : [];
+
+  let content = textarea.value;
+
+  const locale =
+    details?.getAttribute('data-locale') || window.CURRENT_LOCALE || 'en';
+
+  const dateInput = document.querySelector('#post-date');
+  const dateValue = dateInput ? dateInput.value : '';
+  const dateHtml = dateValue
+    ? `<time datetime="${dateValue}">${formatPreviewDate(dateValue, locale)}</time>`
+    : '';
+
+  const authorsSelect = document.querySelector('#post-authors');
+  const selectedAuthors = authorsSelect
+    ? Array.from(authorsSelect.selectedOptions).map((o) => o.value)
+    : [];
+  const byLabel = (window.BY_I18N && window.BY_I18N[locale]) || 'By';
+  const authorsHtml =
+    selectedAuthors.length > 0
+      ? `<li>${byLabel} ${new Intl.ListFormat(locale, { style: 'long', type: 'conjunction' }).format(selectedAuthors)}</li>`
+      : '';
+
+  const tagsHtml = tags
+    .map((t) => `<li><a href="#" class="post-tag">${t}</a></li>`)
+    .join('');
+  const titleHtml = title ? `<h1>${title}</h1>` : '';
+  const metadataHtml =
+    dateHtml || authorsHtml || tagsHtml
+      ? `<ul class="post-metadata"><li>${dateHtml}</li>${authorsHtml}${tagsHtml}</ul>`
+      : '';
+
+  const draft = drafts.find((d) => d.id === currentDraftId);
+  if (draft && draft.imageFiles) {
+    for (const img of draft.imageFiles) {
+      let blobUrl = blobCache.get(img.id);
+      if (!blobUrl) {
+        const data = await getImage(img.id);
+        if (data) {
+          const type =
+            img.type ||
+            (img.name.toLowerCase().endsWith('.svg')
+              ? 'image/svg+xml'
+              : 'image/jpeg');
+          blobUrl = URL.createObjectURL(new Blob([data], { type }));
+          blobCache.set(img.id, blobUrl);
+        }
+      }
+      if (blobUrl) {
+        content = content.replaceAll(`./${img.name}`, blobUrl);
+      }
+    }
+  }
+  await sanitizeHTML(
+    preview,
+    `${titleHtml}${metadataHtml}${marked.parse(content)}`,
+  );
+}
