@@ -388,23 +388,23 @@ header {
 <script type="importmap">
 {
   "imports": {
-    "prompt-api-polyfill": "/assets/js/prompt-api-polyfill/prompt-api-polyfill.js",
-    "built-in-ai-task-apis-polyfills/": "/assets/js/built-in-ai-task-apis-polyfills/",
-    
-    "firebase/app": "/assets/js/firebase/firebase-app.js",
-    "firebase/ai": "/assets/js/firebase/firebase-ai.js",
-    "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js": "/assets/js/firebase/firebase-app.js",
-    
-    "browser-fs-access": "/assets/js/browser-fs-access/index.modern.js",
+    "prompt-api-polyfill": "/starter-extended-blog/_site/assets/js/prompt-api-polyfill/prompt-api-polyfill.js",
+    "built-in-ai-task-apis-polyfills/": "/starter-extended-blog/_site/assets/js/built-in-ai-task-apis-polyfills/",
 
-    "@google/genai": "/assets/js/google-genai/index.mjs",
-    "openai": "/assets/js/openai/index.mjs",
-    "@huggingface/transformers": "/assets/js/huggingface-transformers/transformers.web.js",
-    "onnxruntime-web/webgpu": "/assets/js/onnxruntime-web/ort.webgpu.mjs",
-    "onnxruntime-common": "/assets/js/onnxruntime-common/index.js",
+    "firebase/app": "/starter-extended-blog/_site/assets/js/firebase/firebase-app.js",
+    "firebase/ai": "/starter-extended-blog/_site/assets/js/firebase/firebase-ai.js",
+    "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js": "/starter-extended-blog/_site/assets/js/firebase/firebase-app.js",
 
-    "p-retry": "/assets/js/helpers/p-retry-esm.js",
-    "dompurify": "/assets/js/dompurify/purify.es.mjs"
+    "browser-fs-access": "/starter-extended-blog/_site/assets/js/browser-fs-access/index.modern.js",
+
+    "@google/genai": "/starter-extended-blog/_site/assets/js/google-genai/index.mjs",
+    "openai": "/starter-extended-blog/_site/assets/js/openai/index.mjs",
+    "@huggingface/transformers": "/starter-extended-blog/_site/assets/js/huggingface-transformers/transformers.web.js",
+    "onnxruntime-web/webgpu": "/starter-extended-blog/_site/assets/js/onnxruntime-web/ort.webgpu.mjs",
+    "onnxruntime-common": "/starter-extended-blog/_site/assets/js/onnxruntime-common/index.js",
+
+    "p-retry": "/starter-extended-blog/_site/assets/js/helpers/p-retry-esm.js",
+    "dompurify": "/starter-extended-blog/_site/assets/js/dompurify/purify.es.mjs"
   }
 }
 </script>
@@ -436,10 +436,10 @@ header {
   if (!('switch' in HTMLInputElement.prototype)) {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/assets/js/input-switch-polyfill/input-switch-polyfill.css';
+    css.href = '/starter-extended-blog/_site/assets/js/input-switch-polyfill/input-switch-polyfill.css';
     document.head.append(css);
 
-    await import('/assets/js/input-switch-polyfill/input-switch-polyfill.js');
+    await import('/starter-extended-blog/_site/assets/js/input-switch-polyfill/input-switch-polyfill.js');
   } else {
     document.head.insertAdjacentHTML(
       'beforeend',
@@ -462,7 +462,7 @@ header {
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/en/blog/admin/sw.js', { scope: '/en/blog/admin/' });
+      navigator.serviceWorker.register('/en/starter-extended-blog/_site/blog/admin/sw.js', { scope: '/en/starter-extended-blog/_site/blog/admin/' });
     });
   }
 
@@ -877,7 +877,7 @@ header {
 			</form>
 		</footer>
 
-		<!-- This page `/ja/blog/admin/` was built on 2026-05-12T16:48:59.155Z -->
+		<!-- This page `/ja/blog/admin/` was built on 2026-05-12T17:26:02.046Z -->
 		<script type="module" src="/starter-extended-blog/_site/assets/js/bundles/v1UBEQSIwI.js"></script>
 		
 	</body>

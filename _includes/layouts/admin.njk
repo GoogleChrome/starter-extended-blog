@@ -8,23 +8,23 @@
 <script type="importmap" eleventy:ignore>
 {
   "imports": {
-    "prompt-api-polyfill": "/assets/js/prompt-api-polyfill/prompt-api-polyfill.js",
-    "built-in-ai-task-apis-polyfills/": "/assets/js/built-in-ai-task-apis-polyfills/",
-    
-    "firebase/app": "/assets/js/firebase/firebase-app.js",
-    "firebase/ai": "/assets/js/firebase/firebase-ai.js",
-    "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js": "/assets/js/firebase/firebase-app.js",
-    
-    "browser-fs-access": "/assets/js/browser-fs-access/index.modern.js",
+    "prompt-api-polyfill": "{{ '/assets/js/prompt-api-polyfill/prompt-api-polyfill.js' | url }}",
+    "built-in-ai-task-apis-polyfills/": "{{ '/assets/js/built-in-ai-task-apis-polyfills/' | url }}",
 
-    "@google/genai": "/assets/js/google-genai/index.mjs",
-    "openai": "/assets/js/openai/index.mjs",
-    "@huggingface/transformers": "/assets/js/huggingface-transformers/transformers.web.js",
-    "onnxruntime-web/webgpu": "/assets/js/onnxruntime-web/ort.webgpu.mjs",
-    "onnxruntime-common": "/assets/js/onnxruntime-common/index.js",
+    "firebase/app": "{{ '/assets/js/firebase/firebase-app.js' | url }}",
+    "firebase/ai": "{{ '/assets/js/firebase/firebase-ai.js' | url }}",
+    "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js": "{{ '/assets/js/firebase/firebase-app.js' | url }}",
 
-    "p-retry": "/assets/js/helpers/p-retry-esm.js",
-    "dompurify": "/assets/js/dompurify/purify.es.mjs"
+    "browser-fs-access": "{{ '/assets/js/browser-fs-access/index.modern.js' | url }}",
+
+    "@google/genai": "{{ '/assets/js/google-genai/index.mjs' | url }}",
+    "openai": "{{ '/assets/js/openai/index.mjs' | url }}",
+    "@huggingface/transformers": "{{ '/assets/js/huggingface-transformers/transformers.web.js' | url }}",
+    "onnxruntime-web/webgpu": "{{ '/assets/js/onnxruntime-web/ort.webgpu.mjs' | url }}",
+    "onnxruntime-common": "{{ '/assets/js/onnxruntime-common/index.js' | url }}",
+
+    "p-retry": "{{ '/assets/js/helpers/p-retry-esm.js' | url }}",
+    "dompurify": "{{ '/assets/js/dompurify/purify.es.mjs' | url }}"
   }
 }
 </script>
@@ -56,10 +56,10 @@
   if (!('switch' in HTMLInputElement.prototype)) {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/assets/js/input-switch-polyfill/input-switch-polyfill.css';
+    css.href = '{{ '/assets/js/input-switch-polyfill/input-switch-polyfill.css' | url }}';
     document.head.append(css);
 
-    await import('/assets/js/input-switch-polyfill/input-switch-polyfill.js');
+    await import('{{ '/assets/js/input-switch-polyfill/input-switch-polyfill.js' | url }}');
   } else {
     document.head.insertAdjacentHTML(
       'beforeend',
@@ -82,7 +82,7 @@
 <script eleventy:ignore>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/{{ metadata.language }}/blog/admin/sw.js', { scope: '/{{ metadata.language }}/blog/admin/' });
+      navigator.serviceWorker.register('{{ '/' + metadata.language + '/blog/admin/sw.js' | url }}', { scope: '{{ '/' + metadata.language + '/blog/admin/' | url }}' });
     });
   }
 
