@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet href="../../feed/pretty-atom-feed.xsl" type="text/xsl"?>
+<!-- Copyright 2026 Google LLC SPDX-License-Identifier: MIT -->
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en-US">
   <script src="/assets/js/xslt-polyfill/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <title>Posts - Starter Extended Blog</title>
   <subtitle>I am writing about my experiences as a naval navel-gazer.</subtitle>
   <link href="https://example.com/starter-extended-blog/_site/en-US/feed/feed.xml" rel="self" />
   <link href="https://example.com/starter-extended-blog/_site/" />
-  <updated>2026-05-12T17:42:58Z</updated>
+  <updated>2026-05-13T10:17:39Z</updated>
   <id>https://example.com/starter-extended-blog/_site/</id>
   <author>
     <name>Jane Doe and John Doe</name>

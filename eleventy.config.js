@@ -222,6 +222,16 @@ export default async function (eleventyConfig) {
     return new Date().toISOString();
   });
 
+  eleventyConfig.addTransform('xml-license-header', function (content, outputPath) {
+    if (outputPath && outputPath.endsWith('.xml')) {
+      return content.replace(
+        /^((?:<\?[^?]*\?>\s*)+)/,
+        '$1<!-- Copyright 2026 Google LLC SPDX-License-Identifier: MIT -->\n',
+      );
+    }
+    return content;
+  });
+
   // Features to make your build faster (when you need them)
 
   // If your passthrough copy gets heavy and cumbersome, add this line
