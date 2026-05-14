@@ -1,0 +1,14 @@
+{
+  "type": "object",
+  "properties": {
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["another tag","number 2","posts with two tags","second tag"]
+      }
+    }
+  },
+  "required": ["tags"],
+  "additionalProperties": false
+}

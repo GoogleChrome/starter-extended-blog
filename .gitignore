@@ -1,0 +1,10 @@
+node_modules/
+_site/
+.cache
+.claude
+
+# Built-in AI Agent instructions
+AGENTS.md
+SKILL.md
+# Surge deployment
+public/CNAME

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet href="../../feed/pretty-atom-feed.xsl" type="text/xsl"?>
+<!-- Copyright 2026 Google LLC SPDX-License-Identifier: MIT -->
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <script src="/assets/js/xslt-polyfill/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
+  <title>記事 - Starter Extended Blog</title>
+  <subtitle>I am writing about my experiences as a naval navel-gazer.</subtitle>
+  <link href="https://example.com/starter-extended-blog/ja/feed/feed.xml" rel="self" />
+  <link href="https://example.com/starter-extended-blog/" />
+  <updated>2018-05-01T00:00:00Z</updated>
+  <id>https://example.com/starter-extended-blog/</id>
+  <author>
+    <name>Jane Doe、John Doe</name>
+  </author>
+  <entry>
+    <title>これは私の最初の投稿です。</title>
+    <link href="https://example.com/starter-extended-blog/ja/blog/firstpost/" />
+    <updated>2018-05-01T00:00:00Z</updated>
+    <id>https://example.com/starter-extended-blog/ja/blog/firstpost/</id>
+    <content type="html">&lt;p&gt;ハイレベルな概要に対して堅牢なあらすじを提供するために、アジャイルフレームワークを活用します。企業戦略への反復的なアプローチは、全体的なバリュープロポジションをさらに高めるための協調的な思考を育みます。職場の多様性とエンパワーメントを通じて、破壊的イノベーションの全体的な世界観を有機的に成長させます。&lt;/p&gt;
+&lt;p&gt;積極的な支配を確実にするために、ウィンウィンの生存戦略を提案してください。一日の終わりには、今後、ジェネレーションXから進化した新しいノーマルが、合理化されたクラウドソリューションに向かって滑走路に向かっています。リアルタイムのユーザー生成コンテンツには、オフショアリングのための複数のタッチポイントがあります。&lt;/p&gt;
+&lt;h2 id=&quot;&quot;&gt;セクションヘッダー&lt;/h2&gt;
+&lt;p&gt;ベータテストのために概算の付加価値活動を特定するために、手の届きやすい成果を活用します。DevOpsからの追加のクリックスルーでデジタルデバイドを克服します。情報ハイウェイに沿ったナノテクノロジーの没入は、収益のみに焦点を当てることのループを閉じます。&lt;/p&gt;
+&lt;pre class=&quot;language-diff-js&quot; tabindex=&quot;0&quot;&gt;&lt;code class=&quot;language-diff-js&quot;&gt;&lt;span class=&quot;token unchanged language-js&quot;&gt;&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;// これはコマンドです&lt;/span&gt;
+&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;&lt;span class=&quot;token keyword&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;myCommand&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&quot;token inserted-sign inserted language-js&quot;&gt;&lt;span class=&quot;token prefix inserted&quot;&gt;+&lt;/span&gt;  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&quot;token deleted-sign deleted language-js&quot;&gt;&lt;span class=&quot;token prefix deleted&quot;&gt;-&lt;/span&gt;  &lt;span class=&quot;token keyword&quot;&gt;let&lt;/span&gt; counter &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;token number&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;span class=&quot;token unchanged language-js&quot;&gt;&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;  counter&lt;span class=&quot;token operator&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;
+&lt;/span&gt;
+&lt;span class=&quot;token unchanged language-js&quot;&gt;&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;&lt;span class=&quot;token comment&quot;&gt;// この行の上に改行を入れてテストします。&lt;/span&gt;
+&lt;span class=&quot;token prefix unchanged&quot;&gt; &lt;/span&gt;console&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token function&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&#39;テスト&#39;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;;&lt;/span&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+</content>
+  </entry>
+</feed>

@@ -1,0 +1,11 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const tslib_1 = require("./internal/tslib.js");
+/** @deprecated Import from ./core/api-promise instead */
+tslib_1.__exportStar(require("./core/api-promise.js"), exports);
+//# sourceMappingURL=api-promise.js.map
