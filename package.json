@@ -14,7 +14,7 @@
     "debugstart": "cross-env DEBUG=Eleventy* npx @11ty/eleventy --serve --quiet",
     "benchmark": "cross-env DEBUG=Eleventy:Benchmark* npx @11ty/eleventy",
     "format": "npx prettier --write .",
-    "deploy": "npm run build && git push origin main && git add -f _site && git commit -m 'Deploy to GitHub Pages' && git push origin $(git subtree split --prefix=_site HEAD):gh-pages --force && git reset HEAD~1"
+    "deploy": "npm run build && git push origin main && gh-pages -d _site"
   },
   "repository": {
     "type": "git",
@@ -52,6 +52,7 @@
     "@11ty/eleventy-plugin-syntaxhighlight": "^5.0.2",
     "built-in-ai-skills-md-agent-md": "^1.4.0",
     "cross-env": "^10.1.0",
+    "gh-pages": "^6.3.0",
     "luxon": "^3.7.2",
     "node-addon-api": "^8.7.0",
     "node-gyp": "^12.3.0",
@@ -63,7 +64,6 @@
   },
   "dependencies": {
     "@zachleat/heading-anchors": "^1.0.5",
-    "pagefind": "^1.5.2",
     "browser-fs-access": "^0.38.0",
     "built-in-ai-task-apis-polyfills": "^1.11.0",
     "dompurify": "^3.4.2",
@@ -71,6 +71,7 @@
     "input-switch-polyfill": "^1.11.0",
     "jszip": "^3.10.1",
     "marked": "^18.0.3",
+    "pagefind": "^1.5.2",
     "prompt-api-polyfill": "^1.17.0",
     "turndown": "^7.2.4",
     "xslt-polyfill": "^1.0.21"
