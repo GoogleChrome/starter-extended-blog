@@ -14,7 +14,7 @@
     "debugstart": "cross-env DEBUG=Eleventy* npx @11ty/eleventy --serve --quiet",
     "benchmark": "cross-env DEBUG=Eleventy:Benchmark* npx @11ty/eleventy",
     "format": "npx prettier --write .",
-    "deploy": "npm run build && git add . && git commit -m 'Deploy to GitHub Pages' && git push origin main"
+    "deploy": "npm run build && git push origin main && git add -f _site && git commit -m 'Deploy to GitHub Pages' && git push origin $(git subtree split --prefix=_site HEAD):gh-pages --force && git reset HEAD~1"
   },
   "repository": {
     "type": "git",
