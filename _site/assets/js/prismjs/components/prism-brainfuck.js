@@ -1,0 +1,25 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+Prism.languages.brainfuck = {
+	'pointer': {
+		pattern: /<|>/,
+		alias: 'keyword'
+	},
+	'increment': {
+		pattern: /\+/,
+		alias: 'inserted'
+	},
+	'decrement': {
+		pattern: /-/,
+		alias: 'deleted'
+	},
+	'branching': {
+		pattern: /\[|\]/,
+		alias: 'important'
+	},
+	'operator': /[.,]/,
+	'comment': /\S+/
+};
