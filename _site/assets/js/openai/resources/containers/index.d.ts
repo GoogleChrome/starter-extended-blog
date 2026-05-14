@@ -1,8 +1,0 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-export { Containers, type ContainerCreateResponse, type ContainerRetrieveResponse, type ContainerListResponse, type ContainerCreateParams, type ContainerListParams, type ContainerListResponsesPage, } from "./containers.js";
-export { Files, type FileCreateResponse, type FileRetrieveResponse, type FileListResponse, type FileCreateParams, type FileRetrieveParams, type FileListParams, type FileDeleteParams, type FileListResponsesPage, } from "./files/index.js";
-//# sourceMappingURL=index.d.ts.map
