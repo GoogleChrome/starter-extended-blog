@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // File mostly copied from @types/json-schema, but stripped down a bit for brevity
 // https://github.com/DefinitelyTyped/DefinitelyTyped/blob/817274f3280152ba2929a6067c93df8b34c4c9aa/types/json-schema/index.d.ts
 //

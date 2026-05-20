@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { parseDef } from "./parseDef.mjs";
 import { getRefs } from "./Refs.mjs";
 import { zodDef, isEmptyObj } from "./util.mjs";

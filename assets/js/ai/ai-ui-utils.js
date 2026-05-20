@@ -83,7 +83,8 @@ export function refreshAIVisibility(ui) {
     ui.aiRewriterSection.style.display = aiEnabled ? 'block' : 'none';
   }
   if (ui.aiClassifierSection) {
-    ui.aiClassifierSection.style.display = aiEnabled ? 'block' : 'none';
+    ui.aiClassifierSection.style.display =
+      aiEnabled && !ui.aiClassifierSection.hidden ? 'block' : 'none';
   }
   if (ui.aiTranslationSection) {
     ui.aiTranslationSection.style.display = translateEnabled ? 'block' : 'none';

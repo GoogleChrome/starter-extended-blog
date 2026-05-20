@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../core/resource.js";
 import * as FilesAPI from "./files.js";
 import { VectorStoreFilesPage } from "./files.js";

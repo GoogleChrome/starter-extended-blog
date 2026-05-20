@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ResponsesEmitter, ResponsesStreamMessage } from "./internal-base.js";
 import { type WebSocketLike } from "../../internal/ws-adapter.js";
 import { type RawWebSocketData, type ReconnectingEvent, type ReconnectingOverrides } from "../../internal/ws.js";

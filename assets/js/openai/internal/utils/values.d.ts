@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export declare const isAbsoluteURL: (url: string) => boolean;
 export declare let isArray: (val: unknown) => val is unknown[];
 export declare let isReadonlyArray: (val: unknown) => val is readonly unknown[];

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { hasOwn } from './values';
@@ -112,6 +107,8 @@ export const formatRequestDetails = (details: {
           name,
           (
             name.toLowerCase() === 'authorization' ||
+            name.toLowerCase() === 'api-key' ||
+            name.toLowerCase() === 'x-api-key' ||
             name.toLowerCase() === 'cookie' ||
             name.toLowerCase() === 'set-cookie'
           ) ?

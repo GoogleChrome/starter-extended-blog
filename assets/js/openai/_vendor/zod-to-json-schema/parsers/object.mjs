@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { parseDef } from "../parseDef.mjs";
 function decideAdditionalProperties(def, refs) {
     if (refs.removeAdditionalStrategy === 'strict') {

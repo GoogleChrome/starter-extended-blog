@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Primitive type
  * @see https://tools.ietf.org/html/draft-handrews-json-schema-validation-01#section-6.1.1
  */

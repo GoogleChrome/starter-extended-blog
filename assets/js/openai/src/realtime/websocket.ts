@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { AzureOpenAI, OpenAI } from '../index';
 import { OpenAIError } from '../error';
 import type { RealtimeClientEvent, RealtimeServerEvent } from '../resources/realtime/realtime';

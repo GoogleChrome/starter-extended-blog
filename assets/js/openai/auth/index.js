@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SubjectTokenProviderError = exports.OAuthError = exports.gcpIDTokenProvider = exports.azureManagedIdentityTokenProvider = exports.k8sServiceAccountTokenProvider = void 0;

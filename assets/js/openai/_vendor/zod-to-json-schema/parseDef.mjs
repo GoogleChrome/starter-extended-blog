@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ZodFirstPartyTypeKind } from 'zod/v3';
 import { parseAnyDef } from "./parsers/any.mjs";
 import { parseArrayDef } from "./parsers/array.mjs";

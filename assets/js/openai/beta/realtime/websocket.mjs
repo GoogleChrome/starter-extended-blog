@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { OpenAI } from "../../index.mjs";
 import { OpenAIError } from "../../error.mjs";
 import { OpenAIRealtimeEmitter, buildRealtimeURL, isAzure } from "./internal-base.mjs";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { RealtimeClientEvent, RealtimeServerEvent, ErrorEvent } from "../../resources/beta/realtime/realtime.js";
 import { EventEmitter } from "../../lib/EventEmitter.js";
 import { OpenAIError } from "../../error.js";

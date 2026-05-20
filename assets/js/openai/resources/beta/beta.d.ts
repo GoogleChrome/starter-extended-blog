@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../core/resource.js";
 import * as AssistantsAPI from "./assistants.js";
 import { Assistant, AssistantCreateParams, AssistantDeleted, AssistantListParams, AssistantStreamEvent, AssistantTool, AssistantUpdateParams, Assistants, AssistantsPage, CodeInterpreterTool, FileSearchTool, FunctionTool, MessageStreamEvent, RunStepStreamEvent, RunStreamEvent, ThreadStreamEvent } from "./assistants.js";

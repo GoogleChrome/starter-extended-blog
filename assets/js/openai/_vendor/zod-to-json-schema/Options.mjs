@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export const ignoreOverride = Symbol('Let zodToJsonSchema decide on which parser to use');
 const defaultOptions = {
     name: undefined,

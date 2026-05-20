@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export type Format = 'RFC1738' | 'RFC3986';
 
 export type DefaultEncoder = (str: any, defaultEncoder?: any, charset?: string) => string;

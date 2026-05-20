@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { Alpha } from "./alpha/index.js";
 export { Checkpoints } from "./checkpoints/index.js";
 export { FineTuning } from "./fine-tuning.js";

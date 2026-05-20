@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { FinalRequestOptions } from "./request-options.js";
 import { type OpenAI } from "../client.js";
 import type { AbstractPage } from "../pagination.js";

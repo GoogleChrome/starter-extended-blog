@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export function parseLiteralDef(def, refs) {
     const parsedType = typeof def.value;
     if (parsedType !== 'bigint' &&

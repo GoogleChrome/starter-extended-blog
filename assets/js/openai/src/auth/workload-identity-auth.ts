@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { WorkloadIdentity, TokenExchangeResponse } from './types';
 import type { Fetch } from '../internal/builtin-types';
 import * as Shims from '../internal/shims';
@@ -13,7 +8,7 @@ interface CachedToken {
   expiresAt: number;
 }
 
-const SUBJECT_TOKEN_TYPES: Record<string, string> = {
+const SUBJECT_TOKEN_TYPES: Record<WorkloadIdentity['provider']['tokenType'], string> = {
   jwt: 'urn:ietf:params:oauth:token-type:jwt',
   id: 'urn:ietf:params:oauth:token-type:id_token',
 };
@@ -59,20 +54,24 @@ export class WorkloadIdentityAuth {
 
   private async refreshToken(): Promise<string> {
     const subjectToken = await this.config.provider.getToken();
+    const body: Record<string, string> = {
+      grant_type: TOKEN_EXCHANGE_GRANT_TYPE,
+      subject_token: subjectToken,
+      subject_token_type: SUBJECT_TOKEN_TYPES[this.config.provider.tokenType],
+      identity_provider_id: this.config.identityProviderId,
+      service_account_id: this.config.serviceAccountId,
+    };
+
+    if (this.config.clientId) {
+      body['client_id'] = this.config.clientId;
+    }
 
     const response = await this.fetch(this.tokenExchangeUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        grant_type: TOKEN_EXCHANGE_GRANT_TYPE,
-        client_id: this.config.clientId,
-        subject_token: subjectToken,
-        subject_token_type: SUBJECT_TOKEN_TYPES[this.config.provider.tokenType],
-        identity_provider_id: this.config.identityProviderId,
-        service_account_id: this.config.serviceAccountId,
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

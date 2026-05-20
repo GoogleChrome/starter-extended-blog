@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { InputItems, type ResponseItemList, type InputItemListParams } from "./input-items.js";
 export { InputTokens, type InputTokenCountResponse, type InputTokenCountParams } from "./input-tokens.js";
 export { Responses } from "./responses.js";

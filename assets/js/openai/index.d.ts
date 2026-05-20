@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { OpenAI as default } from "./client.js";
 export { type Uploadable, toFile } from "./core/uploads.js";
 export { APIPromise } from "./core/api-promise.js";

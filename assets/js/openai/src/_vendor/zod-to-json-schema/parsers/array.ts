@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ZodArrayDef, ZodFirstPartyTypeKind } from 'zod/v3';
 import { ErrorMessages, setResponseValueAndErrors } from '../errorMessages';
 import { JsonSchema7Type, parseDef } from '../parseDef';

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { type ChatCompletionChunk, type ChatCompletionCreateParamsStreaming } from "../resources/chat/completions.js";
 import { RunnerOptions, type AbstractChatCompletionRunnerEvents } from "./AbstractChatCompletionRunner.js";
 import { type ReadableStream } from "../internal/shim-types.js";

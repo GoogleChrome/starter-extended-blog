@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { parseDef } from "../parseDef.mjs";
 export function parsePromiseDef(def, refs) {
     return parseDef(def.type._def, refs);

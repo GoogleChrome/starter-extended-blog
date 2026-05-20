@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { BlobPart, getName, makeFile, isAsyncIterable } from './uploads';
 import type { FilePropertyBag } from './builtin-types';
 import { checkFileSupport } from './uploads';

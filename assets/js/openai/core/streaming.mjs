@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 var _Stream_client;
 import { __classPrivateFieldGet, __classPrivateFieldSet } from "../internal/tslib.mjs";
 import { OpenAIError } from "./error.mjs";

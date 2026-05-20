@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ChatCompletion, ChatCompletionCreateParams, ChatCompletionCreateParamsBase, ChatCompletionFunctionTool, ChatCompletionMessage, ChatCompletionMessageFunctionToolCall, ChatCompletionStreamingToolRunnerParams, ChatCompletionStreamParams, ChatCompletionToolRunnerParams, ParsedChatCompletion } from "../resources/chat/completions.js";
 import { type ResponseFormatTextJSONSchemaConfig } from "../resources/responses/responses.js";
 import { ResponseFormatJSONSchema } from "../resources/shared.js";

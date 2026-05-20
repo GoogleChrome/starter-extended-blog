@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 var _LineDecoder_buffer, _LineDecoder_carriageReturnIndex;
 import { __classPrivateFieldGet, __classPrivateFieldSet } from "../tslib.mjs";
 import { concatBytes, decodeUTF8, encodeUTF8 } from "../utils/bytes.mjs";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { APIKeys, type ProjectAPIKey, type APIKeyDeleteResponse, type APIKeyRetrieveParams, type APIKeyListParams, type APIKeyDeleteParams, type ProjectAPIKeysPage, } from "./api-keys.js";
 export { Certificates, type CertificateListResponse, type CertificateActivateResponse, type CertificateDeactivateResponse, type CertificateListParams, type CertificateActivateParams, type CertificateDeactivateParams, type CertificateListResponsesPage, type CertificateActivateResponsesPage, type CertificateDeactivateResponsesPage, } from "./certificates.js";
 export { Groups, type ProjectGroup, type GroupDeleteResponse, type GroupCreateParams, type GroupListParams, type GroupDeleteParams, type ProjectGroupsPage, } from "./groups/index.js";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIUserAbortError, OpenAIError } from '../error';
 
 export class EventStream<EventTypes extends BaseEvents> {

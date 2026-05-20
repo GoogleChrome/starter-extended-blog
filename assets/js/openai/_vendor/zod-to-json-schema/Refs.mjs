@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { getDefaultOptions } from "./Options.mjs";
 import { zodDef } from "./util.mjs";
 export const getRefs = (options) => {

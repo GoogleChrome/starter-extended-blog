@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../../../core/resource.js";
 import * as APIKeysAPI from "./api-keys.js";
 import { APIKeyDeleteParams, APIKeyDeleteResponse, APIKeyListParams, APIKeyRetrieveParams, APIKeys, ProjectAPIKey, ProjectAPIKeysPage } from "./api-keys.js";

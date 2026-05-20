@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { AdminAPIKeys, type AdminAPIKey, type AdminAPIKeyCreateResponse, type AdminAPIKeyDeleteResponse, type AdminAPIKeyCreateParams, type AdminAPIKeyListParams, type AdminAPIKeysPage, } from "./admin-api-keys.js";
 export { AuditLogs, type AuditLogListResponse, type AuditLogListParams, type AuditLogListResponsesPage, } from "./audit-logs.js";
 export { Certificates, type Certificate, type CertificateListResponse, type CertificateDeleteResponse, type CertificateActivateResponse, type CertificateDeactivateResponse, type CertificateCreateParams, type CertificateRetrieveParams, type CertificateUpdateParams, type CertificateListParams, type CertificateActivateParams, type CertificateDeactivateParams, type CertificateListResponsesPage, type CertificateActivateResponsesPage, type CertificateDeactivateResponsesPage, } from "./certificates.js";

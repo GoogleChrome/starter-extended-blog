@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../core/resource.js";
 import { HeadersLike } from "../../internal/headers.js";
 export declare class Webhooks extends APIResource {

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
 import { APIResource } from '../../core/resource';
@@ -139,6 +134,7 @@ export interface CallAcceptParams {
     | (string & {})
     | 'gpt-realtime'
     | 'gpt-realtime-1.5'
+    | 'gpt-realtime-2'
     | 'gpt-realtime-2025-08-28'
     | 'gpt-4o-realtime-preview'
     | 'gpt-4o-realtime-preview-2024-10-01'
@@ -163,10 +159,21 @@ export interface CallAcceptParams {
   output_modalities?: Array<'text' | 'audio'>;
 
   /**
+   * Whether the model may call multiple tools in parallel. Only supported by
+   * reasoning Realtime models such as `gpt-realtime-2`.
+   */
+  parallel_tool_calls?: boolean;
+
+  /**
    * Reference to a prompt template and its variables.
    * [Learn more](https://platform.openai.com/docs/guides/text?api-mode=responses#reusable-prompts).
    */
   prompt?: ResponsesAPI.ResponsePrompt | null;
+
+  /**
+   * Configuration for reasoning-capable Realtime models such as `gpt-realtime-2`.
+   */
+  reasoning?: RealtimeAPI.RealtimeReasoning;
 
   /**
    * How the model chooses tools. Provide one of the string modes or force a specific

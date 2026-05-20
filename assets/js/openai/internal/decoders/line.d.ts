@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export type Bytes = string | ArrayBuffer | Uint8Array | null | undefined;
 /**
  * A re-implementation of httpx's `LineDecoder` in Python that handles incrementally

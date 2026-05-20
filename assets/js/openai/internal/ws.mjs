@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { concatBytes, encodeUTF8 } from "./utils/bytes.mjs";
 function toUint8Array(view) {
     if (view instanceof Uint8Array)

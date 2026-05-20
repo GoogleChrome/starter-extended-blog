@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 "use strict";
 var _LineDecoder_buffer, _LineDecoder_carriageReturnIndex;
 Object.defineProperty(exports, "__esModule", { value: true });

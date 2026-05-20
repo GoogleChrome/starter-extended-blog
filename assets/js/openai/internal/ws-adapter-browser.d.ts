@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { WebSocketLike } from "./ws-adapter.js";
 /** A generic event listener callback. */
 type Listener = (...args: any[]) => void;

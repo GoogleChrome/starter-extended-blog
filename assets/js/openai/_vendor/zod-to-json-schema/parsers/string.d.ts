@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ZodStringDef } from 'zod/v3';
 import { ErrorMessages } from "../errorMessages.js";
 import { Refs } from "../Refs.js";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { setResponseValueAndErrors } from "../errorMessages.mjs";
 export function parseDateDef(def, refs, overrideDateStrategy) {
     const strategy = overrideDateStrategy ?? refs.dateStrategy;

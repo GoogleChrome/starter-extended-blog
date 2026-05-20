@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export function toStrictJsonSchema(schema) {
     if (schema.type !== 'object') {
         throw new Error(`Root schema must have type: 'object' but got type: ${schema.type ? `'${schema.type}'` : 'undefined'}`);

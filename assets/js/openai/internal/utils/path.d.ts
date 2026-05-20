@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Percent-encode everything that isn't safe to have in a path without encoding safe chars.
  *
  * Taken from https://datatracker.ietf.org/doc/html/rfc3986#section-3.3:

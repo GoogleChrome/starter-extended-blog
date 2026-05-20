@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import * as Shims from "../internal/shims.mjs";
 import { SubjectTokenProviderError } from "../core/error.mjs";
 const DEFAULT_RESOURCE = 'https://management.azure.com/';

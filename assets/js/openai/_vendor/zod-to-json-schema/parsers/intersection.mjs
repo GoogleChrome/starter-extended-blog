@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { parseDef } from "../parseDef.mjs";
 const isJsonSchema7AllOfType = (type) => {
     if ('type' in type && type.type === 'string')

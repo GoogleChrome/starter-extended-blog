@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { encode, is_buffer, maybe_map, has } from "./utils.mjs";
 import { default_format, default_formatter, formatters } from "./formats.mjs";
 import { isArray } from "../utils/values.mjs";

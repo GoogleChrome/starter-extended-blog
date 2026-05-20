@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { RFC1738 } from './formats';
 import type { DefaultEncoder, Format } from './types';
 import { isArray } from '../utils/values';

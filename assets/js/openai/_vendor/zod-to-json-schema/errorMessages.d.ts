@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { JsonSchema7TypeUnion } from "./parseDef.js";
 import { Refs } from "./Refs.js";
 export type ErrorMessages<T extends JsonSchema7TypeUnion, OmitProperties extends string = ''> = Partial<Omit<{

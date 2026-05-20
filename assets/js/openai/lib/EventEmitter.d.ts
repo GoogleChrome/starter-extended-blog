@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 type EventListener<Events, EventType extends keyof Events> = Events[EventType];
 export type EventParameters<Events, EventType extends keyof Events> = {
     [Event in EventType]: EventListener<Events, EventType> extends (...args: infer P) => any ? P : never;

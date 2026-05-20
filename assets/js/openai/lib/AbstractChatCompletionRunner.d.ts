@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type OpenAI from "../index.js";
 import type { RequestOptions } from "../internal/request-options.js";
 import type { ChatCompletion, ChatCompletionCreateParams, ChatCompletionMessage, ChatCompletionMessageFunctionToolCall, ChatCompletionMessageParam, ParsedChatCompletion } from "../resources/chat/completions.js";

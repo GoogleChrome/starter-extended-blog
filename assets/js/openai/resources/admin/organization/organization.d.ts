@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../../core/resource.js";
 import * as AdminAPIKeysAPI from "./admin-api-keys.js";
 import { AdminAPIKey, AdminAPIKeyCreateParams, AdminAPIKeyCreateResponse, AdminAPIKeyDeleteResponse, AdminAPIKeyListParams, AdminAPIKeys, AdminAPIKeysPage } from "./admin-api-keys.js";

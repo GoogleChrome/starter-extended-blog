@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { NullableHeaders } from "./headers.js";
 import type { BodyInit } from "./builtin-types.js";
 import { Stream } from "../core/streaming.js";

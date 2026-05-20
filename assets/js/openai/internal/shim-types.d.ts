@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Shims for types that we can't always rely on being available globally.
  *
  * Note: these only exist at the type-level, there is no corresponding runtime

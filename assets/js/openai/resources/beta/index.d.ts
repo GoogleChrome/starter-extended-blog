@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { Assistants, type Assistant, type AssistantDeleted, type AssistantStreamEvent, type AssistantTool, type CodeInterpreterTool, type FileSearchTool, type FunctionTool, type MessageStreamEvent, type RunStepStreamEvent, type RunStreamEvent, type ThreadStreamEvent, type AssistantCreateParams, type AssistantUpdateParams, type AssistantListParams, type AssistantsPage, } from "./assistants.js";
 export { Beta } from "./beta.js";
 export { Realtime } from "./realtime/index.js";

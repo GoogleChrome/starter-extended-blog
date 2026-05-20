@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ZodLiteralDef } from 'zod/v3';
 import { Refs } from "../Refs.js";
 export type JsonSchema7LiteralType = {

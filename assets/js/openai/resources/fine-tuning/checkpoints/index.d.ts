@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export { Checkpoints } from "./checkpoints.js";
 export { Permissions, type PermissionCreateResponse, type PermissionRetrieveResponse, type PermissionListResponse, type PermissionDeleteResponse, type PermissionCreateParams, type PermissionRetrieveParams, type PermissionListParams, type PermissionDeleteParams, type PermissionCreateResponsesPage, type PermissionListResponsesPage, } from "./permissions.js";
 //# sourceMappingURL=index.d.ts.map

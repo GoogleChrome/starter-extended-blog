@@ -1,16 +1,11 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export interface SubjectTokenProvider {
   tokenType: 'jwt' | 'id';
   getToken: () => Promise<string>;
 }
 
 export interface WorkloadIdentity {
-  /**A unique string that identifies the client.*/
-  clientId: string;
+  /**Optional client identifier for token exchange compatibility.*/
+  clientId?: string;
 
   /**Identity provider resource id in WIFAPI.*/
   identityProviderId: string;

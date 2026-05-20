@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { Format } from "./types.js";
 export declare const default_format: Format;
 export declare const default_formatter: (v: PropertyKey) => string;

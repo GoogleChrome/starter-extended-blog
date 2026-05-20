@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 "use strict";
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -72,6 +67,8 @@ const formatRequestDetails = (details) => {
         details.headers = Object.fromEntries((details.headers instanceof Headers ? [...details.headers] : Object.entries(details.headers)).map(([name, value]) => [
             name,
             (name.toLowerCase() === 'authorization' ||
+                name.toLowerCase() === 'api-key' ||
+                name.toLowerCase() === 'x-api-key' ||
                 name.toLowerCase() === 'cookie' ||
                 name.toLowerCase() === 'set-cookie') ?
                 '***'

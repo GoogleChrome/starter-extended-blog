@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { Fetch } from "./builtin-types.js";
 import type { ReadableStream } from "./shim-types.js";
 export declare function getDefaultFetch(): Fetch;

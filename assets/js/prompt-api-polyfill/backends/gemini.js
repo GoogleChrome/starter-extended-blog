@@ -1,9 +1,4 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { n as e, t } from "../chunks/defaults-B5W7MP9T.js";
+import { n as e, t } from "../chunks/defaults-DMD-8IKq.js";
 import { GoogleGenAI as n } from "@google/genai";
 //#region backends/gemini.js
 var r = class extends e {

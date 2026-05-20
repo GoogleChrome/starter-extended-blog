@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { type ChatCompletionAssistantMessageParam, type ChatCompletionMessageParam, type ChatCompletionToolMessageParam } from "../resources.js";
 export declare const isAssistantMessage: (message: ChatCompletionMessageParam | null | undefined) => message is ChatCompletionAssistantMessageParam;
 export declare const isToolMessage: (message: ChatCompletionMessageParam | null | undefined) => message is ChatCompletionToolMessageParam;

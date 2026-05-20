@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { RequestInit } from './internal/builtin-types';
 import type { NullableHeaders } from './internal/headers';
 import { buildHeaders } from './internal/headers';

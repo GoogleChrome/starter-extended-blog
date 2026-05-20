@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../core/resource.js";
 import { APIPromise } from "../core/api-promise.js";
 import { ConversationCursorPage, type ConversationCursorPageParams, PagePromise } from "../core/pagination.js";

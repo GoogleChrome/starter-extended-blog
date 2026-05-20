@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 var _OpenAI_instances, _a, _OpenAI_encoder, _OpenAI_baseURLOverridden;
 import { __classPrivateFieldGet, __classPrivateFieldSet } from "./internal/tslib.mjs";

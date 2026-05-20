@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Most browsers don't yet have async iterable support for ReadableStream,
  * and Node has a very different way of reading bytes from its "ReadableStream".
  *

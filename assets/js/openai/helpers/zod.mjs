@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import * as z4 from 'zod/v4';
 import { makeParseableResponseFormat, makeParseableTextFormat, makeParseableTool, } from "../lib/parser.mjs";
 import { zodToJsonSchema as _zodToJsonSchema } from "../_vendor/zod-to-json-schema/index.mjs";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import OpenAI from "../index.js";
 import { RequestOptions } from "../internal/request-options.js";
 import { type ReadableStream } from "../internal/shim-types.js";

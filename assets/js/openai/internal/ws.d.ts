@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /** Reconnection event passed to the `onReconnecting` handler and event listeners. */
 export interface ReconnectingEvent<Parameters = Record<string, unknown>> {
     /** Which retry attempt this is (1-based). */

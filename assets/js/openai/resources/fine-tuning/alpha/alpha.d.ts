@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { APIResource } from "../../../core/resource.js";
 import * as GradersAPI from "./graders.js";
 import { GraderRunParams, GraderRunResponse, GraderValidateParams, GraderValidateResponse, Graders } from "./graders.js";

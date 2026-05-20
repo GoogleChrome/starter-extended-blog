@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 //#region backends/base.js
 var e = class {
 	constructor(e) {
@@ -34,7 +29,8 @@ var e = class {
 		modelName: "onnx-community/gemma-3-1b-it-ONNX-GQA",
 		device: "webgpu",
 		dtype: "q4f16"
-	}
+	},
+	webllm: { modelName: "Llama-3.2-3B-Instruct-q4f32_1-MLC" }
 };
 //#endregion
 export { e as n, t };

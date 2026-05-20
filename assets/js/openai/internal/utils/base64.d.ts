@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export declare const toBase64: (data: string | Uint8Array | null | undefined) => string;
 export declare const fromBase64: (str: string) => Uint8Array;
 /**

@@ -2,7 +2,7 @@ import { registerVersion } from '@firebase/app';
 export * from '@firebase/app';
 
 var name = "firebase";
-var version = "12.12.1";
+var version = "12.13.0";
 
 /**
  * @license

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { type ChatCompletionRunner } from "./ChatCompletionRunner.js";
 import { type ChatCompletionStreamingRunner } from "./ChatCompletionStreamingRunner.js";
 import { JSONSchema } from "./jsonschema.js";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export type Fetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 /**
  * An alias to the builtin `RequestInit` type so we can

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { DefaultEncoder, Format } from "./types.js";
 export declare let has: (obj: object, key: PropertyKey) => boolean;
 export declare function merge(target: any, source: any, options?: {

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import * as WS from 'ws';
 import { AzureOpenAI, OpenAI } from "../index.js";
 import type { RealtimeClientEvent } from "../resources/realtime/realtime.js";

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { type ReadableStream } from "../internal/shim-types.js";
 import type { OpenAI } from "../client.js";
 export type ServerSentEvent = {

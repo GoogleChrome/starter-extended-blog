@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 function __classPrivateFieldSet(receiver, state, value, kind, f) {
     if (kind === "m")
         throw new TypeError("Private method is not writable");

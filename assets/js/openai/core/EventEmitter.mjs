@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 var _EventEmitter_listeners;
 import { __classPrivateFieldGet } from "../internal/tslib.mjs";
 export class EventEmitter {

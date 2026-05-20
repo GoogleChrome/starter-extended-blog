@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import * as ResponsesAPI from "./responses.js";
 import { OpenAI } from "../../client.js";
 import { EventEmitter } from "../../core/EventEmitter.js";

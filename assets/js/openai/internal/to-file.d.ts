@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import type { FilePropertyBag } from "./builtin-types.js";
 type BlobLikePart = string | ArrayBuffer | ArrayBufferView | BlobLike | DataView;
 /**

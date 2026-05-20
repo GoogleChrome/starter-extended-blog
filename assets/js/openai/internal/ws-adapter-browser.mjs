@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export class BrowserWebSocket {
     constructor(ws) {
         this._listenerMap = new Map();

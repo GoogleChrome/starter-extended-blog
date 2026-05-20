@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export * from "./Options.mjs";
 export * from "./Refs.mjs";
 export * from "./errorMessages.mjs";

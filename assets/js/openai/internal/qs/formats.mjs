@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export const default_format = 'RFC3986';
 export const default_formatter = (v) => String(v);
 export const formatters = {

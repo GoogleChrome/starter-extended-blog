@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 const STR = 0b000000001;
 const NUM = 0b000000010;
 const ARR = 0b000000100;

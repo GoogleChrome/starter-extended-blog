@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Message, Text, ImageFile, TextDelta, MessageDelta } from "../resources/beta/threads/messages.js";
 import { RequestOptions } from "../internal/request-options.js";
 import { Run, RunCreateParamsBase, Runs, RunSubmitToolOutputsParamsBase } from "../resources/beta/threads/runs/runs.js";

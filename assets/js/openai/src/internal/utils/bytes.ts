@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 export function concatBytes(buffers: Uint8Array[]): Uint8Array {
   let length = 0;
   for (const buffer of buffers) {

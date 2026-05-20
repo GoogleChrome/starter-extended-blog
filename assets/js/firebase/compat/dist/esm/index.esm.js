@@ -12,7 +12,7 @@ import '@firebase/performance-compat';
 import '@firebase/remote-config-compat';
 
 var name$1 = "firebase";
-var version$1 = "12.12.1";
+var version$1 = "12.13.0";
 
 /**
  * @license
@@ -33,7 +33,7 @@ var version$1 = "12.12.1";
 firebase.registerVersion(name$1, version$1, 'app-compat');
 
 var name = "firebase";
-var version = "12.12.1";
+var version = "12.13.0";
 
 /**
  * @license

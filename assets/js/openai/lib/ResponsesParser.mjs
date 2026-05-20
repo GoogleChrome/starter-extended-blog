@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { OpenAIError } from "../error.mjs";
 import { isAutoParsableResponseFormat } from "../lib/parser.mjs";
 export function maybeParseResponse(response, params) {

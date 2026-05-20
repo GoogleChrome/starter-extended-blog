@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 //#region async-iterator-polyfill.js
 ReadableStream.prototype[Symbol.asyncIterator] || (ReadableStream.prototype[Symbol.asyncIterator] = async function* () {
 	let e = this.getReader();
@@ -163,6 +158,10 @@ var e = class {
 	{
 		config: "TRANSFORMERS_CONFIG",
 		path: "./backends/transformers.js"
+	},
+	{
+		config: "WEBLLM_CONFIG",
+		path: "./backends/webllm.js"
 	}
 ];
 async function n(e) {
@@ -170,6 +169,7 @@ async function n(e) {
 	if (e === "./backends/gemini.js") return (await import("./backends/gemini.js")).default;
 	if (e === "./backends/openai.js") return (await import("./backends/openai.js")).default;
 	if (e === "./backends/transformers.js") return (await import("./backends/transformers.js")).default;
+	if (e === "./backends/webllm.js") return (await import("./backends/webllm.js")).default;
 	throw Error(`Unknown backend path "${e}"`);
 }
 //#endregion
