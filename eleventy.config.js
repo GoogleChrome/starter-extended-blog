@@ -222,15 +222,18 @@ export default async function (eleventyConfig) {
     return new Date().toISOString();
   });
 
-  eleventyConfig.addTransform('xml-license-header', function (content, outputPath) {
-    if (outputPath && outputPath.endsWith('.xml')) {
-      return content.replace(
-        /^((?:<\?[^?]*\?>\s*)+)/,
-        '$1<!-- Copyright 2026 Google LLC SPDX-License-Identifier: MIT -->\n',
-      );
-    }
-    return content;
-  });
+  eleventyConfig.addTransform(
+    'xml-license-header',
+    function (content, outputPath) {
+      if (outputPath && outputPath.endsWith('.xml')) {
+        return content.replace(
+          /^((?:<\?[^?]*\?>\s*)+)/,
+          '$1<!-- Copyright 2026 Google LLC SPDX-License-Identifier: MIT -->\n',
+        );
+      }
+      return content;
+    },
+  );
 
   // Features to make your build faster (when you need them)
 
@@ -271,5 +274,5 @@ export const config = {
   // it will transform any absolute URLs in your HTML to include this
   // folder name and does **not** affect where things go in the output folder.
 
-  pathPrefix: "/starter-extended-blog/",
+  pathPrefix: '/starter-extended-blog/',
 };
