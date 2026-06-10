@@ -43,7 +43,13 @@ export default async function (eleventyConfig) {
     './node_modules/built-in-ai-task-apis-polyfills/dist/':
       '/assets/js/built-in-ai-task-apis-polyfills/',
     './node_modules/dompurify/dist/': '/assets/js/dompurify/',
-    './node_modules/firebase/': '/assets/js/firebase/',
+    './node_modules/@firebase/app/dist/': '/assets/js/@firebase/app/dist/',
+    './node_modules/@firebase/ai/dist/': '/assets/js/@firebase/ai/dist/',
+    './node_modules/@firebase/app-check/dist/': '/assets/js/@firebase/app-check/dist/',
+    './node_modules/@firebase/component/dist/': '/assets/js/@firebase/component/dist/',
+    './node_modules/@firebase/util/dist/': '/assets/js/@firebase/util/dist/',
+    './node_modules/@firebase/logger/dist/': '/assets/js/@firebase/logger/dist/',
+    './node_modules/idb/build/': '/assets/js/idb/build/',
     './node_modules/input-switch-polyfill/':
       '/assets/js/input-switch-polyfill/',
     './node_modules/jszip/dist/': '/assets/js/jszip/',
