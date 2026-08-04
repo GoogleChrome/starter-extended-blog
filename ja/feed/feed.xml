@@ -5,18 +5,18 @@
   <script src="/assets/js/xslt-polyfill/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <title>記事 - Starter Extended Blog</title>
   <subtitle>I am writing about my experiences as a naval navel-gazer.</subtitle>
-  <link href="https://example.com/ja/feed/feed.xml" rel="self" />
-  <link href="https://example.com/" />
+  <link href="https://example.com/starter-extended-blog/ja/feed/feed.xml" rel="self" />
+  <link href="https://example.com/starter-extended-blog/" />
   <updated>2018-05-01T00:00:00Z</updated>
-  <id>https://example.com/</id>
+  <id>https://example.com/starter-extended-blog/</id>
   <author>
     <name>Jane Doe、John Doe</name>
   </author>
   <entry>
     <title>これは私の最初の投稿です。</title>
-    <link href="https://example.com/ja/blog/firstpost/" />
+    <link href="https://example.com/starter-extended-blog/ja/blog/firstpost/" />
     <updated>2018-05-01T00:00:00Z</updated>
-    <id>https://example.com/ja/blog/firstpost/</id>
+    <id>https://example.com/starter-extended-blog/ja/blog/firstpost/</id>
     <content type="html">&lt;p&gt;ハイレベルな概要に対して堅牢なあらすじを提供するために、アジャイルフレームワークを活用します。企業戦略への反復的なアプローチは、全体的なバリュープロポジションをさらに高めるための協調的な思考を育みます。職場の多様性とエンパワーメントを通じて、破壊的イノベーションの全体的な世界観を有機的に成長させます。&lt;/p&gt;
 &lt;p&gt;積極的な支配を確実にするために、ウィンウィンの生存戦略を提案してください。一日の終わりには、今後、ジェネレーションXから進化した新しいノーマルが、合理化されたクラウドソリューションに向かって滑走路に向かっています。リアルタイムのユーザー生成コンテンツには、オフショアリングのための複数のタッチポイントがあります。&lt;/p&gt;
 &lt;h2 id=&quot;&quot;&gt;セクションヘッダー&lt;/h2&gt;
