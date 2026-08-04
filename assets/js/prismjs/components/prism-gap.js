@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // https://www.gap-system.org/Manuals/doc/ref/chap4.html
 // https://www.gap-system.org/Manuals/doc/ref/chap27.html
 

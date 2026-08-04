@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // based loosely upon: https://github.com/Azure/bicep/blob/main/src/textmate/bicep.tmlanguage
 Prism.languages.bicep = {
 	'comment': [

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.fortran = {
 	'quoted-number': {
 		pattern: /[BOZ](['"])[A-F0-9]+\1/i,

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 (function (Prism) {
 
 	// https://yaml.org/spec/1.2/spec.html#c-ns-anchor-property

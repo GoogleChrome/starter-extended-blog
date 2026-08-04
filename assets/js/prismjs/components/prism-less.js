@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* FIXME :
  :extend() is not handled specifically : its highlighting is buggy.
  Mixin usage must be inside a ruleset to be highlighted.

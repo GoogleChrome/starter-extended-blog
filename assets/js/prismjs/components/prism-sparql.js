@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.sparql = Prism.languages.extend('turtle', {
 	'boolean': /\b(?:false|true)\b/i,
 	'variable': {

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 (function (Prism) {
 
 	// https://mc-stan.org/docs/2_28/reference-manual/bnf-grammars.html

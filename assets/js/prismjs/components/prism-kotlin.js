@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 (function (Prism) {
 	Prism.languages.kotlin = Prism.languages.extend('clike', {
 		'keyword': {

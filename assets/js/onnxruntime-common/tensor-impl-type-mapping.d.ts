@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Tensor } from './tensor.js';
 export type SupportedTypedArrayConstructors = Float32ArrayConstructor | Uint8ArrayConstructor | Int8ArrayConstructor | Uint16ArrayConstructor | Int16ArrayConstructor | Int32ArrayConstructor | BigInt64ArrayConstructor | Uint8ArrayConstructor | Float64ArrayConstructor | Uint32ArrayConstructor | BigUint64ArrayConstructor;
 export type SupportedTypedArray = InstanceType<SupportedTypedArrayConstructors>;

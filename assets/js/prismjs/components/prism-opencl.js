@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 (function (Prism) {
 	/* OpenCL kernel language */
 	Prism.languages.opencl = Prism.languages.extend('c', {

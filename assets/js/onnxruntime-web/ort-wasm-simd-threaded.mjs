@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 async function ortWasmThreaded(moduleArg={}){var moduleRtn;var h=moduleArg,aa=!!globalThis.window,k=!!globalThis.WorkerGlobalScope,m=globalThis.process?.versions?.node&&"renderer"!=globalThis.process?.type,n=k&&self.name?.startsWith("em-pthread");if(m){const {createRequire:a}=await import("module");var require=a(import.meta.url),ba=require("worker_threads");global.Worker=ba.Worker;n=(k=!ba.hc)&&"em-pthread"==ba.workerData}h.mountExternalData=(a,b)=>{a.startsWith("./")&&(a=a.substring(2));(h.Rb||(h.Rb=new Map)).set(a,b)};
 h.unmountExternalData=()=>{delete h.Rb};var SharedArrayBuffer=globalThis.SharedArrayBuffer??(new WebAssembly.Memory({initial:0,maximum:0,shared:!0})).buffer.constructor,ca="./this.program",da=(a,b)=>{throw b;},ea=import.meta.url,fa="",ha,ia;
 if(m){var fs=require("fs");ea.startsWith("file:")&&(fa=require("path").dirname(require("url").fileURLToPath(ea))+"/");ia=a=>{a=ja(a)?new URL(a):a;return fs.readFileSync(a)};ha=async a=>{a=ja(a)?new URL(a):a;return fs.readFileSync(a,void 0)};1<process.argv.length&&(ca=process.argv[1].replace(/\\/g,"/"));process.argv.slice(2);da=(a,b)=>{process.exitCode=a;throw b;}}else if(aa||k){try{fa=(new URL(".",ea)).href}catch{}m||(k&&(ia=a=>{var b=new XMLHttpRequest;b.open("GET",a,!1);b.responseType="arraybuffer";

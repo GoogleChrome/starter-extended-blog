@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable no-misleading-character-class */
 
 // 1C:Enterprise

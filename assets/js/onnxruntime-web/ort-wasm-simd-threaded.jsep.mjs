@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 async function ortWasmThreaded(moduleArg={}){var moduleRtn;var f=moduleArg,aa=!!globalThis.window,ba=!!globalThis.WorkerGlobalScope,h=globalThis.process?.versions?.node&&"renderer"!=globalThis.process?.type,m=ba&&self.name?.startsWith("em-pthread");if(h){const {createRequire:a}=await import("module");var require=a(import.meta.url),ca=require("worker_threads");global.Worker=ca.Worker;m=(ba=!ca.Xd)&&"em-pthread"==ca.workerData}f.mountExternalData=(a,b)=>{a.startsWith("./")&&(a=a.substring(2));(f.Xc||(f.Xc=new Map)).set(a,b)};
 f.unmountExternalData=()=>{delete f.Xc};var SharedArrayBuffer=globalThis.SharedArrayBuffer??(new WebAssembly.Memory({initial:0,maximum:0,shared:!0})).buffer.constructor;const da=a=>async(...b)=>{try{if(f.Yc)throw Error("Session already started");const d=f.Yc={Kd:b[0],errors:[]},c=await a(...b);if(f.Yc!==d)throw Error("Session mismatch");f.dd?.flush();const e=d.errors;if(0<e.length){let g=await Promise.all(e);g=g.filter(k=>k);if(0<g.length)throw Error(g.join("\n"));}return c}finally{f.Yc=null}};
 f.jsepInit=(a,b)=>{if("webgpu"===a){[f.dd,f.Ad,f.Ed,f.ed,f.Dd,f.$b,f.Fd,f.Hd,f.Bd,f.Cd,f.Gd]=b;const d=f.dd;f.jsepRegisterBuffer=(c,e,g,k)=>d.registerBuffer(c,e,g,k);f.jsepGetBuffer=c=>d.getBuffer(c);f.jsepCreateDownloader=(c,e,g)=>d.createDownloader(c,e,g);f.jsepOnCreateSession=c=>{d.onCreateSession(c)};f.jsepOnReleaseSession=c=>{d.onReleaseSession(c)};f.jsepOnRunStart=c=>d.onRunStart(c);f.Id=(c,e)=>{d.upload(c,e)}}else if("webnn"===a){const d=b[0];[f.Wd,f.sd,f.webnnEnsureTensor,f.td,f.webnnDownloadTensor,

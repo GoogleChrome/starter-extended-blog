@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // Test files for the parser itself:
 // https://github.com/JesusFreke/smali/tree/master/smali/src/test/resources/LexerTest
 

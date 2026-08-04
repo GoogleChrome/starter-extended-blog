@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 async function ortWasmThreaded(moduleArg={}){var moduleRtn;var g=moduleArg,aa=!!globalThis.window,ba=!!globalThis.WorkerGlobalScope,l=globalThis.process?.versions?.node&&"renderer"!=globalThis.process?.type,n=ba&&self.name?.startsWith("em-pthread");if(l){const {createRequire:a}=await import("module");var require=a(import.meta.url),ca=require("worker_threads");global.Worker=ca.Worker;n=(ba=!ca.me)&&"em-pthread"==ca.workerData}g.mountExternalData=(a,b)=>{a.startsWith("./")&&(a=a.substring(2));(g.Uc||(g.Uc=new Map)).set(a,b)};
 g.unmountExternalData=()=>{delete g.Uc};var SharedArrayBuffer=globalThis.SharedArrayBuffer??(new WebAssembly.Memory({initial:0,maximum:0,shared:!0})).buffer.constructor;
 let ea=()=>{const a=b=>(...c)=>{const d=q;c=b(...c);return q!=d?da():c};(b=>{for(const c of b)g[c]=a(g[c])})(["_OrtAppendExecutionProvider","_OrtCreateSession","_OrtRun","_OrtRunWithBinding","_OrtBindInput"]);"undefined"!==typeof jsepRunAsync&&(g._OrtRun=jsepRunAsync(g._OrtRun),g._OrtRunWithBinding=jsepRunAsync(g._OrtRunWithBinding));ea=void 0};g.asyncInit=()=>{ea?.()};var fa="./this.program",ha=(a,b)=>{throw b;},ia=import.meta.url,ja="",ka,la;

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // https://qiskit.github.io/openqasm/grammar/index.html
 
 Prism.languages.openqasm = {

@@ -7,8 +7,8 @@
 		<title>Starter Extended Blog</title>
 		<meta name="description" content="I am writing about my experiences as a naval navel-gazer.">
 		<meta name="color-scheme" content="light dark">
-		<link rel="alternate" href="/starter-extended-blog/feed/feed.xml" type="application/atom+xml" title="Starter Extended Blog">
-		<link rel="icon" type="image/svg+xml" href="/starter-extended-blog/assets/img/icon.svg">
+		<link rel="alternate" href="/feed/feed.xml" type="application/atom+xml" title="Starter Extended Blog">
+		<link rel="icon" type="image/svg+xml" href="/assets/img/icon.svg">
 		
 		
 		
@@ -389,23 +389,30 @@ header {
 <script type="importmap">
 {
   "imports": {
-    "prompt-api-polyfill": "/starter-extended-blog/assets/js/prompt-api-polyfill/prompt-api-polyfill.js",
-    "built-in-ai-task-apis-polyfills/": "/starter-extended-blog/assets/js/built-in-ai-task-apis-polyfills/",
+    "prompt-api-polyfill": "/assets/js/prompt-api-polyfill/prompt-api-polyfill.js",
+    "built-in-ai-task-apis-polyfills/": "/assets/js/built-in-ai-task-apis-polyfills/",
 
-    "firebase/app": "/starter-extended-blog/assets/js/firebase/firebase-app.js",
-    "firebase/ai": "/starter-extended-blog/assets/js/firebase/firebase-ai.js",
-    "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js": "/starter-extended-blog/assets/js/firebase/firebase-app.js",
+    "firebase/app": "/assets/js/@firebase/app/dist/esm/index.esm.js",
+    "firebase/app-check": "/assets/js/@firebase/app-check/dist/esm/index.esm.js",
+    "firebase/ai": "/assets/js/@firebase/ai/dist/esm/index.esm.js",
+    "@firebase/app": "/assets/js/@firebase/app/dist/esm/index.esm.js",
+    "@firebase/ai": "/assets/js/@firebase/ai/dist/esm/index.esm.js",
+    "@firebase/app-check": "/assets/js/@firebase/app-check/dist/esm/index.esm.js",
+    "@firebase/component": "/assets/js/@firebase/component/dist/esm/index.esm.js",
+    "@firebase/util": "/assets/js/@firebase/util/dist/index.esm.js",
+    "@firebase/logger": "/assets/js/@firebase/logger/dist/esm/index.esm.js",
+    "idb": "/assets/js/idb/build/index.js",
 
-    "browser-fs-access": "/starter-extended-blog/assets/js/browser-fs-access/index.modern.js",
+    "browser-fs-access": "/assets/js/browser-fs-access/index.modern.js",
 
-    "@google/genai": "/starter-extended-blog/assets/js/google-genai/index.mjs",
-    "openai": "/starter-extended-blog/assets/js/openai/index.mjs",
-    "@huggingface/transformers": "/starter-extended-blog/assets/js/huggingface-transformers/transformers.web.js",
-    "onnxruntime-web/webgpu": "/starter-extended-blog/assets/js/onnxruntime-web/ort.webgpu.mjs",
-    "onnxruntime-common": "/starter-extended-blog/assets/js/onnxruntime-common/index.js",
+    "@google/genai": "/assets/js/google-genai/index.mjs",
+    "openai": "/assets/js/openai/index.mjs",
+    "@huggingface/transformers": "/assets/js/huggingface-transformers/transformers.web.js",
+    "onnxruntime-web/webgpu": "/assets/js/onnxruntime-web/ort.webgpu.mjs",
+    "onnxruntime-common": "/assets/js/onnxruntime-common/index.js",
 
-    "p-retry": "/starter-extended-blog/assets/js/helpers/p-retry-esm.js",
-    "dompurify": "/starter-extended-blog/assets/js/dompurify/purify.es.mjs"
+    "p-retry": "/assets/js/helpers/p-retry-esm.js",
+    "dompurify": "/assets/js/dompurify/purify.es.mjs"
   }
 }
 </script>
@@ -437,10 +444,10 @@ header {
   if (!('switch' in HTMLInputElement.prototype)) {
     const css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = '/starter-extended-blog/assets/js/input-switch-polyfill/input-switch-polyfill.css';
+    css.href = '/assets/js/input-switch-polyfill/input-switch-polyfill.css';
     document.head.append(css);
 
-    await import('/starter-extended-blog/assets/js/input-switch-polyfill/input-switch-polyfill.js');
+    await import('/assets/js/input-switch-polyfill/input-switch-polyfill.js');
   } else {
     document.head.insertAdjacentHTML(
       'beforeend',
@@ -449,21 +456,21 @@ header {
   }
 </script>
 
-<link rel="stylesheet" href="/starter-extended-blog/assets/css/create-post.css">
-<link rel="stylesheet" href="/starter-extended-blog/assets/js/prismjs/themes/prism-okaidia.css">
-<link rel="manifest" href="/starter-extended-blog/en/blog/admin/manifest.json">
+<link rel="stylesheet" href="/assets/css/create-post.css">
+<link rel="stylesheet" href="/assets/js/prismjs/themes/prism-okaidia.css">
+<link rel="manifest" href="/en/blog/admin/manifest.json">
 
-<script src="/starter-extended-blog/assets/js/marked/marked.umd.js"></script>
-<script src="/starter-extended-blog/assets/js/prismjs/prism.js"></script>
-<script src="/starter-extended-blog/assets/js/turndown/turndown.js"></script>
-<script src="/starter-extended-blog/assets/js/jszip/jszip.js"></script>
+<script src="/assets/js/marked/marked.umd.js"></script>
+<script src="/assets/js/prismjs/prism.js"></script>
+<script src="/assets/js/turndown/turndown.js"></script>
+<script src="/assets/js/jszip/jszip.js"></script>
 
-<script type="module" src="/starter-extended-blog/assets/js/editor/create-post.js"></script>
+<script type="module" src="/assets/js/editor/create-post.js"></script>
 
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/starter-extended-blog/en/blog/admin/sw.js', { scope: '/starter-extended-blog/en/blog/admin/' });
+      navigator.serviceWorker.register('/en/blog/admin/sw.js', { scope: '/en/blog/admin/' });
     });
   }
 
@@ -521,13 +528,13 @@ header {
 		<a href="#main" id="skip-link" class="visually-hidden">Saltar al contenido principal</a>
 
 		<header>
-			<a href="/starter-extended-blog/es-ES/" class="home-link">Starter Extended Blog</a>
+			<a href="/es-ES/" class="home-link">Starter Extended Blog</a>
 			<nav>
 				<h2 class="visually-hidden" id="menu-de-navegacion-de-nivel-superior">Menú de navegación de nivel superior</h2>
 				<ul class="nav">
-					<li class="nav-item"><a href="/starter-extended-blog/es-ES/blog/">Archivo</a></li>
-					<li class="nav-item"><a href="/starter-extended-blog/es-ES/feed/feed.xml">Feed</a></li>
-					<li class="nav-item admin-only" style="display: none;"><a href="/starter-extended-blog/es-ES/blog/admin/" aria-current="page">Admin</a></li>
+					<li class="nav-item"><a href="/es-ES/blog/">Archivo</a></li>
+					<li class="nav-item"><a href="/es-ES/feed/feed.xml">Feed</a></li>
+					<li class="nav-item admin-only" style="display: none;"><a href="/es-ES/blog/admin/" aria-current="page">Admin</a></li>
 					
 <li class="nav-item admin-only" id="install-item" style="display: none;"><button id="install-button" class="btn">Install</button></li>
 
@@ -849,8 +856,8 @@ header {
 
 		<footer>
 			<div id="search" style="margin: 1rem 0;"></div>
-			<link href="/starter-extended-blog/pagefind/pagefind-ui.css" rel="stylesheet">
-			<script src="/starter-extended-blog/pagefind/pagefind-ui.js"></script>
+			<link href="/pagefind/pagefind-ui.css" rel="stylesheet">
+			<script src="/pagefind/pagefind-ui.js"></script>
 			
 			<p>
 				<em>Construido con <a href="https://www.11ty.dev/">Eleventy v4.0.0</a></em>
@@ -876,8 +883,8 @@ header {
 			</form>
 		</footer>
 
-		<!-- This page `/es-ES/blog/admin/` was built on 2026-05-20T14:25:59.465Z -->
-		<script type="module" src="/starter-extended-blog/assets/js/bundles/A1TIfLXAKG.js"></script>
+		<!-- This page `/es-ES/blog/admin/` was built on 2026-08-04T15:22:43.409Z -->
+		<script type="module" src="/assets/js/bundles/-OxbAfPyDY.js"></script>
 		
 	</body>
 </html>

@@ -1,7 +1,2 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-import { t as e } from "./rewriter-api-polyfill-C6veC4AM.js";
+import { t as e } from "./rewriter-api-polyfill-39h934rg.js";
 export { e as Rewriter };

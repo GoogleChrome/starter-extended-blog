@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // ABNF grammar:
 // https://github.com/dhall-lang/dhall-lang/blob/master/standard/dhall.abnf
 

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.gedcom = {
 	'line-value': {
 		// Preceded by level, optional pointer, and tag

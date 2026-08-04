@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.aspnet = Prism.languages.extend('markup', {
 	'page-directive': {
 		pattern: /<%\s*@.*%>/,

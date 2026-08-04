@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.basic = {
 	'comment': {
 		pattern: /(?:!|REM\b).+/i,

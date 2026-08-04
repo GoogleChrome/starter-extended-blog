@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 (async () => {
   // Feature Detection
   // If the browser prototype has the 'switch' property, we trust native support.

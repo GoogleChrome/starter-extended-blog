@@ -586,6 +586,26 @@ function videoFromVertex$1(fromObject) {
  * Copyright 2025 Google LLC
  * SPDX-License-Identifier: Apache-2.0
  */
+/** Outcome of the code execution. */
+var Outcome;
+(function (Outcome) {
+    /**
+     * Unspecified status. This value should not be used.
+     */
+    Outcome["OUTCOME_UNSPECIFIED"] = "OUTCOME_UNSPECIFIED";
+    /**
+     * Code execution completed successfully. `output` contains the stdout, if any.
+     */
+    Outcome["OUTCOME_OK"] = "OUTCOME_OK";
+    /**
+     * Code execution failed. `output` contains the stderr and stdout, if any.
+     */
+    Outcome["OUTCOME_FAILED"] = "OUTCOME_FAILED";
+    /**
+     * Code execution ran for too long, and was cancelled. There may or may not be a partial `output` present.
+     */
+    Outcome["OUTCOME_DEADLINE_EXCEEDED"] = "OUTCOME_DEADLINE_EXCEEDED";
+})(Outcome || (Outcome = {}));
 /** Programming language of the `code`. */
 var Language;
 (function (Language) {
@@ -598,27 +618,7 @@ var Language;
      */
     Language["PYTHON"] = "PYTHON";
 })(Language || (Language = {}));
-/** Outcome of the code execution. */
-var Outcome;
-(function (Outcome) {
-    /**
-     * Unspecified status. This value should not be used.
-     */
-    Outcome["OUTCOME_UNSPECIFIED"] = "OUTCOME_UNSPECIFIED";
-    /**
-     * Code execution completed successfully.
-     */
-    Outcome["OUTCOME_OK"] = "OUTCOME_OK";
-    /**
-     * Code execution finished but with a failure. `stderr` should contain the reason.
-     */
-    Outcome["OUTCOME_FAILED"] = "OUTCOME_FAILED";
-    /**
-     * Code execution ran for too long, and was cancelled. There may or may not be a partial output present.
-     */
-    Outcome["OUTCOME_DEADLINE_EXCEEDED"] = "OUTCOME_DEADLINE_EXCEEDED";
-})(Outcome || (Outcome = {}));
-/** Specifies how the response should be scheduled in the conversation. */
+/** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
 var FunctionResponseScheduling;
 (function (FunctionResponseScheduling) {
     /**
@@ -685,6 +685,14 @@ var Environment;
      * Operates in a web browser.
      */
     Environment["ENVIRONMENT_BROWSER"] = "ENVIRONMENT_BROWSER";
+    /**
+     * Operates in a mobile environment.
+     */
+    Environment["ENVIRONMENT_MOBILE"] = "ENVIRONMENT_MOBILE";
+    /**
+     * Operates in a desktop environment.
+     */
+    Environment["ENVIRONMENT_DESKTOP"] = "ENVIRONMENT_DESKTOP";
 })(Environment || (Environment = {}));
 /** Type of auth scheme. This enum is not supported in Gemini API. */
 var AuthType;
@@ -816,30 +824,6 @@ var DynamicRetrievalConfigMode;
      */
     DynamicRetrievalConfigMode["MODE_DYNAMIC"] = "MODE_DYNAMIC";
 })(DynamicRetrievalConfigMode || (DynamicRetrievalConfigMode = {}));
-/** Function calling mode. */
-var FunctionCallingConfigMode;
-(function (FunctionCallingConfigMode) {
-    /**
-     * Unspecified function calling mode. This value should not be used.
-     */
-    FunctionCallingConfigMode["MODE_UNSPECIFIED"] = "MODE_UNSPECIFIED";
-    /**
-     * Default model behavior, model decides to predict either function calls or natural language response.
-     */
-    FunctionCallingConfigMode["AUTO"] = "AUTO";
-    /**
-     * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
-     */
-    FunctionCallingConfigMode["ANY"] = "ANY";
-    /**
-     * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
-     */
-    FunctionCallingConfigMode["NONE"] = "NONE";
-    /**
-     * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
-     */
-    FunctionCallingConfigMode["VALIDATED"] = "VALIDATED";
-})(FunctionCallingConfigMode || (FunctionCallingConfigMode = {}));
 /** The number of thoughts tokens that the model should generate. */
 var ThinkingLevel;
 (function (ThinkingLevel) {
@@ -988,6 +972,30 @@ var HarmBlockThreshold;
      */
     HarmBlockThreshold["OFF"] = "OFF";
 })(HarmBlockThreshold || (HarmBlockThreshold = {}));
+/** Function calling mode. */
+var FunctionCallingConfigMode;
+(function (FunctionCallingConfigMode) {
+    /**
+     * Unspecified function calling mode. This value should not be used.
+     */
+    FunctionCallingConfigMode["MODE_UNSPECIFIED"] = "MODE_UNSPECIFIED";
+    /**
+     * Default model behavior, model decides to predict either function calls or natural language response.
+     */
+    FunctionCallingConfigMode["AUTO"] = "AUTO";
+    /**
+     * Model is constrained to always predicting function calls only. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+     */
+    FunctionCallingConfigMode["ANY"] = "ANY";
+    /**
+     * Model will not predict any function calls. Model behavior is same as when not passing any function declarations.
+     */
+    FunctionCallingConfigMode["NONE"] = "NONE";
+    /**
+     * Model is constrained to predict either function calls or natural language response. If "allowed_function_names" are set, the predicted function calls will be limited to any one of "allowed_function_names", else the predicted function calls will be any one of the provided "function_declarations".
+     */
+    FunctionCallingConfigMode["VALIDATED"] = "VALIDATED";
+})(FunctionCallingConfigMode || (FunctionCallingConfigMode = {}));
 /** Output only. The reason why the model stopped generating tokens.
 
 If empty, the model has not stopped generating the tokens. */
@@ -1470,7 +1478,23 @@ var PairwiseChoice;
      */
     PairwiseChoice["TIE"] = "TIE";
 })(PairwiseChoice || (PairwiseChoice = {}));
-/** The tuning task. Either I2V or T2V. This enum is not supported in Gemini API. */
+/** The speed of the tuning job. Only supported for Veo 3.0 models. This enum is not supported in Gemini API. */
+var TuningSpeed;
+(function (TuningSpeed) {
+    /**
+     * The default / unset value. For Veo 3.0 models, this defaults to FAST.
+     */
+    TuningSpeed["TUNING_SPEED_UNSPECIFIED"] = "TUNING_SPEED_UNSPECIFIED";
+    /**
+     * Regular tuning speed.
+     */
+    TuningSpeed["REGULAR"] = "REGULAR";
+    /**
+     * Fast tuning speed.
+     */
+    TuningSpeed["FAST"] = "FAST";
+})(TuningSpeed || (TuningSpeed = {}));
+/** The tuning task for Veo. This enum is not supported in Gemini API. */
 var TuningTask;
 (function (TuningTask) {
     /**
@@ -1490,6 +1514,22 @@ var TuningTask;
      */
     TuningTask["TUNING_TASK_R2V"] = "TUNING_TASK_R2V";
 })(TuningTask || (TuningTask = {}));
+/** The orientation of the video. Defaults to LANDSCAPE. This enum is not supported in Gemini API. */
+var VideoOrientation;
+(function (VideoOrientation) {
+    /**
+     * Unspecified video orientation. Defaults to landscape.
+     */
+    VideoOrientation["VIDEO_ORIENTATION_UNSPECIFIED"] = "VIDEO_ORIENTATION_UNSPECIFIED";
+    /**
+     * Landscape orientation (e.g. 16:9, 1280x720).
+     */
+    VideoOrientation["LANDSCAPE"] = "LANDSCAPE";
+    /**
+     * Portrait orientation (e.g. 9:16, 720x1280).
+     */
+    VideoOrientation["PORTRAIT"] = "PORTRAIT";
+})(VideoOrientation || (VideoOrientation = {}));
 /** Output only. Current state of the `Document`. This enum is not supported in Vertex AI. */
 var DocumentState;
 (function (DocumentState) {
@@ -1774,6 +1814,58 @@ var ImageResizeMode;
      */
     ImageResizeMode["PAD"] = "PAD";
 })(ImageResizeMode || (ImageResizeMode = {}));
+/** Defines how to parse sample response. */
+var ResponseParseType;
+(function (ResponseParseType) {
+    /**
+     * Default value. This value is unused.
+     */
+    ResponseParseType["RESPONSE_PARSE_TYPE_UNSPECIFIED"] = "RESPONSE_PARSE_TYPE_UNSPECIFIED";
+    /**
+     * Use the sample response as is.
+     */
+    ResponseParseType["IDENTITY"] = "IDENTITY";
+    /**
+     * Use regex to extract the important part of sample response.
+     */
+    ResponseParseType["REGEX_EXTRACT"] = "REGEX_EXTRACT";
+})(ResponseParseType || (ResponseParseType = {}));
+/** Match operation to use for evaluation. */
+var MatchOperation;
+(function (MatchOperation) {
+    /**
+     * Default value. This value is unused.
+     */
+    MatchOperation["MATCH_OPERATION_UNSPECIFIED"] = "MATCH_OPERATION_UNSPECIFIED";
+    /**
+     * Equivalent to GoogleSQL `REGEX_CONTAINS(target, expression)`.
+     */
+    MatchOperation["REGEX_CONTAINS"] = "REGEX_CONTAINS";
+    /**
+     * `expression` is a substring of target.
+     */
+    MatchOperation["PARTIAL_MATCH"] = "PARTIAL_MATCH";
+    /**
+     * `expression` is an exact match of target.
+     */
+    MatchOperation["EXACT_MATCH"] = "EXACT_MATCH";
+})(MatchOperation || (MatchOperation = {}));
+/** Represents how much to think for the tuning job. */
+var ReinforcementTuningThinkingLevel;
+(function (ReinforcementTuningThinkingLevel) {
+    /**
+     * Unspecified thinking level.
+     */
+    ReinforcementTuningThinkingLevel["REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED"] = "REINFORCEMENT_TUNING_THINKING_LEVEL_UNSPECIFIED";
+    /**
+     * Little to no thinking.
+     */
+    ReinforcementTuningThinkingLevel["MINIMAL"] = "MINIMAL";
+    /**
+     * High thinking level.
+     */
+    ReinforcementTuningThinkingLevel["HIGH"] = "HIGH";
+})(ReinforcementTuningThinkingLevel || (ReinforcementTuningThinkingLevel = {}));
 /** Enum representing the tuning method. */
 var TuningMethod;
 (function (TuningMethod) {
@@ -1789,6 +1881,10 @@ var TuningMethod;
      * Distillation tuning.
      */
     TuningMethod["DISTILLATION"] = "DISTILLATION";
+    /**
+     * Reinforcement tuning.
+     */
+    TuningMethod["REINFORCEMENT_TUNING"] = "REINFORCEMENT_TUNING";
 })(TuningMethod || (TuningMethod = {}));
 /** State for the lifecycle of a File. */
 var FileState;
@@ -2163,24 +2259,13 @@ the API in a subsequent turn within a `Content` message, along with the
 corresponding `ToolCall`. */
 class ToolResponse {
 }
-/** Raw media bytes for function response.
-
-Text should not be sent as raw bytes, use the FunctionResponse.response
-field. */
+/** Raw media bytes for function response. Text should not be sent as raw bytes, use the 'text' field. */
 class FunctionResponseBlob {
 }
-/** URI based data for function response. */
+/** URI based data for function response. This data type is not supported in Gemini API. */
 class FunctionResponseFileData {
 }
-/** A datatype containing media that is part of a `FunctionResponse` message.
-
-A `FunctionResponsePart` consists of data which has an associated datatype. A
-`FunctionResponsePart` can only contain one of the accepted types in
-`FunctionResponsePart.data`.
-
-A `FunctionResponsePart` must have a fixed IANA MIME type identifying the
-type and subtype of the media if the `inline_data` field is filled with raw
-bytes. */
+/** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
 class FunctionResponsePart {
 }
 /**
@@ -2205,7 +2290,7 @@ function createFunctionResponsePartFromUri(uri, mimeType) {
         },
     };
 }
-/** A function response. */
+/** The result output from a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model. This should contain the result of a `FunctionCall` made based on model prediction. */
 class FunctionResponse {
 }
 /**
@@ -2633,6 +2718,12 @@ class GenerateVideosOperation {
         return operation;
     }
 }
+/** Defines how to parse sample response for reinforcement tuning. */
+class ReinforcementTuningParseResponseConfig {
+}
+/** Scores responses by directly converting parsed autorater response to float reward (reward is clipped to be within [-1, 1]). */
+class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {
+}
 /** The results from an evaluation run performed by the EvaluationService. This data type is not supported in Gemini API. */
 class EvaluateDatasetResponse {
 }
@@ -2641,6 +2732,12 @@ class ListTuningJobsResponse {
 }
 /** Empty response for tunings.cancel method. */
 class CancelTuningJobResponse {
+}
+/** Response for the validate_reward method.
+
+Contains the computed reward for a reinforcement tuning reward
+configuration. */
+class ValidateRewardResponse {
 }
 /** Empty response for caches.delete method. */
 class DeleteCachedContentResponse {
@@ -5110,6 +5207,7 @@ var PagedItem;
     PagedItem["PAGED_ITEM_CACHED_CONTENTS"] = "cachedContents";
     PagedItem["PAGED_ITEM_FILE_SEARCH_STORES"] = "fileSearchStores";
     PagedItem["PAGED_ITEM_DOCUMENTS"] = "documents";
+    PagedItem["PAGED_ITEM_SKILLS"] = "skills";
 })(PagedItem || (PagedItem = {}));
 /**
  * Pager class for iterating through paginated results.
@@ -5830,6 +5928,21 @@ function blobToMldev$3(fromObject) {
     }
     return toObject;
 }
+function codeExecutionResultToVertex$3(fromObject) {
+    const toObject = {};
+    const fromOutcome = getValueByPath(fromObject, ['outcome']);
+    if (fromOutcome != null) {
+        setValueByPath(toObject, ['outcome'], fromOutcome);
+    }
+    const fromOutput = getValueByPath(fromObject, ['output']);
+    if (fromOutput != null) {
+        setValueByPath(toObject, ['output'], fromOutput);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function contentToMldev$3(fromObject) {
     const toObject = {};
     const fromParts = getValueByPath(fromObject, ['parts']);
@@ -5848,14 +5961,14 @@ function contentToMldev$3(fromObject) {
     }
     return toObject;
 }
-function contentToVertex$2(fromObject) {
+function contentToVertex$3(fromObject) {
     const toObject = {};
     const fromParts = getValueByPath(fromObject, ['parts']);
     if (fromParts != null) {
         let transformedList = fromParts;
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return partToVertex$2(item);
+                return partToVertex$3(item);
             });
         }
         setValueByPath(toObject, ['parts'], transformedList);
@@ -5934,7 +6047,7 @@ function createCachedContentConfigToVertex(fromObject, parentObject) {
         let transformedList = tContents(fromContents);
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return contentToVertex$2(item);
+                return contentToVertex$3(item);
             });
         }
         setValueByPath(parentObject, ['contents'], transformedList);
@@ -5943,7 +6056,7 @@ function createCachedContentConfigToVertex(fromObject, parentObject) {
         'systemInstruction',
     ]);
     if (parentObject !== undefined && fromSystemInstruction != null) {
-        setValueByPath(parentObject, ['systemInstruction'], contentToVertex$2(tContent(fromSystemInstruction)));
+        setValueByPath(parentObject, ['systemInstruction'], contentToVertex$3(tContent(fromSystemInstruction)));
     }
     const fromTools = getValueByPath(fromObject, ['tools']);
     if (parentObject !== undefined && fromTools != null) {
@@ -6022,6 +6135,21 @@ function deleteCachedContentResponseFromVertex(fromObject) {
     ]);
     if (fromSdkHttpResponse != null) {
         setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    return toObject;
+}
+function executableCodeToVertex$3(fromObject) {
+    const toObject = {};
+    const fromCode = getValueByPath(fromObject, ['code']);
+    if (fromCode != null) {
+        setValueByPath(toObject, ['code'], fromCode);
+    }
+    const fromLanguage = getValueByPath(fromObject, ['language']);
+    if (fromLanguage != null) {
+        setValueByPath(toObject, ['language'], fromLanguage);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
     }
     return toObject;
 }
@@ -6224,6 +6352,16 @@ function listCachedContentsResponseFromVertex(fromObject) {
     }
     return toObject;
 }
+function mcpServerToVertex$2(fromObject) {
+    const toObject = {};
+    if (getValueByPath(fromObject, ['name']) !== undefined) {
+        throw new Error('name parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    if (getValueByPath(fromObject, ['streamableHttpTransport']) !== undefined) {
+        throw new Error('streamableHttpTransport parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function partToMldev$3(fromObject) {
     const toObject = {};
     const fromMediaResolution = getValueByPath(fromObject, [
@@ -6296,7 +6434,7 @@ function partToMldev$3(fromObject) {
     }
     return toObject;
 }
-function partToVertex$2(fromObject) {
+function partToVertex$3(fromObject) {
     const toObject = {};
     const fromMediaResolution = getValueByPath(fromObject, [
         'mediaResolution',
@@ -6308,13 +6446,13 @@ function partToVertex$2(fromObject) {
         'codeExecutionResult',
     ]);
     if (fromCodeExecutionResult != null) {
-        setValueByPath(toObject, ['codeExecutionResult'], fromCodeExecutionResult);
+        setValueByPath(toObject, ['codeExecutionResult'], codeExecutionResultToVertex$3(fromCodeExecutionResult));
     }
     const fromExecutableCode = getValueByPath(fromObject, [
         'executableCode',
     ]);
     if (fromExecutableCode != null) {
-        setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+        setValueByPath(toObject, ['executableCode'], executableCodeToVertex$3(fromExecutableCode));
     }
     const fromFileData = getValueByPath(fromObject, ['fileData']);
     if (fromFileData != null) {
@@ -6533,8 +6671,15 @@ function toolToVertex$2(fromObject) {
     if (fromUrlContext != null) {
         setValueByPath(toObject, ['urlContext'], fromUrlContext);
     }
-    if (getValueByPath(fromObject, ['mcpServers']) !== undefined) {
-        throw new Error('mcpServers parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    const fromMcpServers = getValueByPath(fromObject, ['mcpServers']);
+    if (fromMcpServers != null) {
+        let transformedList = fromMcpServers;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return mcpServerToVertex$2(item);
+            });
+        }
+        setValueByPath(toObject, ['mcpServers'], transformedList);
     }
     return toObject;
 }
@@ -7872,6 +8017,21 @@ function blobToMldev$2(fromObject) {
     }
     return toObject;
 }
+function codeExecutionResultToVertex$2(fromObject) {
+    const toObject = {};
+    const fromOutcome = getValueByPath(fromObject, ['outcome']);
+    if (fromOutcome != null) {
+        setValueByPath(toObject, ['outcome'], fromOutcome);
+    }
+    const fromOutput = getValueByPath(fromObject, ['output']);
+    if (fromOutput != null) {
+        setValueByPath(toObject, ['output'], fromOutput);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function contentToMldev$2(fromObject) {
     const toObject = {};
     const fromParts = getValueByPath(fromObject, ['parts']);
@@ -7890,14 +8050,14 @@ function contentToMldev$2(fromObject) {
     }
     return toObject;
 }
-function contentToVertex$1(fromObject) {
+function contentToVertex$2(fromObject) {
     const toObject = {};
     const fromParts = getValueByPath(fromObject, ['parts']);
     if (fromParts != null) {
         let transformedList = fromParts;
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return partToVertex$1(item);
+                return partToVertex$2(item);
             });
         }
         setValueByPath(toObject, ['parts'], transformedList);
@@ -7905,6 +8065,21 @@ function contentToVertex$1(fromObject) {
     const fromRole = getValueByPath(fromObject, ['role']);
     if (fromRole != null) {
         setValueByPath(toObject, ['role'], fromRole);
+    }
+    return toObject;
+}
+function executableCodeToVertex$2(fromObject) {
+    const toObject = {};
+    const fromCode = getValueByPath(fromObject, ['code']);
+    if (fromCode != null) {
+        setValueByPath(toObject, ['code'], fromCode);
+    }
+    const fromLanguage = getValueByPath(fromObject, ['language']);
+    if (fromLanguage != null) {
+        setValueByPath(toObject, ['language'], fromLanguage);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
     }
     return toObject;
 }
@@ -8232,11 +8407,11 @@ function liveConnectConfigToMldev$1(fromObject, parentObject) {
         }
         setValueByPath(parentObject, ['setup', 'safetySettings'], transformedList);
     }
-    const fromStreamTranslationConfig = getValueByPath(fromObject, [
-        'streamTranslationConfig',
+    const fromTranslationConfig = getValueByPath(fromObject, [
+        'translationConfig',
     ]);
-    if (parentObject !== undefined && fromStreamTranslationConfig != null) {
-        setValueByPath(parentObject, ['setup', 'generationConfig', 'streamTranslationConfig'], fromStreamTranslationConfig);
+    if (parentObject !== undefined && fromTranslationConfig != null) {
+        setValueByPath(parentObject, ['setup', 'generationConfig', 'translationConfig'], fromTranslationConfig);
     }
     return toObject;
 }
@@ -8302,7 +8477,7 @@ function liveConnectConfigToVertex(fromObject, parentObject) {
         'systemInstruction',
     ]);
     if (parentObject !== undefined && fromSystemInstruction != null) {
-        setValueByPath(parentObject, ['setup', 'systemInstruction'], contentToVertex$1(tContent(fromSystemInstruction)));
+        setValueByPath(parentObject, ['setup', 'systemInstruction'], contentToVertex$2(tContent(fromSystemInstruction)));
     }
     const fromTools = getValueByPath(fromObject, ['tools']);
     if (parentObject !== undefined && fromTools != null) {
@@ -8370,8 +8545,8 @@ function liveConnectConfigToVertex(fromObject, parentObject) {
         }
         setValueByPath(parentObject, ['setup', 'safetySettings'], transformedList);
     }
-    if (getValueByPath(fromObject, ['streamTranslationConfig']) !== undefined) {
-        throw new Error('streamTranslationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    if (getValueByPath(fromObject, ['translationConfig']) !== undefined) {
+        throw new Error('translationConfig parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
     }
     return toObject;
 }
@@ -8563,6 +8738,16 @@ function liveServerMessageFromVertex(fromObject) {
     }
     return toObject;
 }
+function mcpServerToVertex$1(fromObject) {
+    const toObject = {};
+    if (getValueByPath(fromObject, ['name']) !== undefined) {
+        throw new Error('name parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    if (getValueByPath(fromObject, ['streamableHttpTransport']) !== undefined) {
+        throw new Error('streamableHttpTransport parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function partToMldev$2(fromObject) {
     const toObject = {};
     const fromMediaResolution = getValueByPath(fromObject, [
@@ -8635,7 +8820,7 @@ function partToMldev$2(fromObject) {
     }
     return toObject;
 }
-function partToVertex$1(fromObject) {
+function partToVertex$2(fromObject) {
     const toObject = {};
     const fromMediaResolution = getValueByPath(fromObject, [
         'mediaResolution',
@@ -8647,13 +8832,13 @@ function partToVertex$1(fromObject) {
         'codeExecutionResult',
     ]);
     if (fromCodeExecutionResult != null) {
-        setValueByPath(toObject, ['codeExecutionResult'], fromCodeExecutionResult);
+        setValueByPath(toObject, ['codeExecutionResult'], codeExecutionResultToVertex$2(fromCodeExecutionResult));
     }
     const fromExecutableCode = getValueByPath(fromObject, [
         'executableCode',
     ]);
     if (fromExecutableCode != null) {
-        setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+        setValueByPath(toObject, ['executableCode'], executableCodeToVertex$2(fromExecutableCode));
     }
     const fromFileData = getValueByPath(fromObject, ['fileData']);
     if (fromFileData != null) {
@@ -8858,8 +9043,15 @@ function toolToVertex$1(fromObject) {
     if (fromUrlContext != null) {
         setValueByPath(toObject, ['urlContext'], fromUrlContext);
     }
-    if (getValueByPath(fromObject, ['mcpServers']) !== undefined) {
-        throw new Error('mcpServers parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    const fromMcpServers = getValueByPath(fromObject, ['mcpServers']);
+    if (fromMcpServers != null) {
+        let transformedList = fromMcpServers;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return mcpServerToVertex$1(item);
+            });
+        }
+        setValueByPath(toObject, ['mcpServers'], transformedList);
     }
     return toObject;
 }
@@ -9085,6 +9277,21 @@ function citationMetadataFromMldev(fromObject, _rootObject) {
     }
     return toObject;
 }
+function codeExecutionResultToVertex$1(fromObject, _rootObject) {
+    const toObject = {};
+    const fromOutcome = getValueByPath(fromObject, ['outcome']);
+    if (fromOutcome != null) {
+        setValueByPath(toObject, ['outcome'], fromOutcome);
+    }
+    const fromOutput = getValueByPath(fromObject, ['output']);
+    if (fromOutput != null) {
+        setValueByPath(toObject, ['output'], fromOutput);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function computeTokensParametersToVertex(apiClient, fromObject, rootObject) {
     const toObject = {};
     const fromModel = getValueByPath(fromObject, ['model']);
@@ -9096,7 +9303,7 @@ function computeTokensParametersToVertex(apiClient, fromObject, rootObject) {
         let transformedList = tContents(fromContents);
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return contentToVertex(item);
+                return contentToVertex$1(item);
             });
         }
         setValueByPath(toObject, ['contents'], transformedList);
@@ -9165,14 +9372,14 @@ function contentToMldev$1(fromObject, rootObject) {
     }
     return toObject;
 }
-function contentToVertex(fromObject, rootObject) {
+function contentToVertex$1(fromObject, rootObject) {
     const toObject = {};
     const fromParts = getValueByPath(fromObject, ['parts']);
     if (fromParts != null) {
         let transformedList = fromParts;
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return partToVertex(item);
+                return partToVertex$1(item);
             });
         }
         setValueByPath(toObject, ['parts'], transformedList);
@@ -9216,7 +9423,7 @@ function countTokensConfigToVertex(fromObject, parentObject, rootObject) {
         'systemInstruction',
     ]);
     if (parentObject !== undefined && fromSystemInstruction != null) {
-        setValueByPath(parentObject, ['systemInstruction'], contentToVertex(tContent(fromSystemInstruction)));
+        setValueByPath(parentObject, ['systemInstruction'], contentToVertex$1(tContent(fromSystemInstruction)));
     }
     const fromTools = getValueByPath(fromObject, ['tools']);
     if (parentObject !== undefined && fromTools != null) {
@@ -9269,7 +9476,7 @@ function countTokensParametersToVertex(apiClient, fromObject, rootObject) {
         let transformedList = tContents(fromContents);
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return contentToVertex(item);
+                return contentToVertex$1(item);
             });
         }
         setValueByPath(toObject, ['contents'], transformedList);
@@ -9705,7 +9912,7 @@ function embedContentParametersPrivateToVertex(apiClient, fromObject, rootObject
     if (discriminatorContent === 'EMBED_CONTENT') {
         const fromContent = getValueByPath(fromObject, ['content']);
         if (fromContent != null) {
-            setValueByPath(toObject, ['content'], contentToVertex(tContent(fromContent)));
+            setValueByPath(toObject, ['content'], contentToVertex$1(tContent(fromContent)));
         }
     }
     const fromConfig = getValueByPath(fromObject, ['config']);
@@ -9794,6 +10001,21 @@ function endpointFromVertex(fromObject, _rootObject) {
     ]);
     if (fromDeployedModelId != null) {
         setValueByPath(toObject, ['deployedModelId'], fromDeployedModelId);
+    }
+    return toObject;
+}
+function executableCodeToVertex$1(fromObject, _rootObject) {
+    const toObject = {};
+    const fromCode = getValueByPath(fromObject, ['code']);
+    if (fromCode != null) {
+        setValueByPath(toObject, ['code'], fromCode);
+    }
+    const fromLanguage = getValueByPath(fromObject, ['language']);
+    if (fromLanguage != null) {
+        setValueByPath(toObject, ['language'], fromLanguage);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
     }
     return toObject;
 }
@@ -10025,7 +10247,7 @@ function generateContentConfigToVertex(apiClient, fromObject, parentObject, root
         'systemInstruction',
     ]);
     if (parentObject !== undefined && fromSystemInstruction != null) {
-        setValueByPath(parentObject, ['systemInstruction'], contentToVertex(tContent(fromSystemInstruction)));
+        setValueByPath(parentObject, ['systemInstruction'], contentToVertex$1(tContent(fromSystemInstruction)));
     }
     const fromTemperature = getValueByPath(fromObject, ['temperature']);
     if (fromTemperature != null) {
@@ -10230,7 +10452,7 @@ function generateContentParametersToVertex(apiClient, fromObject, rootObject) {
         let transformedList = tContents(fromContents);
         if (Array.isArray(transformedList)) {
             transformedList = transformedList.map((item) => {
-                return contentToVertex(item);
+                return contentToVertex$1(item);
             });
         }
         setValueByPath(toObject, ['contents'], transformedList);
@@ -11485,6 +11707,16 @@ function maskReferenceConfigToVertex(fromObject, _rootObject) {
     }
     return toObject;
 }
+function mcpServerToVertex(fromObject, _rootObject) {
+    const toObject = {};
+    if (getValueByPath(fromObject, ['name']) !== undefined) {
+        throw new Error('name parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    if (getValueByPath(fromObject, ['streamableHttpTransport']) !== undefined) {
+        throw new Error('streamableHttpTransport parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
 function modelFromMldev(fromObject, rootObject) {
     const toObject = {};
     const fromName = getValueByPath(fromObject, ['name']);
@@ -11675,7 +11907,7 @@ function partToMldev$1(fromObject, rootObject) {
     }
     return toObject;
 }
-function partToVertex(fromObject, _rootObject) {
+function partToVertex$1(fromObject, rootObject) {
     const toObject = {};
     const fromMediaResolution = getValueByPath(fromObject, [
         'mediaResolution',
@@ -11687,13 +11919,13 @@ function partToVertex(fromObject, _rootObject) {
         'codeExecutionResult',
     ]);
     if (fromCodeExecutionResult != null) {
-        setValueByPath(toObject, ['codeExecutionResult'], fromCodeExecutionResult);
+        setValueByPath(toObject, ['codeExecutionResult'], codeExecutionResultToVertex$1(fromCodeExecutionResult));
     }
     const fromExecutableCode = getValueByPath(fromObject, [
         'executableCode',
     ]);
     if (fromExecutableCode != null) {
-        setValueByPath(toObject, ['executableCode'], fromExecutableCode);
+        setValueByPath(toObject, ['executableCode'], executableCodeToVertex$1(fromExecutableCode));
     }
     const fromFileData = getValueByPath(fromObject, ['fileData']);
     if (fromFileData != null) {
@@ -12168,7 +12400,7 @@ function toolToMldev$1(fromObject, rootObject) {
     }
     return toObject;
 }
-function toolToVertex(fromObject, _rootObject) {
+function toolToVertex(fromObject, rootObject) {
     const toObject = {};
     const fromRetrieval = getValueByPath(fromObject, ['retrieval']);
     if (fromRetrieval != null) {
@@ -12229,8 +12461,15 @@ function toolToVertex(fromObject, _rootObject) {
     if (fromUrlContext != null) {
         setValueByPath(toObject, ['urlContext'], fromUrlContext);
     }
-    if (getValueByPath(fromObject, ['mcpServers']) !== undefined) {
-        throw new Error('mcpServers parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    const fromMcpServers = getValueByPath(fromObject, ['mcpServers']);
+    if (fromMcpServers != null) {
+        let transformedList = fromMcpServers;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return mcpServerToVertex(item);
+            });
+        }
+        setValueByPath(toObject, ['mcpServers'], transformedList);
     }
     return toObject;
 }
@@ -12793,7 +13032,7 @@ const CONTENT_TYPE_HEADER = 'Content-Type';
 const SERVER_TIMEOUT_HEADER = 'X-Server-Timeout';
 const USER_AGENT_HEADER = 'User-Agent';
 const GOOGLE_API_CLIENT_HEADER = 'x-goog-api-client';
-const SDK_VERSION = '2.4.0'; // x-release-please-version
+const SDK_VERSION = '2.8.0'; // x-release-please-version
 const LIBRARY_LABEL = `google-genai-sdk/${SDK_VERSION}`;
 const VERTEX_AI_API_DEFAULT_VERSION = 'v1beta1';
 const GOOGLE_AI_API_DEFAULT_VERSION = 'v1beta';
@@ -16443,11 +16682,11 @@ function liveConnectConfigToMldev(fromObject, parentObject) {
         }
         setValueByPath(parentObject, ['setup', 'safetySettings'], transformedList);
     }
-    const fromStreamTranslationConfig = getValueByPath(fromObject, [
-        'streamTranslationConfig',
+    const fromTranslationConfig = getValueByPath(fromObject, [
+        'translationConfig',
     ]);
-    if (parentObject !== undefined && fromStreamTranslationConfig != null) {
-        setValueByPath(parentObject, ['setup', 'generationConfig', 'streamTranslationConfig'], fromStreamTranslationConfig);
+    if (parentObject !== undefined && fromTranslationConfig != null) {
+        setValueByPath(parentObject, ['setup', 'generationConfig', 'translationConfig'], fromTranslationConfig);
     }
     return toObject;
 }
@@ -19637,6 +19876,39 @@ function cancelTuningJobResponseFromVertex(fromObject, _rootObject) {
     }
     return toObject;
 }
+function codeExecutionResultToVertex(fromObject, _rootObject) {
+    const toObject = {};
+    const fromOutcome = getValueByPath(fromObject, ['outcome']);
+    if (fromOutcome != null) {
+        setValueByPath(toObject, ['outcome'], fromOutcome);
+    }
+    const fromOutput = getValueByPath(fromObject, ['output']);
+    if (fromOutput != null) {
+        setValueByPath(toObject, ['output'], fromOutput);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
+function contentToVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromParts = getValueByPath(fromObject, ['parts']);
+    if (fromParts != null) {
+        let transformedList = fromParts;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return partToVertex(item);
+            });
+        }
+        setValueByPath(toObject, ['parts'], transformedList);
+    }
+    const fromRole = getValueByPath(fromObject, ['role']);
+    if (fromRole != null) {
+        setValueByPath(toObject, ['role'], fromRole);
+    }
+    return toObject;
+}
 function createTuningJobConfigToMldev(fromObject, parentObject, _rootObject) {
     const toObject = {};
     if (getValueByPath(fromObject, ['validationDataset']) !== undefined) {
@@ -19707,6 +19979,30 @@ function createTuningJobConfigToMldev(fromObject, parentObject, _rootObject) {
     if (getValueByPath(fromObject, ['encryptionSpec']) !== undefined) {
         throw new Error('encryptionSpec parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
     }
+    if (getValueByPath(fromObject, ['rewardConfig']) !== undefined) {
+        throw new Error('rewardConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['compositeRewardConfig']) !== undefined) {
+        throw new Error('compositeRewardConfig parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['samplesPerPrompt']) !== undefined) {
+        throw new Error('samplesPerPrompt parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['evaluateInterval']) !== undefined) {
+        throw new Error('evaluateInterval parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['checkpointInterval']) !== undefined) {
+        throw new Error('checkpointInterval parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['maxOutputTokens']) !== undefined) {
+        throw new Error('maxOutputTokens parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['thinkingLevel']) !== undefined) {
+        throw new Error('thinkingLevel parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
+    if (getValueByPath(fromObject, ['validationDatasetUri']) !== undefined) {
+        throw new Error('validationDatasetUri parameter is only supported in Gemini Enterprise Agent Platform mode, not in Gemini Developer API mode.');
+    }
     return toObject;
 }
 function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
@@ -19740,6 +20036,14 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
         ]);
         if (parentObject !== undefined && fromValidationDataset != null) {
             setValueByPath(parentObject, ['distillationSpec'], tuningValidationDatasetToVertex(fromValidationDataset));
+        }
+    }
+    else if (discriminatorValidationDataset === 'REINFORCEMENT_TUNING') {
+        const fromValidationDataset = getValueByPath(fromObject, [
+            'validationDataset',
+        ]);
+        if (parentObject !== undefined && fromValidationDataset != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec'], tuningValidationDatasetToVertex(fromValidationDataset));
         }
     }
     const fromTunedModelDisplayName = getValueByPath(fromObject, [
@@ -19777,6 +20081,12 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
             setValueByPath(parentObject, ['distillationSpec', 'hyperParameters', 'epochCount'], fromEpochCount);
         }
     }
+    else if (discriminatorEpochCount === 'REINFORCEMENT_TUNING') {
+        const fromEpochCount = getValueByPath(fromObject, ['epochCount']);
+        if (parentObject !== undefined && fromEpochCount != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'epochCount'], fromEpochCount);
+        }
+    }
     let discriminatorLearningRateMultiplier = getValueByPath(rootObject, [
         'config',
         'method',
@@ -19810,6 +20120,18 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
         ]);
         if (parentObject !== undefined && fromLearningRateMultiplier != null) {
             setValueByPath(parentObject, ['distillationSpec', 'hyperParameters', 'learningRateMultiplier'], fromLearningRateMultiplier);
+        }
+    }
+    else if (discriminatorLearningRateMultiplier === 'REINFORCEMENT_TUNING') {
+        const fromLearningRateMultiplier = getValueByPath(fromObject, [
+            'learningRateMultiplier',
+        ]);
+        if (parentObject !== undefined && fromLearningRateMultiplier != null) {
+            setValueByPath(parentObject, [
+                'reinforcementTuningSpec',
+                'hyperParameters',
+                'learningRateMultiplier',
+            ], fromLearningRateMultiplier);
         }
     }
     let discriminatorExportLastCheckpointOnly = getValueByPath(rootObject, ['config', 'method']);
@@ -19865,6 +20187,12 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
             setValueByPath(parentObject, ['distillationSpec', 'hyperParameters', 'adapterSize'], fromAdapterSize);
         }
     }
+    else if (discriminatorAdapterSize === 'REINFORCEMENT_TUNING') {
+        const fromAdapterSize = getValueByPath(fromObject, ['adapterSize']);
+        if (parentObject !== undefined && fromAdapterSize != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'adapterSize'], fromAdapterSize);
+        }
+    }
     let discriminatorTuningMode = getValueByPath(rootObject, [
         'config',
         'method',
@@ -19907,6 +20235,12 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
         const fromBatchSize = getValueByPath(fromObject, ['batchSize']);
         if (parentObject !== undefined && fromBatchSize != null) {
             setValueByPath(parentObject, ['distillationSpec', 'hyperParameters', 'batchSize'], fromBatchSize);
+        }
+    }
+    else if (discriminatorBatchSize === 'REINFORCEMENT_TUNING') {
+        const fromBatchSize = getValueByPath(fromObject, ['batchSize']);
+        if (parentObject !== undefined && fromBatchSize != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'batchSize'], fromBatchSize);
         }
     }
     let discriminatorLearningRate = getValueByPath(rootObject, [
@@ -19968,6 +20302,52 @@ function createTuningJobConfigToVertex(fromObject, parentObject, rootObject) {
     if (parentObject !== undefined && fromEncryptionSpec != null) {
         setValueByPath(parentObject, ['encryptionSpec'], fromEncryptionSpec);
     }
+    const fromRewardConfig = getValueByPath(fromObject, ['rewardConfig']);
+    if (parentObject !== undefined && fromRewardConfig != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'singleRewardConfig'], fromRewardConfig);
+    }
+    const fromCompositeRewardConfig = getValueByPath(fromObject, [
+        'compositeRewardConfig',
+    ]);
+    if (parentObject !== undefined && fromCompositeRewardConfig != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'compositeRewardConfig'], fromCompositeRewardConfig);
+    }
+    const fromSamplesPerPrompt = getValueByPath(fromObject, [
+        'samplesPerPrompt',
+    ]);
+    if (parentObject !== undefined && fromSamplesPerPrompt != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'samplesPerPrompt'], fromSamplesPerPrompt);
+    }
+    const fromEvaluateInterval = getValueByPath(fromObject, [
+        'evaluateInterval',
+    ]);
+    if (parentObject !== undefined && fromEvaluateInterval != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'evaluateInterval'], fromEvaluateInterval);
+    }
+    const fromCheckpointInterval = getValueByPath(fromObject, [
+        'checkpointInterval',
+    ]);
+    if (parentObject !== undefined && fromCheckpointInterval != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'checkpointInterval'], fromCheckpointInterval);
+    }
+    const fromMaxOutputTokens = getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (parentObject !== undefined && fromMaxOutputTokens != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromThinkingLevel = getValueByPath(fromObject, [
+        'thinkingLevel',
+    ]);
+    if (parentObject !== undefined && fromThinkingLevel != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'hyperParameters', 'thinkingLevel'], fromThinkingLevel);
+    }
+    const fromValidationDatasetUri = getValueByPath(fromObject, [
+        'validationDatasetUri',
+    ]);
+    if (parentObject !== undefined && fromValidationDatasetUri != null) {
+        setValueByPath(parentObject, ['reinforcementTuningSpec', 'validationDatasetUri'], fromValidationDatasetUri);
+    }
     return toObject;
 }
 function createTuningJobParametersPrivateToMldev(fromObject, rootObject) {
@@ -20015,6 +20395,265 @@ function createTuningJobParametersPrivateToVertex(fromObject, rootObject) {
     const fromConfig = getValueByPath(fromObject, ['config']);
     if (fromConfig != null) {
         createTuningJobConfigToVertex(fromConfig, toObject, rootObject);
+    }
+    return toObject;
+}
+function distillationHyperParametersFromVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromAdapterSize = getValueByPath(fromObject, ['adapterSize']);
+    if (fromAdapterSize != null) {
+        setValueByPath(toObject, ['adapterSize'], fromAdapterSize);
+    }
+    const fromEpochCount = getValueByPath(fromObject, ['epochCount']);
+    if (fromEpochCount != null) {
+        setValueByPath(toObject, ['epochCount'], fromEpochCount);
+    }
+    const fromLearningRateMultiplier = getValueByPath(fromObject, [
+        'learningRateMultiplier',
+    ]);
+    if (fromLearningRateMultiplier != null) {
+        setValueByPath(toObject, ['learningRateMultiplier'], fromLearningRateMultiplier);
+    }
+    const fromGenerationConfig = getValueByPath(fromObject, [
+        'generationConfig',
+    ]);
+    if (fromGenerationConfig != null) {
+        setValueByPath(toObject, ['generationConfig'], generationConfigFromVertex(fromGenerationConfig));
+    }
+    const fromLearningRate = getValueByPath(fromObject, ['learningRate']);
+    if (fromLearningRate != null) {
+        setValueByPath(toObject, ['learningRate'], fromLearningRate);
+    }
+    const fromBatchSize = getValueByPath(fromObject, ['batchSize']);
+    if (fromBatchSize != null) {
+        setValueByPath(toObject, ['batchSize'], fromBatchSize);
+    }
+    return toObject;
+}
+function distillationSamplingSpecFromVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromBaseTeacherModel = getValueByPath(fromObject, [
+        'baseTeacherModel',
+    ]);
+    if (fromBaseTeacherModel != null) {
+        setValueByPath(toObject, ['baseTeacherModel'], fromBaseTeacherModel);
+    }
+    const fromTunedTeacherModelSource = getValueByPath(fromObject, [
+        'tunedTeacherModelSource',
+    ]);
+    if (fromTunedTeacherModelSource != null) {
+        setValueByPath(toObject, ['tunedTeacherModelSource'], fromTunedTeacherModelSource);
+    }
+    const fromValidationDatasetUri = getValueByPath(fromObject, [
+        'validationDatasetUri',
+    ]);
+    if (fromValidationDatasetUri != null) {
+        setValueByPath(toObject, ['validationDatasetUri'], fromValidationDatasetUri);
+    }
+    const fromPromptDatasetUri = getValueByPath(fromObject, [
+        'promptDatasetUri',
+    ]);
+    if (fromPromptDatasetUri != null) {
+        setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+    }
+    const fromHyperparameters = getValueByPath(fromObject, [
+        'hyperparameters',
+    ]);
+    if (fromHyperparameters != null) {
+        setValueByPath(toObject, ['hyperparameters'], distillationHyperParametersFromVertex(fromHyperparameters));
+    }
+    return toObject;
+}
+function distillationSpecFromVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromPromptDatasetUri = getValueByPath(fromObject, [
+        'promptDatasetUri',
+    ]);
+    if (fromPromptDatasetUri != null) {
+        setValueByPath(toObject, ['promptDatasetUri'], fromPromptDatasetUri);
+    }
+    const fromBaseTeacherModel = getValueByPath(fromObject, [
+        'baseTeacherModel',
+    ]);
+    if (fromBaseTeacherModel != null) {
+        setValueByPath(toObject, ['baseTeacherModel'], fromBaseTeacherModel);
+    }
+    const fromHyperParameters = getValueByPath(fromObject, [
+        'hyperParameters',
+    ]);
+    if (fromHyperParameters != null) {
+        setValueByPath(toObject, ['hyperParameters'], distillationHyperParametersFromVertex(fromHyperParameters));
+    }
+    const fromPipelineRootDirectory = getValueByPath(fromObject, [
+        'pipelineRootDirectory',
+    ]);
+    if (fromPipelineRootDirectory != null) {
+        setValueByPath(toObject, ['pipelineRootDirectory'], fromPipelineRootDirectory);
+    }
+    const fromStudentModel = getValueByPath(fromObject, ['studentModel']);
+    if (fromStudentModel != null) {
+        setValueByPath(toObject, ['studentModel'], fromStudentModel);
+    }
+    const fromTrainingDatasetUri = getValueByPath(fromObject, [
+        'trainingDatasetUri',
+    ]);
+    if (fromTrainingDatasetUri != null) {
+        setValueByPath(toObject, ['trainingDatasetUri'], fromTrainingDatasetUri);
+    }
+    const fromTunedTeacherModelSource = getValueByPath(fromObject, [
+        'tunedTeacherModelSource',
+    ]);
+    if (fromTunedTeacherModelSource != null) {
+        setValueByPath(toObject, ['tunedTeacherModelSource'], fromTunedTeacherModelSource);
+    }
+    const fromValidationDatasetUri = getValueByPath(fromObject, [
+        'validationDatasetUri',
+    ]);
+    if (fromValidationDatasetUri != null) {
+        setValueByPath(toObject, ['validationDatasetUri'], fromValidationDatasetUri);
+    }
+    const fromTuningMode = getValueByPath(fromObject, ['tuningMode']);
+    if (fromTuningMode != null) {
+        setValueByPath(toObject, ['tuningMode'], fromTuningMode);
+    }
+    return toObject;
+}
+function executableCodeToVertex(fromObject, _rootObject) {
+    const toObject = {};
+    const fromCode = getValueByPath(fromObject, ['code']);
+    if (fromCode != null) {
+        setValueByPath(toObject, ['code'], fromCode);
+    }
+    const fromLanguage = getValueByPath(fromObject, ['language']);
+    if (fromLanguage != null) {
+        setValueByPath(toObject, ['language'], fromLanguage);
+    }
+    if (getValueByPath(fromObject, ['id']) !== undefined) {
+        throw new Error('id parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
+function generationConfigFromVertex(fromObject, _rootObject) {
+    const toObject = {};
+    const fromModelSelectionConfig = getValueByPath(fromObject, [
+        'modelConfig',
+    ]);
+    if (fromModelSelectionConfig != null) {
+        setValueByPath(toObject, ['modelSelectionConfig'], fromModelSelectionConfig);
+    }
+    const fromResponseJsonSchema = getValueByPath(fromObject, [
+        'responseJsonSchema',
+    ]);
+    if (fromResponseJsonSchema != null) {
+        setValueByPath(toObject, ['responseJsonSchema'], fromResponseJsonSchema);
+    }
+    const fromAudioTimestamp = getValueByPath(fromObject, [
+        'audioTimestamp',
+    ]);
+    if (fromAudioTimestamp != null) {
+        setValueByPath(toObject, ['audioTimestamp'], fromAudioTimestamp);
+    }
+    const fromCandidateCount = getValueByPath(fromObject, [
+        'candidateCount',
+    ]);
+    if (fromCandidateCount != null) {
+        setValueByPath(toObject, ['candidateCount'], fromCandidateCount);
+    }
+    const fromEnableAffectiveDialog = getValueByPath(fromObject, [
+        'enableAffectiveDialog',
+    ]);
+    if (fromEnableAffectiveDialog != null) {
+        setValueByPath(toObject, ['enableAffectiveDialog'], fromEnableAffectiveDialog);
+    }
+    const fromFrequencyPenalty = getValueByPath(fromObject, [
+        'frequencyPenalty',
+    ]);
+    if (fromFrequencyPenalty != null) {
+        setValueByPath(toObject, ['frequencyPenalty'], fromFrequencyPenalty);
+    }
+    const fromLogprobs = getValueByPath(fromObject, ['logprobs']);
+    if (fromLogprobs != null) {
+        setValueByPath(toObject, ['logprobs'], fromLogprobs);
+    }
+    const fromMaxOutputTokens = getValueByPath(fromObject, [
+        'maxOutputTokens',
+    ]);
+    if (fromMaxOutputTokens != null) {
+        setValueByPath(toObject, ['maxOutputTokens'], fromMaxOutputTokens);
+    }
+    const fromMediaResolution = getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromPresencePenalty = getValueByPath(fromObject, [
+        'presencePenalty',
+    ]);
+    if (fromPresencePenalty != null) {
+        setValueByPath(toObject, ['presencePenalty'], fromPresencePenalty);
+    }
+    const fromResponseLogprobs = getValueByPath(fromObject, [
+        'responseLogprobs',
+    ]);
+    if (fromResponseLogprobs != null) {
+        setValueByPath(toObject, ['responseLogprobs'], fromResponseLogprobs);
+    }
+    const fromResponseMimeType = getValueByPath(fromObject, [
+        'responseMimeType',
+    ]);
+    if (fromResponseMimeType != null) {
+        setValueByPath(toObject, ['responseMimeType'], fromResponseMimeType);
+    }
+    const fromResponseModalities = getValueByPath(fromObject, [
+        'responseModalities',
+    ]);
+    if (fromResponseModalities != null) {
+        setValueByPath(toObject, ['responseModalities'], fromResponseModalities);
+    }
+    const fromResponseSchema = getValueByPath(fromObject, [
+        'responseSchema',
+    ]);
+    if (fromResponseSchema != null) {
+        setValueByPath(toObject, ['responseSchema'], fromResponseSchema);
+    }
+    const fromRoutingConfig = getValueByPath(fromObject, [
+        'routingConfig',
+    ]);
+    if (fromRoutingConfig != null) {
+        setValueByPath(toObject, ['routingConfig'], fromRoutingConfig);
+    }
+    const fromSeed = getValueByPath(fromObject, ['seed']);
+    if (fromSeed != null) {
+        setValueByPath(toObject, ['seed'], fromSeed);
+    }
+    const fromSpeechConfig = getValueByPath(fromObject, ['speechConfig']);
+    if (fromSpeechConfig != null) {
+        setValueByPath(toObject, ['speechConfig'], fromSpeechConfig);
+    }
+    const fromStopSequences = getValueByPath(fromObject, [
+        'stopSequences',
+    ]);
+    if (fromStopSequences != null) {
+        setValueByPath(toObject, ['stopSequences'], fromStopSequences);
+    }
+    const fromTemperature = getValueByPath(fromObject, ['temperature']);
+    if (fromTemperature != null) {
+        setValueByPath(toObject, ['temperature'], fromTemperature);
+    }
+    const fromThinkingConfig = getValueByPath(fromObject, [
+        'thinkingConfig',
+    ]);
+    if (fromThinkingConfig != null) {
+        setValueByPath(toObject, ['thinkingConfig'], fromThinkingConfig);
+    }
+    const fromTopK = getValueByPath(fromObject, ['topK']);
+    if (fromTopK != null) {
+        setValueByPath(toObject, ['topK'], fromTopK);
+    }
+    const fromTopP = getValueByPath(fromObject, ['topP']);
+    if (fromTopP != null) {
+        setValueByPath(toObject, ['topP'], fromTopP);
     }
     return toObject;
 }
@@ -20084,6 +20723,99 @@ function listTuningJobsResponseFromVertex(fromObject, rootObject) {
     }
     return toObject;
 }
+function partToVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromMediaResolution = getValueByPath(fromObject, [
+        'mediaResolution',
+    ]);
+    if (fromMediaResolution != null) {
+        setValueByPath(toObject, ['mediaResolution'], fromMediaResolution);
+    }
+    const fromCodeExecutionResult = getValueByPath(fromObject, [
+        'codeExecutionResult',
+    ]);
+    if (fromCodeExecutionResult != null) {
+        setValueByPath(toObject, ['codeExecutionResult'], codeExecutionResultToVertex(fromCodeExecutionResult));
+    }
+    const fromExecutableCode = getValueByPath(fromObject, [
+        'executableCode',
+    ]);
+    if (fromExecutableCode != null) {
+        setValueByPath(toObject, ['executableCode'], executableCodeToVertex(fromExecutableCode));
+    }
+    const fromFileData = getValueByPath(fromObject, ['fileData']);
+    if (fromFileData != null) {
+        setValueByPath(toObject, ['fileData'], fromFileData);
+    }
+    const fromFunctionCall = getValueByPath(fromObject, ['functionCall']);
+    if (fromFunctionCall != null) {
+        setValueByPath(toObject, ['functionCall'], fromFunctionCall);
+    }
+    const fromFunctionResponse = getValueByPath(fromObject, [
+        'functionResponse',
+    ]);
+    if (fromFunctionResponse != null) {
+        setValueByPath(toObject, ['functionResponse'], fromFunctionResponse);
+    }
+    const fromInlineData = getValueByPath(fromObject, ['inlineData']);
+    if (fromInlineData != null) {
+        setValueByPath(toObject, ['inlineData'], fromInlineData);
+    }
+    const fromText = getValueByPath(fromObject, ['text']);
+    if (fromText != null) {
+        setValueByPath(toObject, ['text'], fromText);
+    }
+    const fromThought = getValueByPath(fromObject, ['thought']);
+    if (fromThought != null) {
+        setValueByPath(toObject, ['thought'], fromThought);
+    }
+    const fromThoughtSignature = getValueByPath(fromObject, [
+        'thoughtSignature',
+    ]);
+    if (fromThoughtSignature != null) {
+        setValueByPath(toObject, ['thoughtSignature'], fromThoughtSignature);
+    }
+    const fromVideoMetadata = getValueByPath(fromObject, [
+        'videoMetadata',
+    ]);
+    if (fromVideoMetadata != null) {
+        setValueByPath(toObject, ['videoMetadata'], fromVideoMetadata);
+    }
+    if (getValueByPath(fromObject, ['toolCall']) !== undefined) {
+        throw new Error('toolCall parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    if (getValueByPath(fromObject, ['toolResponse']) !== undefined) {
+        throw new Error('toolResponse parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    if (getValueByPath(fromObject, ['partMetadata']) !== undefined) {
+        throw new Error('partMetadata parameter is only supported in Gemini Developer API mode, not in Gemini Enterprise Agent Platform mode.');
+    }
+    return toObject;
+}
+function reinforcementTuningExampleToVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromContents = getValueByPath(fromObject, ['contents']);
+    if (fromContents != null) {
+        let transformedList = fromContents;
+        if (Array.isArray(transformedList)) {
+            transformedList = transformedList.map((item) => {
+                return contentToVertex(item);
+            });
+        }
+        setValueByPath(toObject, ['contents'], transformedList);
+    }
+    const fromReferences = getValueByPath(fromObject, ['references']);
+    if (fromReferences != null) {
+        setValueByPath(toObject, ['references'], fromReferences);
+    }
+    const fromSystemInstruction = getValueByPath(fromObject, [
+        'systemInstruction',
+    ]);
+    if (fromSystemInstruction != null) {
+        setValueByPath(toObject, ['systemInstruction'], contentToVertex(fromSystemInstruction));
+    }
+    return toObject;
+}
 function tunedModelFromMldev(fromObject, _rootObject) {
     const toObject = {};
     const fromModel = getValueByPath(fromObject, ['name']);
@@ -20143,6 +20875,12 @@ function tuningDatasetToVertex(fromObject, parentObject, rootObject) {
             setValueByPath(parentObject, ['distillationSpec', 'promptDatasetUri'], fromGcsUri);
         }
     }
+    else if (discriminatorGcsUri === 'REINFORCEMENT_TUNING') {
+        const fromGcsUri = getValueByPath(fromObject, ['gcsUri']);
+        if (parentObject !== undefined && fromGcsUri != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec', 'trainingDatasetUri'], fromGcsUri);
+        }
+    }
     let discriminatorVertexDatasetResource = getValueByPath(rootObject, [
         'config',
         'method',
@@ -20172,6 +20910,14 @@ function tuningDatasetToVertex(fromObject, parentObject, rootObject) {
         ]);
         if (parentObject !== undefined && fromVertexDatasetResource != null) {
             setValueByPath(parentObject, ['distillationSpec', 'promptDatasetUri'], fromVertexDatasetResource);
+        }
+    }
+    else if (discriminatorVertexDatasetResource === 'REINFORCEMENT_TUNING') {
+        const fromVertexDatasetResource = getValueByPath(fromObject, [
+            'vertexDatasetResource',
+        ]);
+        if (parentObject !== undefined && fromVertexDatasetResource != null) {
+            setValueByPath(parentObject, ['reinforcementTuningSpec', 'trainingDatasetUri'], fromVertexDatasetResource);
         }
     }
     if (getValueByPath(fromObject, ['examples']) !== undefined) {
@@ -20231,7 +20977,7 @@ function tuningJobFromMldev(fromObject, rootObject) {
     }
     return toObject;
 }
-function tuningJobFromVertex(fromObject, _rootObject) {
+function tuningJobFromVertex(fromObject, rootObject) {
     const toObject = {};
     const fromSdkHttpResponse = getValueByPath(fromObject, [
         'sdkHttpResponse',
@@ -20301,7 +21047,13 @@ function tuningJobFromVertex(fromObject, _rootObject) {
         'distillationSpec',
     ]);
     if (fromDistillationSpec != null) {
-        setValueByPath(toObject, ['distillationSpec'], fromDistillationSpec);
+        setValueByPath(toObject, ['distillationSpec'], distillationSpecFromVertex(fromDistillationSpec));
+    }
+    const fromReinforcementTuningSpec = getValueByPath(fromObject, [
+        'reinforcementTuningSpec',
+    ]);
+    if (fromReinforcementTuningSpec != null) {
+        setValueByPath(toObject, ['reinforcementTuningSpec'], fromReinforcementTuningSpec);
     }
     const fromTuningDataStats = getValueByPath(fromObject, [
         'tuningDataStats',
@@ -20385,17 +21137,23 @@ function tuningJobFromVertex(fromObject, _rootObject) {
     if (fromVeoTuningSpec != null) {
         setValueByPath(toObject, ['veoTuningSpec'], fromVeoTuningSpec);
     }
-    const fromDistillationSamplingSpec = getValueByPath(fromObject, [
-        'distillationSamplingSpec',
-    ]);
-    if (fromDistillationSamplingSpec != null) {
-        setValueByPath(toObject, ['distillationSamplingSpec'], fromDistillationSamplingSpec);
-    }
     const fromTuningJobMetadata = getValueByPath(fromObject, [
         'tuningJobMetadata',
     ]);
     if (fromTuningJobMetadata != null) {
         setValueByPath(toObject, ['tuningJobMetadata'], fromTuningJobMetadata);
+    }
+    const fromVeoLoraTuningSpec = getValueByPath(fromObject, [
+        'veoLoraTuningSpec',
+    ]);
+    if (fromVeoLoraTuningSpec != null) {
+        setValueByPath(toObject, ['veoLoraTuningSpec'], fromVeoLoraTuningSpec);
+    }
+    const fromDistillationSamplingSpec = getValueByPath(fromObject, [
+        'distillationSamplingSpec',
+    ]);
+    if (fromDistillationSamplingSpec != null) {
+        setValueByPath(toObject, ['distillationSamplingSpec'], distillationSamplingSpecFromVertex(fromDistillationSamplingSpec));
     }
     return toObject;
 }
@@ -20436,6 +21194,62 @@ function tuningValidationDatasetToVertex(fromObject, _rootObject) {
     ]);
     if (fromVertexDatasetResource != null) {
         setValueByPath(toObject, ['validationDatasetUri'], fromVertexDatasetResource);
+    }
+    return toObject;
+}
+function validateRewardParametersToVertex(fromObject, rootObject) {
+    const toObject = {};
+    const fromParent = getValueByPath(fromObject, ['parent']);
+    if (fromParent != null) {
+        setValueByPath(toObject, ['_url', 'parent'], fromParent);
+    }
+    const fromSampleResponse = getValueByPath(fromObject, [
+        'sampleResponse',
+    ]);
+    if (fromSampleResponse != null) {
+        setValueByPath(toObject, ['sampleResponse'], contentToVertex(fromSampleResponse));
+    }
+    const fromExample = getValueByPath(fromObject, ['example']);
+    if (fromExample != null) {
+        setValueByPath(toObject, ['example'], reinforcementTuningExampleToVertex(fromExample));
+    }
+    const fromSingleRewardConfig = getValueByPath(fromObject, [
+        'singleRewardConfig',
+    ]);
+    if (fromSingleRewardConfig != null) {
+        setValueByPath(toObject, ['singleRewardConfig'], fromSingleRewardConfig);
+    }
+    const fromCompositeRewardConfig = getValueByPath(fromObject, [
+        'compositeRewardConfig',
+    ]);
+    if (fromCompositeRewardConfig != null) {
+        setValueByPath(toObject, ['compositeRewardConfig'], fromCompositeRewardConfig);
+    }
+    return toObject;
+}
+function validateRewardResponseFromVertex(fromObject, _rootObject) {
+    const toObject = {};
+    const fromSdkHttpResponse = getValueByPath(fromObject, [
+        'sdkHttpResponse',
+    ]);
+    if (fromSdkHttpResponse != null) {
+        setValueByPath(toObject, ['sdkHttpResponse'], fromSdkHttpResponse);
+    }
+    const fromOverallReward = getValueByPath(fromObject, [
+        'overallReward',
+    ]);
+    if (fromOverallReward != null) {
+        setValueByPath(toObject, ['overallReward'], fromOverallReward);
+    }
+    const fromError = getValueByPath(fromObject, ['error']);
+    if (fromError != null) {
+        setValueByPath(toObject, ['error'], fromError);
+    }
+    const fromRewardInfoDetails = getValueByPath(fromObject, [
+        'rewardInfoDetails',
+    ]);
+    if (fromRewardInfoDetails != null) {
+        setValueByPath(toObject, ['rewardInfoDetails'], fromRewardInfoDetails);
     }
     return toObject;
 }
@@ -20785,6 +21599,46 @@ class Tunings extends BaseModule {
             });
         }
     }
+    async validateReward(params) {
+        var _a, _b;
+        let response;
+        let path = '';
+        let queryParams = {};
+        if (this.apiClient.isVertexAI()) {
+            const body = validateRewardParametersToVertex(params);
+            path = formatMap('{parent}/tuningJobs:validateReinforcementTuningReward', body['_url']);
+            queryParams = body['_query'];
+            delete body['_url'];
+            delete body['_query'];
+            response = this.apiClient
+                .request({
+                path: path,
+                queryParams: queryParams,
+                body: JSON.stringify(body),
+                httpMethod: 'POST',
+                httpOptions: (_a = params.config) === null || _a === void 0 ? void 0 : _a.httpOptions,
+                abortSignal: (_b = params.config) === null || _b === void 0 ? void 0 : _b.abortSignal,
+            })
+                .then((httpResponse) => {
+                return httpResponse.json().then((jsonResponse) => {
+                    const response = jsonResponse;
+                    response.sdkHttpResponse = {
+                        headers: httpResponse.headers,
+                    };
+                    return response;
+                });
+            });
+            return response.then((apiResponse) => {
+                const resp = validateRewardResponseFromVertex(apiResponse);
+                const typedResp = new ValidateRewardResponse();
+                Object.assign(typedResp, resp);
+                return typedResp;
+            });
+        }
+        else {
+            throw new Error('This method is only supported by the Gemini Enterprise Agent Platform (previously known as Vertex AI).');
+        }
+    }
 }
 
 /**
@@ -21108,5 +21962,5 @@ class GoogleGenAI {
     }
 }
 
-export { ActivityHandling, AdapterSize, AggregationMetric, ApiError, ApiSpec, AuthType, Batches, Behavior, BlockedReason, Caches, CancelTuningJobResponse, Chat, Chats, ComputeTokensResponse, ContentReferenceImage, ControlReferenceImage, ControlReferenceType, CountTokensResponse, CreateFileResponse, DeleteCachedContentResponse, DeleteFileResponse, DeleteModelResponse, DocumentState, DynamicRetrievalConfigMode, EditImageResponse, EditMode, EmbedContentResponse, EmbeddingApiType, EndSensitivity, Environment, EvaluateDatasetResponse, FeatureSelectionPreference, FileSource, FileState, Files, FinishReason, FunctionCallingConfigMode, FunctionResponse, FunctionResponseBlob, FunctionResponseFileData, FunctionResponsePart, FunctionResponseScheduling, GenerateContentResponse, GenerateContentResponsePromptFeedback, GenerateContentResponseUsageMetadata, GenerateImagesResponse, GenerateVideosOperation, GenerateVideosResponse, GoogleGenAI, HarmBlockMethod, HarmBlockThreshold, HarmCategory, HarmProbability, HarmSeverity, HttpElementLocation, HttpResponse, ImagePromptLanguage, ImageResizeMode, ImportFileOperation, ImportFileResponse, InlinedEmbedContentResponse, InlinedResponse, JobState, Language, ListBatchJobsResponse, ListCachedContentsResponse, ListDocumentsResponse, ListFileSearchStoresResponse, ListFilesResponse, ListModelsResponse, ListTuningJobsResponse, Live, LiveClientToolResponse, LiveMusicPlaybackControl, LiveMusicServerMessage, LiveSendToolResponseParameters, LiveServerMessage, MaskReferenceImage, MaskReferenceMode, MediaModality, MediaResolution, Modality, ModelStage, Models, MusicGenerationMode, Operations, Outcome, PagedItem, Pager, PairwiseChoice, PartMediaResolutionLevel, PersonGeneration, PhishBlockThreshold, ProminentPeople, RawReferenceImage, RecontextImageResponse, RegisterFilesResponse, ReplayResponse, ResourceScope, SafetyFilterLevel, Scale, SegmentImageResponse, SegmentMode, ServiceTier, Session, SingleEmbedContentResponse, StartSensitivity, StyleReferenceImage, SubjectReferenceImage, SubjectReferenceType, ThinkingLevel, Tokens, ToolResponse, ToolType, TrafficType, TuningJobState, TuningMethod, TuningMode, TuningTask, TurnCompleteReason, TurnCoverage, Type, UploadToFileSearchStoreOperation, UploadToFileSearchStoreResponse, UploadToFileSearchStoreResumableResponse, UpscaleImageResponse, UrlRetrievalStatus, VadSignalType, VideoCompressionQuality, VideoGenerationMaskMode, VideoGenerationReferenceType, VoiceActivityType, createFunctionResponsePartFromBase64, createFunctionResponsePartFromUri, createModelContent, createPartFromBase64, createPartFromCodeExecutionResult, createPartFromExecutableCode, createPartFromFunctionCall, createPartFromFunctionResponse, createPartFromText, createPartFromUri, createUserContent, mcpToTool, setDefaultBaseUrls };
+export { ActivityHandling, AdapterSize, AggregationMetric, ApiError, ApiSpec, AuthType, Batches, Behavior, BlockedReason, Caches, CancelTuningJobResponse, Chat, Chats, ComputeTokensResponse, ContentReferenceImage, ControlReferenceImage, ControlReferenceType, CountTokensResponse, CreateFileResponse, DeleteCachedContentResponse, DeleteFileResponse, DeleteModelResponse, DocumentState, DynamicRetrievalConfigMode, EditImageResponse, EditMode, EmbedContentResponse, EmbeddingApiType, EndSensitivity, Environment, EvaluateDatasetResponse, FeatureSelectionPreference, FileSource, FileState, Files, FinishReason, FunctionCallingConfigMode, FunctionResponse, FunctionResponseBlob, FunctionResponseFileData, FunctionResponsePart, FunctionResponseScheduling, GenerateContentResponse, GenerateContentResponsePromptFeedback, GenerateContentResponseUsageMetadata, GenerateImagesResponse, GenerateVideosOperation, GenerateVideosResponse, GoogleGenAI, HarmBlockMethod, HarmBlockThreshold, HarmCategory, HarmProbability, HarmSeverity, HttpElementLocation, HttpResponse, ImagePromptLanguage, ImageResizeMode, ImportFileOperation, ImportFileResponse, InlinedEmbedContentResponse, InlinedResponse, JobState, Language, ListBatchJobsResponse, ListCachedContentsResponse, ListDocumentsResponse, ListFileSearchStoresResponse, ListFilesResponse, ListModelsResponse, ListTuningJobsResponse, Live, LiveClientToolResponse, LiveMusicPlaybackControl, LiveMusicServerMessage, LiveSendToolResponseParameters, LiveServerMessage, MaskReferenceImage, MaskReferenceMode, MatchOperation, MediaModality, MediaResolution, Modality, ModelStage, Models, MusicGenerationMode, Operations, Outcome, PagedItem, Pager, PairwiseChoice, PartMediaResolutionLevel, PersonGeneration, PhishBlockThreshold, ProminentPeople, RawReferenceImage, RecontextImageResponse, RegisterFilesResponse, ReinforcementTuningAutoraterScorerParsedResponseConversionScorer, ReinforcementTuningParseResponseConfig, ReinforcementTuningThinkingLevel, ReplayResponse, ResourceScope, ResponseParseType, SafetyFilterLevel, Scale, SegmentImageResponse, SegmentMode, ServiceTier, Session, SingleEmbedContentResponse, StartSensitivity, StyleReferenceImage, SubjectReferenceImage, SubjectReferenceType, ThinkingLevel, Tokens, ToolResponse, ToolType, TrafficType, TuningJobState, TuningMethod, TuningMode, TuningSpeed, TuningTask, TurnCompleteReason, TurnCoverage, Type, UploadToFileSearchStoreOperation, UploadToFileSearchStoreResponse, UploadToFileSearchStoreResumableResponse, UpscaleImageResponse, UrlRetrievalStatus, VadSignalType, ValidateRewardResponse, VideoCompressionQuality, VideoGenerationMaskMode, VideoGenerationReferenceType, VideoOrientation, VoiceActivityType, createFunctionResponsePartFromBase64, createFunctionResponsePartFromUri, createModelContent, createPartFromBase64, createPartFromCodeExecutionResult, createPartFromExecutableCode, createPartFromFunctionCall, createPartFromFunctionResponse, createPartFromText, createPartFromUri, createUserContent, mcpToTool, setDefaultBaseUrls };
 //# sourceMappingURL=index.mjs.map

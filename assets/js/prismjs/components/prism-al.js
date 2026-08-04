@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // based on https://github.com/microsoft/AL/blob/master/grammar/alsyntax.tmlanguage
 
 Prism.languages.al = {

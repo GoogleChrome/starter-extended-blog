@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages['firestore-security-rules'] = Prism.languages.extend('clike', {
 	'comment': /\/\/.*/,
 	'keyword': /\b(?:allow|function|if|match|null|return|rules_version|service)\b/,

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Tensor, TypedTensor } from './tensor.js';
 export type ImageFormat = 'RGB' | 'RGBA' | 'BGR' | 'RBG';
 export type ImageTensorLayout = 'NHWC' | 'NCHW';

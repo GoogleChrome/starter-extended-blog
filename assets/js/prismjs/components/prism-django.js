@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // Django/Jinja2 syntax definition for Prism.js <http://prismjs.com> syntax highlighter.
 // Mostly it works OK but can paint code incorrectly on complex html/template tag combinations.
 

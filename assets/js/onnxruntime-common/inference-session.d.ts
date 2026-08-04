@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { OnnxModelOptions } from './onnx-model.js';
 import { OnnxValue, OnnxValueDataLocation } from './onnx-value.js';
 import type { Tensor } from './tensor.js';

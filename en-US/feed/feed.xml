@@ -5,10 +5,10 @@
   <script src="/assets/js/xslt-polyfill/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <title>Posts - Starter Extended Blog</title>
   <subtitle>I am writing about my experiences as a naval navel-gazer.</subtitle>
-  <link href="https://example.com/starter-extended-blog/en-US/feed/feed.xml" rel="self" />
-  <link href="https://example.com/starter-extended-blog/" />
-  <updated>2026-05-20T14:25:59Z</updated>
-  <id>https://example.com/starter-extended-blog/</id>
+  <link href="https://example.com/en-US/feed/feed.xml" rel="self" />
+  <link href="https://example.com/" />
+  <updated>2026-08-04T15:22:43Z</updated>
+  <id>https://example.com/</id>
   <author>
     <name>Jane Doe and John Doe</name>
   </author>

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // Thanks to: https://github.com/prometheus-community/monaco-promql/blob/master/src/promql/promql.ts
 // As well as: https://kausal.co/blog/slate-prism-add-new-syntax-promql/
 

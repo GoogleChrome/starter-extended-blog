@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // http://avisynth.nl/index.php/The_full_AviSynth_grammar
 (function (Prism) {
 

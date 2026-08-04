@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // https://smlfamily.github.io/sml97-defn.pdf
 // https://people.mpi-sws.org/~rossberg/sml.html
 (function (Prism) {

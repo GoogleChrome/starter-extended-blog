@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // according to the offical reference (EN)
 // https://ichigojam.net/IchigoJam-en.html
 Prism.languages.ichigojam = {

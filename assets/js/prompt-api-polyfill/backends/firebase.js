@@ -1,4 +1,4 @@
-import { n as e, t } from "../chunks/defaults-DMD-8IKq.js";
+import { n as e, t } from "../chunks/defaults-n7NcZd-K.js";
 import { initializeApp as n } from "firebase/app";
 import { ReCaptchaEnterpriseProvider as r, initializeAppCheck as i } from "firebase/app-check";
 import { GoogleAIBackend as a, InferenceMode as o, Schema as s, VertexAIBackend as c, getAI as l, getGenerativeModel as u } from "firebase/ai";

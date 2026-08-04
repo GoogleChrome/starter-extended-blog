@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { TensorToDataUrlOptions, TensorToImageDataOptions } from './tensor-conversion.js';
 import { CpuPinnedConstructorParameters, GpuBufferConstructorParameters, MLTensorConstructorParameters, TensorFromGpuBufferOptions, TensorFromImageBitmapOptions, TensorFromImageDataOptions, TensorFromImageElementOptions, TensorFromMLTensorOptions, TensorFromTextureOptions, TensorFromUrlOptions, TextureConstructorParameters } from './tensor-factory.js';
 import { Tensor as TensorInterface } from './tensor.js';

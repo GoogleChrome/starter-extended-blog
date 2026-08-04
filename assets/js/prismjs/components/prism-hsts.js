@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Original by Scott Helme.
  *
  * Reference: https://scotthelme.co.uk/hsts-cheat-sheet/

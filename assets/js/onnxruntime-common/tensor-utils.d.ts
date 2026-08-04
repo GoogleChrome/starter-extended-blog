@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { ConversionUtils } from './tensor-conversion.js';
 import { Tensor, TypedTensor } from './tensor.js';
 interface Properties {

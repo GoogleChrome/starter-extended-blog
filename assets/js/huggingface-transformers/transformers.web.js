@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
   for (var name in all)

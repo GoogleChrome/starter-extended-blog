@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { OptionsDimensions, OptionsFormat, OptionsNormalizationParameters, OptionsTensorFormat, OptionsTensorLayout, TensorFromGpuBufferOptions, TensorFromImageBitmapOptions, TensorFromImageDataOptions, TensorFromImageElementOptions, TensorFromMLTensorOptions, TensorFromTextureOptions, TensorFromUrlOptions } from './tensor-factory.js';
 import { Tensor } from './tensor-impl.js';
 import { Tensor as TensorInterface } from './tensor.js';

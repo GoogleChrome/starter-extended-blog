@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.monkey = {
 	'comment': {
 		pattern: /^#Rem\s[\s\S]*?^#End|'.+/im,

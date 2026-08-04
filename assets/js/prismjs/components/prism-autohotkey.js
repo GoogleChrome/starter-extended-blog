@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // NOTES - follows first-first highlight method, block is locked after highlight, different from SyntaxHl
 Prism.languages.autohotkey = {
 	'comment': [

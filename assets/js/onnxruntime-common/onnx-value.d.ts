@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Tensor } from './tensor.js';
 export type NonTensorType = never;
 /**

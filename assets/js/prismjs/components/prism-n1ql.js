@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // https://docs.couchbase.com/server/current/n1ql/n1ql-language-reference/index.html
 
 Prism.languages.n1ql = {

@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * Original by Jan T. Sott (http://github.com/idleberg)
  *
  * Includes all commands and plug-ins shipped with NSIS 3.08

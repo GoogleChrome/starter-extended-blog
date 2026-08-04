@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // https://gn.googlesource.com/gn/+/refs/heads/main/docs/reference.md#grammar
 
 Prism.languages.gn = {

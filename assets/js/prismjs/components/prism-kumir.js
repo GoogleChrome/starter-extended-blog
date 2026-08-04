@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 /* eslint-disable regexp/no-dupe-characters-character-class */
 (function (Prism) {
 

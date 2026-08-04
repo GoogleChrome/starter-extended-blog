@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages['nand2tetris-hdl'] = {
 	'comment': /\/\/.*|\/\*[\s\S]*?(?:\*\/|$)/,
 	'keyword': /\b(?:BUILTIN|CHIP|CLOCKED|IN|OUT|PARTS)\b/,

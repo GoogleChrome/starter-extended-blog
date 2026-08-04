@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 Prism.languages.jexl = {
 	'string': /(["'])(?:\\[\s\S]|(?!\1)[^\\])*\1/,
 	'transform': {

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { Backend } from './backend.js';
 import { InferenceSession } from './inference-session.js';
 /**

@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // This is a language definition for generic log files.
 // Since there is no one log format, this language definition has to support all formats to some degree.
 //

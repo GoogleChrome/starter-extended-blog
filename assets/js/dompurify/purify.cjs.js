@@ -1,4 +1,4 @@
-/*! @license DOMPurify 3.4.5 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.4.5/LICENSE */
+/*! @license DOMPurify 3.4.9 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.4.9/LICENSE */
 
 'use strict';
 
@@ -334,11 +334,20 @@ const CUSTOM_ELEMENT = seal(/^[a-z][.\w]*(-[.\w]+)+$/i);
 // https://developer.mozilla.org/en-US/docs/Web/API/Node/nodeType
 const NODE_TYPE = {
   element: 1,
+  attribute: 2,
   text: 3,
+  cdataSection: 4,
+  entityReference: 5,
+  // Deprecated
+  entityNode: 6,
   // Deprecated
   progressingInstruction: 7,
   comment: 8,
-  document: 9};
+  document: 9,
+  documentType: 10,
+  documentFragment: 11,
+  notation: 12 // Deprecated
+};
 const getGlobal = function getGlobal() {
   return typeof window === 'undefined' ? null : window;
 };
@@ -396,7 +405,7 @@ const _createHooksMap = function _createHooksMap() {
 function createDOMPurify() {
   let window = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getGlobal();
   const DOMPurify = root => createDOMPurify(root);
-  DOMPurify.version = '3.4.5';
+  DOMPurify.version = '3.4.9';
   DOMPurify.removed = [];
   if (!window || !window.document || window.document.nodeType !== NODE_TYPE.document || !window.Element) {
     // Not running in a browser, provide a factory function
@@ -407,15 +416,15 @@ function createDOMPurify() {
   let document = window.document;
   const originalDocument = document;
   const currentScript = originalDocument.currentScript;
-  const DocumentFragment = window.DocumentFragment,
-    HTMLTemplateElement = window.HTMLTemplateElement,
+  window.DocumentFragment;
+    const HTMLTemplateElement = window.HTMLTemplateElement,
     Node = window.Node,
     Element = window.Element,
     NodeFilter = window.NodeFilter,
-    _window$NamedNodeMap = window.NamedNodeMap,
-    NamedNodeMap = _window$NamedNodeMap === void 0 ? window.NamedNodeMap || window.MozNamedAttrMap : _window$NamedNodeMap,
-    HTMLFormElement = window.HTMLFormElement,
-    DOMParser = window.DOMParser,
+    _window$NamedNodeMap = window.NamedNodeMap;
+    _window$NamedNodeMap === void 0 ? window.NamedNodeMap || window.MozNamedAttrMap : _window$NamedNodeMap;
+    window.HTMLFormElement;
+    const DOMParser = window.DOMParser,
     trustedTypes = window.trustedTypes;
   const ElementPrototype = Element.prototype;
   const cloneNode = lookupGetter(ElementPrototype, 'cloneNode');
@@ -423,7 +432,10 @@ function createDOMPurify() {
   const getNextSibling = lookupGetter(ElementPrototype, 'nextSibling');
   const getChildNodes = lookupGetter(ElementPrototype, 'childNodes');
   const getParentNode = lookupGetter(ElementPrototype, 'parentNode');
+  const getShadowRoot = lookupGetter(ElementPrototype, 'shadowRoot');
+  const getAttributes = lookupGetter(ElementPrototype, 'attributes');
   const getNodeType = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeType') : null;
+  const getNodeName = Node && Node.prototype ? lookupGetter(Node.prototype, 'nodeName') : null;
   // As per issue #47, the web-components registry is inherited by a
   // new document created via createHTMLDocument. As per the spec
   // (http://w3c.github.io/webcomponents/spec/custom/#creating-and-passing-registries)
@@ -438,6 +450,54 @@ function createDOMPurify() {
   }
   let trustedTypesPolicy;
   let emptyHTML = '';
+  // The instance's own internal Trusted Types policy. Unlike a caller-supplied
+  // `TRUSTED_TYPES_POLICY`, this is created at most once — Trusted Types throws
+  // on duplicate policy names — and is the only policy allowed to persist
+  // across configurations and survive `clearConfig()`.
+  let defaultTrustedTypesPolicy;
+  let defaultTrustedTypesPolicyResolved = false;
+  // Tracks whether we are already inside a call to the configured Trusted Types
+  // policy (`createHTML` or `createScriptURL`). If a supplied policy callback
+  // itself calls `DOMPurify.sanitize` (the cause of #1422), `sanitize` would
+  // re-enter the policy and recurse until the stack overflows. We detect that
+  // re-entry and throw a clear, actionable error instead. The guard is shared
+  // across both callbacks, because either one re-entering `sanitize` triggers
+  // the same unbounded recursion.
+  let IN_TRUSTED_TYPES_POLICY = 0;
+  const _assertNotInTrustedTypesPolicy = function _assertNotInTrustedTypesPolicy() {
+    if (IN_TRUSTED_TYPES_POLICY > 0) {
+      throw typeErrorCreate('A configured TRUSTED_TYPES_POLICY callback (createHTML or ' + 'createScriptURL) must not call DOMPurify.sanitize, as that causes ' + 'infinite recursion. Do not pass a policy whose callbacks wrap ' + 'DOMPurify as TRUSTED_TYPES_POLICY; see the "DOMPurify and Trusted ' + 'Types" section of the README.');
+    }
+  };
+  const _createTrustedHTML = function _createTrustedHTML(html) {
+    _assertNotInTrustedTypesPolicy();
+    IN_TRUSTED_TYPES_POLICY++;
+    try {
+      return trustedTypesPolicy.createHTML(html);
+    } finally {
+      IN_TRUSTED_TYPES_POLICY--;
+    }
+  };
+  const _createTrustedScriptURL = function _createTrustedScriptURL(scriptUrl) {
+    _assertNotInTrustedTypesPolicy();
+    IN_TRUSTED_TYPES_POLICY++;
+    try {
+      return trustedTypesPolicy.createScriptURL(scriptUrl);
+    } finally {
+      IN_TRUSTED_TYPES_POLICY--;
+    }
+  };
+  // Lazily resolve (and cache) the instance's internal default policy.
+  // Resolution is attempted at most once: a successful `createPolicy` cannot be
+  // repeated (Trusted Types throws on duplicate names), and a failed or
+  // unsupported attempt must not be retried on every parse.
+  const _getDefaultTrustedTypesPolicy = function _getDefaultTrustedTypesPolicy() {
+    if (!defaultTrustedTypesPolicyResolved) {
+      defaultTrustedTypesPolicy = _createTrustedTypesPolicy(trustedTypes, currentScript);
+      defaultTrustedTypesPolicyResolved = true;
+    }
+    return defaultTrustedTypesPolicy;
+  };
   const _document = document,
     implementation = _document.implementation,
     createNodeIterator = _document.createNodeIterator,
@@ -576,7 +636,17 @@ function createDOMPurify() {
   let USE_PROFILES = {};
   /* Tags to ignore content of when KEEP_CONTENT is true */
   let FORBID_CONTENTS = null;
-  const DEFAULT_FORBID_CONTENTS = addToSet({}, ['annotation-xml', 'audio', 'colgroup', 'desc', 'foreignobject', 'head', 'iframe', 'math', 'mi', 'mn', 'mo', 'ms', 'mtext', 'noembed', 'noframes', 'noscript', 'plaintext', 'script', 'style', 'svg', 'template', 'thead', 'title', 'video', 'xmp']);
+  const DEFAULT_FORBID_CONTENTS = addToSet({}, ['annotation-xml', 'audio', 'colgroup', 'desc', 'foreignobject', 'head', 'iframe', 'math', 'mi', 'mn', 'mo', 'ms', 'mtext', 'noembed', 'noframes', 'noscript', 'plaintext', 'script',
+  // <selectedcontent> mirrors the selected <option>'s subtree, cloned by
+  // the UA (customizable <select>) — including any on* handlers — and the
+  // engine re-mirrors synchronously whenever a removal changes which
+  // option/selectedcontent is current, even inside DOMPurify's inert
+  // DOMParser document. Hoisting its children on removal re-inserts a fresh
+  // mirror target ahead of the walk, which the engine refills, looping
+  // forever (DoS) and amplifying output. Dropping its content on removal
+  // (rather than hoisting) breaks that cascade; the content is a duplicate
+  // of the option, which is sanitized on its own. See campaign-3 F1/F6.
+  'selectedcontent', 'style', 'svg', 'template', 'thead', 'title', 'video', 'xmp']);
   /* Tags that are safe for data: URIs */
   let DATA_URI_TAGS = null;
   const DEFAULT_DATA_URI_TAGS = addToSet({}, ['audio', 'video', 'img', 'source', 'image', 'track']);
@@ -757,6 +827,13 @@ function createDOMPurify() {
       addToSet(ALLOWED_TAGS, ['tbody']);
       delete FORBID_TAGS.tbody;
     }
+    // Re-derive the active Trusted Types policy from this configuration on
+    // every parse. The active policy must never be sticky closure state that
+    // outlives the config that set it: a caller-supplied policy left in place
+    // after `clearConfig()` — or after a later call that supplied none, or
+    // `TRUSTED_TYPES_POLICY: null` — could sign a subsequent "default"
+    // `RETURN_TRUSTED_TYPE` result with a foreign, possibly unsafe policy.
+    // See GHSA-vxr8-fq34-vvx9.
     if (cfg.TRUSTED_TYPES_POLICY) {
       if (typeof cfg.TRUSTED_TYPES_POLICY.createHTML !== 'function') {
         throw typeErrorCreate('TRUSTED_TYPES_POLICY configuration option must provide a "createHTML" hook.');
@@ -764,19 +841,61 @@ function createDOMPurify() {
       if (typeof cfg.TRUSTED_TYPES_POLICY.createScriptURL !== 'function') {
         throw typeErrorCreate('TRUSTED_TYPES_POLICY configuration option must provide a "createScriptURL" hook.');
       }
-      // Overwrite existing TrustedTypes policy.
+      // A caller-supplied policy applies to this configuration only.
+      const previousTrustedTypesPolicy = trustedTypesPolicy;
       trustedTypesPolicy = cfg.TRUSTED_TYPES_POLICY;
-      // Sign local variables required by `sanitize`.
-      emptyHTML = trustedTypesPolicy.createHTML('');
+      // Sign local variables required by `sanitize`. If the supplied policy's
+      // `createHTML` is circular (i.e. it calls `DOMPurify.sanitize`), this
+      // throws via the re-entrancy guard. Restore the previous policy first so
+      // the instance is not left in a poisoned state. See #1422.
+      try {
+        emptyHTML = _createTrustedHTML('');
+      } catch (error) {
+        trustedTypesPolicy = previousTrustedTypesPolicy;
+        throw error;
+      }
+    } else if (cfg.TRUSTED_TYPES_POLICY === null) {
+      // Explicit opt-out for this call: perform no Trusted Types signing and
+      // create nothing (so a strict `trusted-types` CSP that disallows a
+      // `dompurify` policy can still call `sanitize` from inside its own
+      // policy — see #1422). Resetting to `undefined` rather than a sticky
+      // `null` also drops any previously retained caller policy, so it cannot
+      // resurface on a later call, while still allowing the next config-less
+      // call to restore the internal default policy. See GHSA-vxr8-fq34-vvx9.
+      trustedTypesPolicy = undefined;
+      emptyHTML = '';
     } else {
-      // Uninitialized policy, attempt to initialize the internal dompurify policy.
+      // No policy supplied: keep the currently active policy if one is set — a
+      // previously supplied policy is intentionally sticky across config-less
+      // calls — otherwise fall back to the instance's own internal policy,
+      // created at most once. (A policy supplied for a *single* call still
+      // lingers by design; what must not linger is a policy whose configuration
+      // has been torn down via `clearConfig()`, which restores the default.)
       if (trustedTypesPolicy === undefined) {
-        trustedTypesPolicy = _createTrustedTypesPolicy(trustedTypes, currentScript);
+        trustedTypesPolicy = _getDefaultTrustedTypesPolicy();
       }
-      // If creating the internal policy succeeded sign internal variables.
-      if (trustedTypesPolicy !== null && typeof emptyHTML === 'string') {
-        emptyHTML = trustedTypesPolicy.createHTML('');
+      // Sign internal variables only when a policy is active. A falsy policy
+      // (Trusted Types unsupported, creation failed, or an explicit opt-out)
+      // leaves `emptyHTML` as a plain string, so we never call `.createHTML` on
+      // a non-policy and throw. See #1422.
+      if (trustedTypesPolicy && typeof emptyHTML === 'string') {
+        emptyHTML = _createTrustedHTML('');
       }
+    }
+    /*
+     * Mirror the clone-before-mutate pattern already applied above for
+     * cfg.ADD_TAGS / cfg.ADD_ATTR: if any uponSanitize* hook is
+     * registered AND the set still points at the default constant,
+     * clone it. The hook then mutates the clone (in-call widening
+     * still works exactly as documented) and the next default-cfg
+     * call rebinds to the untouched original via the reassignment at
+     * the top of this function.
+     */
+    if ((hooks.uponSanitizeElement.length > 0 || hooks.uponSanitizeAttribute.length > 0) && ALLOWED_TAGS === DEFAULT_ALLOWED_TAGS) {
+      ALLOWED_TAGS = clone(ALLOWED_TAGS);
+    }
+    if (hooks.uponSanitizeAttribute.length > 0 && ALLOWED_ATTR === DEFAULT_ALLOWED_ATTR) {
+      ALLOWED_ATTR = clone(ALLOWED_ATTR);
     }
     // Prevent further manipulation of configuration.
     // Not available in IE8, Safari 5, etc.
@@ -881,7 +1000,74 @@ function createDOMPurify() {
       // eslint-disable-next-line unicorn/prefer-dom-node-remove
       getParentNode(node).removeChild(node);
     } catch (_) {
+      /* The normal detach failed — this is reached for a parentless node
+         (getParentNode() is null, so .removeChild throws). Element.prototype
+         .remove() is itself a spec no-op on a parentless node, so a recorded
+         "removal" would otherwise hand the caller back an intact,
+         payload-bearing node (e.g. a detached IN_PLACE root the mXSS canary or
+         the style-with-element-child rule decided to kill). Fail closed by
+         throwing — exactly as a clobbered root does at the IN_PLACE entry —
+         rather than trying to "neutralize" the node via its own methods.
+         Neutralizing would mean calling getAttributeNames()/removeAttribute()
+         on the node, both of which a <form> root can clobber via a named child
+         (and _isClobbered does not even probe getAttributeNames), so the
+         neutralize step could itself be silently defeated, leaving the payload
+         intact. A throw touches only the cached, clobber-safe remove() and
+         getParentNode(). Generalizes GHSA-r47g-fvhr-h676 (clobbered-form root)
+         to every root-kill reason. REPORT-3.
+                This lives inside the catch, so it never fires for a normally-removed
+         in-tree node: those have a parent, removeChild() succeeds, and the
+         catch is not entered. Only a kept (parentless) root reaches here. */
       remove(node);
+      if (!getParentNode(node)) {
+        throw typeErrorCreate('a node selected for removal could not be detached from its tree ' + 'and cannot be safely returned; refusing to sanitize in place');
+      }
+    }
+  };
+  /**
+   * _neutralizeRoot
+   *
+   * Fail-closed teardown of an in-place root after the sanitize walk aborts
+   * (campaign-3 F2). An internal throw mid-walk — e.g. a page-registered
+   * custom element's reaction detaches a node so `_forceRemove`'s deliberate
+   * parentless guard throws, or any other re-entrant engine mutation — would
+   * otherwise leave the caller's *live* tree half-sanitized, with everything
+   * after the abort point still carrying its handlers. There is no safe way
+   * to resume the walk (the tree mutated under us), so we strip the root bare:
+   * remove every child and every attribute, then let the caller's catch see
+   * the original error. Clobber-safe (cached `remove`/`childNodes`/`attributes`
+   * getters; the root was already clobber-pre-flighted at the IN_PLACE entry).
+   *
+   * @param root the in-place root to empty
+   */
+  const _neutralizeRoot = function _neutralizeRoot(root) {
+    const childNodes = getChildNodes ? getChildNodes(root) : root.childNodes;
+    if (childNodes) {
+      const snapshot = [];
+      arrayForEach(childNodes, child => {
+        arrayPush(snapshot, child);
+      });
+      arrayForEach(snapshot, child => {
+        try {
+          remove(child);
+        } catch (_) {
+          /* Best-effort teardown; a still-attached child is handled below */
+        }
+      });
+    }
+    const attributes = getAttributes ? getAttributes(root) : null;
+    if (attributes) {
+      for (let i = attributes.length - 1; i >= 0; --i) {
+        const attribute = attributes[i];
+        const name = attribute && attribute.name;
+        if (typeof name === 'string') {
+          try {
+            root.removeAttribute(name);
+          } catch (_) {
+            /* Clobbered removeAttribute — ignore (fail-closed best effort) */
+          }
+        }
+      }
     }
   };
   /**
@@ -917,6 +1103,72 @@ function createDOMPurify() {
     }
   };
   /**
+   * _stripDisallowedAttributes
+   *
+   * Removes every attribute the active configuration does not allow from a
+   * single element, using the same allowlist as the main attribute pass (so
+   * `on*` handlers go, but no `/^on/` blocklist is introduced). Used only to
+   * neutralise nodes that are being discarded from an in-place tree.
+   *
+   * @param element the element to strip
+   */
+  const _stripDisallowedAttributes = function _stripDisallowedAttributes(element) {
+    const attributes = getAttributes ? getAttributes(element) : element.attributes;
+    if (!attributes) {
+      return;
+    }
+    for (let i = attributes.length - 1; i >= 0; --i) {
+      const attribute = attributes[i];
+      const name = attribute && attribute.name;
+      if (typeof name !== 'string' || ALLOWED_ATTR[transformCaseFunc(name)]) {
+        continue;
+      }
+      try {
+        element.removeAttribute(name);
+      } catch (_) {
+        /* Clobbered removeAttribute on a doomed node — ignore */
+      }
+    }
+  };
+  /**
+   * _neutralizeSubtree
+   *
+   * Completes the audit-5 F1 fix across every removal path. The KEEP_CONTENT
+   * move-hoist neutralises only disallowed-tag removals; clobber, mXSS-canary,
+   * namespace, comment, processing-instruction and KEEP_CONTENT:false removals
+   * all drop their subtree wholesale via `_forceRemove`. On the IN_PLACE path
+   * those dropped nodes are detached from the caller's LIVE tree but a
+   * handler-bearing original among them (an `<img onerror>`/`<video>` that was
+   * loading) keeps its queued resource event, which fires in page scope after
+   * sanitize returns. This walks a removed subtree and strips every attribute
+   * the active configuration does not allow — so `on*` handlers are cancelled
+   * through the SAME allowlist that governs kept nodes, not a separate `/^on/`
+   * blocklist. Run synchronously before sanitize returns, i.e. before any
+   * queued event can fire. Hook-free by design: these nodes leave the output,
+   * so firing attribute hooks for them would be surprising. Clobber-safe reads;
+   * a doomed clobbered node may shadow `removeAttribute` (its own attributes are
+   * irrelevant — it is discarded — while its non-clobbered descendants, e.g.
+   * the `<img>`, are reached and scrubbed).
+   *
+   * @param root the root of a removed subtree to neutralise
+   */
+  const _neutralizeSubtree = function _neutralizeSubtree(root) {
+    const stack = [root];
+    while (stack.length > 0) {
+      const node = stack.pop();
+      const nodeType = getNodeType ? getNodeType(node) : node.nodeType;
+      if (nodeType === NODE_TYPE.element) {
+        _stripDisallowedAttributes(node);
+      }
+      const childNodes = getChildNodes ? getChildNodes(node) : node.childNodes;
+      if (childNodes) {
+        for (let i = childNodes.length - 1; i >= 0; --i) {
+          stack.push(childNodes[i]);
+        }
+      }
+    }
+  };
+  /**
    * _initDocument
    *
    * @param dirty - a string of dirty markup
@@ -937,7 +1189,7 @@ function createDOMPurify() {
       // Root of XHTML doc must contain xmlns declaration (see https://www.w3.org/TR/xhtml1/normative.html#strict)
       dirty = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + dirty + '</body></html>';
     }
-    const dirtyPayload = trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
+    const dirtyPayload = trustedTypesPolicy ? _createTrustedHTML(dirty) : dirty;
     /*
      * Use the DOMParser API by default, fallback later if needs be
      * DOMParser not work for svg when has multiple root element.
@@ -996,7 +1248,8 @@ function createDOMPurify() {
    *
    * @param node The root element whose character data should be scrubbed.
    */
-  const _scrubTemplateExpressions = function _scrubTemplateExpressions(node) {
+  const _scrubTemplateExpressions2 = function _scrubTemplateExpressions(node) {
+    var _node$querySelectorAl, _node$querySelectorAl2;
     node.normalize();
     const walker = createNodeIterator.call(node.ownerDocument || node, node,
     // eslint-disable-next-line no-bitwise
@@ -1010,15 +1263,87 @@ function createDOMPurify() {
       currentNode.data = data;
       currentNode = walker.nextNode();
     }
+    // NodeIterator does not descend into <template>.content per the DOM spec,
+    // so we must explicitly recurse into each template's content fragment,
+    // mirroring the approach used by _sanitizeShadowDOM.
+    const templates = (_node$querySelectorAl = (_node$querySelectorAl2 = node.querySelectorAll) === null || _node$querySelectorAl2 === void 0 ? void 0 : _node$querySelectorAl2.call(node, 'template')) !== null && _node$querySelectorAl !== void 0 ? _node$querySelectorAl : [];
+    arrayForEach(Array.from(templates), tmpl => {
+      if (_isDocumentFragment(tmpl.content)) {
+        _scrubTemplateExpressions2(tmpl.content);
+      }
+    });
   };
   /**
    * _isClobbered
+   *
+   * Detect DOM-clobbering on HTMLFormElement nodes. Form is the only HTML
+   * interface with [LegacyOverrideBuiltIns]; a descendant element with a
+   * `name` attribute matching a prototype property shadows that property
+   * on direct reads. We use this check at the IN_PLACE entry-point and
+   * during attribute sanitization to refuse clobbered forms.
    *
    * @param element element to check for clobbering attacks
    * @return true if clobbered, false if safe
    */
   const _isClobbered = function _isClobbered(element) {
-    return element instanceof HTMLFormElement && (typeof element.nodeName !== 'string' || typeof element.textContent !== 'string' || typeof element.removeChild !== 'function' || !(element.attributes instanceof NamedNodeMap) || typeof element.removeAttribute !== 'function' || typeof element.setAttribute !== 'function' || typeof element.namespaceURI !== 'string' || typeof element.insertBefore !== 'function' || typeof element.hasChildNodes !== 'function');
+    // Realm-independent tag-name probe. If we can't determine the tag
+    // name at all, we can't reason about clobbering — return false
+    // (the caller's other defences still apply).
+    const realTagName = getNodeName ? getNodeName(element) : null;
+    if (typeof realTagName !== 'string') {
+      return false;
+    }
+    if (transformCaseFunc(realTagName) !== 'form') {
+      return false;
+    }
+    return typeof element.nodeName !== 'string' || typeof element.textContent !== 'string' || typeof element.removeChild !== 'function' ||
+    // Realm-safe NamedNodeMap detection: equality against the cached
+    // prototype getter. Clobbered .attributes (e.g. <input name="attributes">)
+    // makes the direct read diverge from the cached read; a clean form
+    // (same-realm OR foreign-realm) has both reads pointing at the same
+    // canonical NamedNodeMap.
+    element.attributes !== getAttributes(element) || typeof element.removeAttribute !== 'function' || typeof element.setAttribute !== 'function' || typeof element.namespaceURI !== 'string' || typeof element.insertBefore !== 'function' || typeof element.hasChildNodes !== 'function' ||
+    // NodeType clobbering probe. Cached Node.prototype.nodeType getter
+    // returns the integer 1 for any Element regardless of realm; direct
+    // read on a clobbered form (e.g. <input name="nodeType">) returns
+    // the named child element. Cheap addition — nodeType is read from
+    // an internal slot, no serialization cost — and removes a residual
+    // clobbering surface used by several mXSS / PI / comment branches
+    // in _sanitizeElements that compare currentNode.nodeType directly.
+    element.nodeType !== getNodeType(element) ||
+    // HTMLFormElement has [LegacyOverrideBuiltIns]: a descendant named
+    // "childNodes" shadows the prototype getter. Direct reads of
+    // form.childNodes from a clobbered form return the named child
+    // instead of the real NodeList, so any walk that reads it directly
+    // skips the form's real children. Compare the direct read to the
+    // cached Node.prototype getter — when the form's named-property
+    // getter intercepts the read, the two values differ and we flag
+    // the form. This catches every clobbering child type (input,
+    // select, etc.) regardless of whether the named child happens to
+    // carry a numeric .length, which a typeof-based probe would miss
+    // (e.g. HTMLSelectElement.length is a defined unsigned-long).
+    element.childNodes !== getChildNodes(element);
+  };
+  /**
+   * Checks whether the given value is a DocumentFragment from any realm.
+   *
+   * The realm-independent replacement reads `nodeType` through the cached
+   * Node.prototype getter and compares to the DOCUMENT_FRAGMENT_NODE
+   * constant (11). nodeType is a numeric value resolved from the node's
+   * internal slot, identical across realms for the same kind of node.
+   *
+   * @param value object to check
+   * @return true if value is a DocumentFragment-shaped node from any realm
+   */
+  const _isDocumentFragment = function _isDocumentFragment(value) {
+    if (!getNodeType || typeof value !== 'object' || value === null) {
+      return false;
+    }
+    try {
+      return getNodeType(value) === NODE_TYPE.documentFragment;
+    } catch (_) {
+      return false;
+    }
   };
   /**
    * Checks whether the given object is a DOM node, including nodes that
@@ -1027,12 +1352,6 @@ function createDOMPurify() {
    * realm-bound: nodes from a different window failed it, causing
    * sanitize() to silently stringify them and reset IN_PLACE to false,
    * returning the original node unsanitized. See GHSA-4w3q-35jp-p934.
-   *
-   * Implementation: call the cached `nodeType` getter from Node.prototype
-   * directly on the value. This bypasses any clobbered instance property
-   * (e.g. a child element named "nodeType") and works across realms
-   * because the WebIDL `nodeType` getter reads an internal slot that
-   * every real Node has, regardless of which window minted it.
    *
    * @param value object to check whether it's a DOM node
    * @return true if value is a DOM node from any realm
@@ -1071,7 +1390,7 @@ function createDOMPurify() {
       return true;
     }
     /* Now let's check the element's type and name */
-    const tagName = transformCaseFunc(currentNode.nodeName);
+    const tagName = transformCaseFunc(getNodeName ? getNodeName(currentNode) : currentNode.nodeName);
     /* Execute a hook if present */
     _executeHooks(hooks.uponSanitizeElement, currentNode, {
       tagName,
@@ -1108,23 +1427,55 @@ function createDOMPurify() {
           return false;
         }
       }
-      /* Keep content except for bad-listed elements */
+      /* Keep content except for bad-listed elements.
+         Use the cached prototype getters exclusively — the previous code
+         had `|| currentNode.parentNode` / `|| currentNode.childNodes`
+         fallbacks, but the cached getters always return the canonical
+         value (or null for a real parent-less node), so the fallback
+         path was dead in safe cases and a clobbering surface in unsafe
+         ones. Falsy cached results stay falsy; the `if (childNodes &&
+         parentNode)` check already gates correctly. */
       if (KEEP_CONTENT && !FORBID_CONTENTS[tagName]) {
-        const parentNode = getParentNode(currentNode) || currentNode.parentNode;
-        const childNodes = getChildNodes(currentNode) || currentNode.childNodes;
+        const parentNode = getParentNode(currentNode);
+        const childNodes = getChildNodes(currentNode);
         if (childNodes && parentNode) {
           const childCount = childNodes.length;
+          /* In-place: hoist the *original* children so the iterator visits
+             and sanitises them through the same allowlist pass as every other
+             node. The caller built the tree in the live document, so the
+             originals carry already-queued resource events (`<img onerror>`,
+             `<video>`/`<audio>` error, lazy/`onload`, …); cloning would leave
+             those originals detached but still armed, firing in page scope
+             while the returned tree looked clean. Moving is safe in-place: the
+             root is pre-validated as an allowed tag and so is never the node
+             being removed, which keeps `parentNode` inside the iterator root
+             and the relocated child inside the serialised tree.
+                        Otherwise (string / DOM-copy paths): clone. The iterator is rooted
+             at — and the result serialised from — `body`, so a restrictive
+             ALLOWED_TAGS that removes `body` itself must leave its content in
+             place, which only cloning does; and those paths parse into an
+             inert document, so their discarded originals never had a queued
+             event to neutralise.
+                        `childNodes` is live; a tail-to-head walk keeps `childNodes[i]`
+             valid whether we move (drops the trailing entry) or clone (leaves
+             the list intact). */
           for (let i = childCount - 1; i >= 0; --i) {
-            const childClone = cloneNode(childNodes[i], true);
-            parentNode.insertBefore(childClone, getNextSibling(currentNode));
+            const hoisted = IN_PLACE ? childNodes[i] : cloneNode(childNodes[i], true);
+            parentNode.insertBefore(hoisted, getNextSibling(currentNode));
           }
         }
       }
       _forceRemove(currentNode);
       return true;
     }
-    /* Check whether element has a valid namespace */
-    if (currentNode instanceof Element && !_checkValidNamespace(currentNode)) {
+    /* Check whether element has a valid namespace.
+       Realm-safe check (GHSA-hpcv-96wg-7vj8): use the cached Node.prototype
+       nodeType getter rather than `instanceof Element`, which is realm-
+       bound and short-circuits to false for any node minted in a different
+       realm — letting a foreign-realm element with a forbidden namespace
+       slip past the namespace check entirely. */
+    const nt = getNodeType ? getNodeType(currentNode) : currentNode.nodeType;
+    if (nt === NODE_TYPE.element && !_checkValidNamespace(currentNode)) {
       _forceRemove(currentNode);
       return true;
     }
@@ -1301,12 +1652,12 @@ function createDOMPurify() {
           switch (trustedTypes.getAttributeType(lcTag, lcName)) {
             case 'TrustedHTML':
               {
-                value = trustedTypesPolicy.createHTML(value);
+                value = _createTrustedHTML(value);
                 break;
               }
             case 'TrustedScriptURL':
               {
-                value = trustedTypesPolicy.createScriptURL(value);
+                value = _createTrustedScriptURL(value);
                 break;
               }
           }
@@ -1351,9 +1702,30 @@ function createDOMPurify() {
       _sanitizeElements(shadowNode);
       /* Check attributes next */
       _sanitizeAttributes(shadowNode);
-      /* Deep shadow DOM detected */
-      if (shadowNode.content instanceof DocumentFragment) {
+      /* Deep shadow DOM detected.
+         Realm-safe check (GHSA-hpcv-96wg-7vj8): use nodeType against the
+         DOCUMENT_FRAGMENT_NODE constant rather than instanceof, so we
+         recurse into <template>.content from foreign realms too. */
+      if (_isDocumentFragment(shadowNode.content)) {
         _sanitizeShadowDOM2(shadowNode.content);
+      }
+      /* An element iterated here may itself host an attached
+         shadow root. The default NodeIterator does not enter shadow
+         trees, so a shadow root nested inside template.content was
+         previously reached by no walk at all (the pre-pass at
+         _sanitizeAttachedShadowRoots descends via childNodes, which
+         doesn't enter template.content; the template-content recursion
+         above iterates the content but never inspected shadowRoot).
+         Walk it explicitly. The nodeType guard avoids reading
+         shadowRoot off text / comment / CDATA / PI nodes that the
+         iterator also surfaces. */
+      const shadowNodeType = getNodeType ? getNodeType(shadowNode) : shadowNode.nodeType;
+      if (shadowNodeType === NODE_TYPE.element) {
+        const innerSr = getShadowRoot ? getShadowRoot(shadowNode) : shadowNode.shadowRoot;
+        if (_isDocumentFragment(innerSr)) {
+          _sanitizeAttachedShadowRoots(innerSr);
+          _sanitizeShadowDOM2(innerSr);
+        }
       }
     }
     /* Execute a hook if present */
@@ -1378,28 +1750,83 @@ function createDOMPurify() {
    *
    * @param root the subtree root to walk for attached shadow roots
    */
-  const _sanitizeAttachedShadowRoots2 = function _sanitizeAttachedShadowRoots(root) {
-    if (root.nodeType === NODE_TYPE.element && root.shadowRoot instanceof DocumentFragment) {
-      const sr = root.shadowRoot;
-      // Recurse first so that nested shadow roots are reached even if
-      // _sanitizeShadowDOM removes hosts at this level.
-      _sanitizeAttachedShadowRoots2(sr);
-      _sanitizeShadowDOM2(sr);
-    }
-    // Snapshot children before recursing. Sanitization of one subtree
-    // (e.g. via an uponSanitizeShadowNode hook) may detach siblings,
-    // and naive nextSibling traversal would silently skip the rest of
-    // the list once a node is detached.
-    const childNodes = root.childNodes;
-    if (!childNodes) {
-      return;
-    }
-    const snapshot = [];
-    arrayForEach(childNodes, child => {
-      arrayPush(snapshot, child);
-    });
-    for (const child of snapshot) {
-      _sanitizeAttachedShadowRoots2(child);
+  const _sanitizeAttachedShadowRoots = function _sanitizeAttachedShadowRoots(root) {
+    /* Iterative (explicit stack) rather than per-child recursion. DOM APIs
+       impose no depth cap, so an attacker-shaped tree (JSON/CRDT/editor data
+       built straight into the DOM — the IN_PLACE surface) deeper than the JS
+       call-stack budget would otherwise overflow native recursion here and
+       throw at the IN_PLACE entry pre-pass, before a single node is
+       sanitized, leaving the caller's live tree untouched (fail-open). See
+       campaign-3 F4. A heap stack keeps depth off the call stack.
+            Each work item is either a node to descend into, or a deferred
+       `_sanitizeShadowDOM` for an already-walked shadow root. The deferred
+       form preserves the original post-order discipline: a shadow root's
+       nested shadow roots are discovered before the outer shadow is
+       sanitized (which may remove hosts). Pushes are in reverse of the
+       desired processing order (LIFO): template content, then children, then
+       the shadow-sanitize, then the shadow walk — so the order matches the
+       previous recursion exactly. */
+    const stack = [{
+      node: root,
+      shadow: null
+    }];
+    while (stack.length > 0) {
+      const item = stack.pop();
+      /* Deferred shadow-DOM sanitisation: runs after its subtree was walked. */
+      if (item.shadow) {
+        _sanitizeShadowDOM2(item.shadow);
+        continue;
+      }
+      const node = item.node;
+      const nodeType = getNodeType ? getNodeType(node) : node.nodeType;
+      const isElement = nodeType === NODE_TYPE.element;
+      /* (pushed last → processed first) Children, snapshotted in reverse so
+         the first child is processed first. Snapshotting matters because a
+         hook may detach siblings mid-walk. */
+      const childNodes = getChildNodes ? getChildNodes(node) : node.childNodes;
+      if (childNodes) {
+        for (let i = childNodes.length - 1; i >= 0; --i) {
+          stack.push({
+            node: childNodes[i],
+            shadow: null
+          });
+        }
+      }
+      /* (pushed before children → processed after them, matching the old
+         "template content last" order) When the node is a <template>,
+         descend into its content. */
+      if (isElement) {
+        const rootName = getNodeName ? getNodeName(node) : null;
+        if (typeof rootName === 'string' && transformCaseFunc(rootName) === 'template') {
+          const content = node.content;
+          if (_isDocumentFragment(content)) {
+            stack.push({
+              node: content,
+              shadow: null
+            });
+          }
+        }
+      }
+      /* Shadow root (processed first): walk its subtree, then sanitise it.
+         Realm-safe check (GHSA-hpcv-96wg-7vj8): nodeType-based detection
+         rather than `instanceof DocumentFragment`, which is realm-bound and
+         silently skipped foreign-realm shadow roots (e.g.
+         iframe.contentDocument attachShadow). */
+      if (isElement) {
+        const sr = getShadowRoot ? getShadowRoot(node) : node.shadowRoot;
+        if (_isDocumentFragment(sr)) {
+          /* Push the deferred sanitise first so it pops after the shadow
+             walk we push next, i.e. nested shadow roots are discovered
+             before this one is sanitised. */
+          stack.push({
+            node: null,
+            shadow: sr
+          }, {
+            node: sr,
+            shadow: null
+          });
+        }
+      }
     }
   };
   // eslint-disable-next-line complexity
@@ -1433,22 +1860,50 @@ function createDOMPurify() {
     }
     /* Clean up removed elements */
     DOMPurify.removed = [];
-    /* Check if dirty is correctly typed for IN_PLACE */
-    if (typeof dirty === 'string') {
-      IN_PLACE = false;
-    }
-    if (IN_PLACE) {
-      /* Do some early pre-sanitization to avoid unsafe root nodes */
-      const nn = dirty.nodeName;
+    /* Resolve IN_PLACE for this call without mutating persistent config.
+       Writing the IN_PLACE closure variable here leaks under setConfig(),
+       where _parseConfig is skipped on later calls: a single string call would
+       disable in-place mode for every subsequent node call, returning a
+       sanitized copy while leaving the caller's node — which in-place callers
+       keep using and whose return value they ignore — unsanitized. REPORT-2. */
+    const inPlace = IN_PLACE && typeof dirty !== 'string' && _isNode(dirty);
+    if (inPlace) {
+      /* Do some early pre-sanitization to avoid unsafe root nodes.
+         Read nodeName through the cached prototype getter — a clobbering
+         child named "nodeName" on the form root would otherwise shadow
+         the property and let this check skip the root-allowlist
+         validation entirely. */
+      const nn = getNodeName ? getNodeName(dirty) : dirty.nodeName;
       if (typeof nn === 'string') {
         const tagName = transformCaseFunc(nn);
         if (!ALLOWED_TAGS[tagName] || FORBID_TAGS[tagName]) {
           throw typeErrorCreate('root node is forbidden and cannot be sanitized in-place');
         }
       }
+      /* Pre-flight the root through _isClobbered. The iterator-driven
+         removal path can not detach a parent-less root: _forceRemove
+         falls through to Element.prototype.remove(), which per spec
+         is a no-op on a node with no parent. A clobbered root would
+         then survive the main loop with its attributes uninspected,
+         because _sanitizeAttributes early-returns on _isClobbered. The
+         result would be an attacker-controlled form, complete with any
+         event-handler attributes the caller passed in, handed back to
+         the application unsanitized. Refuse to sanitize such a root
+         the same way we refuse a forbidden tag. GHSA-r47g-fvhr-h676. */
+      if (_isClobbered(dirty)) {
+        throw typeErrorCreate('root node is clobbered and cannot be sanitized in-place');
+      }
       /* Sanitize attached shadow roots before the main iterator runs.
-         The iterator does not descend into shadow trees. */
-      _sanitizeAttachedShadowRoots2(dirty);
+         The iterator does not descend into shadow trees. Same fail-closed
+         barrier as the main walk (campaign-3 F2): a custom-element reaction
+         inside a shadow root could abort this pre-pass before the walk runs,
+         which would otherwise leave the entire live tree unsanitized. */
+      try {
+        _sanitizeAttachedShadowRoots(dirty);
+      } catch (error) {
+        _neutralizeRoot(dirty);
+        throw error;
+      }
     } else if (_isNode(dirty)) {
       /* If dirty is a DOM element, append to an empty document to avoid
          elements being stripped by the parser */
@@ -1465,14 +1920,16 @@ function createDOMPurify() {
       }
       /* Clonable shadow roots are deep-cloned by importNode(); sanitize
          them before the main iterator runs, since the iterator does not
-         descend into shadow trees. */
-      _sanitizeAttachedShadowRoots2(importedNode);
+         descend into shadow trees. The walk routes every read through a
+         cached prototype getter so clobbering descendants on a form root
+         cannot hide a shadow host from this pass. */
+      _sanitizeAttachedShadowRoots(importedNode);
     } else {
       /* Exit directly if we have nothing to do */
       if (!RETURN_DOM && !SAFE_FOR_TEMPLATES && !WHOLE_DOCUMENT &&
       // eslint-disable-next-line unicorn/prefer-includes
       dirty.indexOf('<') === -1) {
-        return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? trustedTypesPolicy.createHTML(dirty) : dirty;
+        return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? _createTrustedHTML(dirty) : dirty;
       }
       /* Initialize the document to work on */
       body = _initDocument(dirty);
@@ -1486,29 +1943,59 @@ function createDOMPurify() {
       _forceRemove(body.firstChild);
     }
     /* Get node iterator */
-    const nodeIterator = _createNodeIterator(IN_PLACE ? dirty : body);
-    /* Now start iterating over the created document */
-    while (currentNode = nodeIterator.nextNode()) {
-      /* Sanitize tags and elements */
-      _sanitizeElements(currentNode);
-      /* Check attributes next */
-      _sanitizeAttributes(currentNode);
-      /* Shadow DOM detected, sanitize it */
-      if (currentNode.content instanceof DocumentFragment) {
-        _sanitizeShadowDOM2(currentNode.content);
+    const nodeIterator = _createNodeIterator(inPlace ? dirty : body);
+    /* Now start iterating over the created document.
+       The walk runs inside an exception barrier (campaign-3 F2): a re-entrant
+       engine/custom-element mutation can detach a node mid-walk so
+       `_forceRemove`'s parentless guard throws, aborting the loop. Without the
+       barrier the caller's in-place tree would be left half-sanitized with the
+       unvisited tail still armed. On any throw we fail closed — strip the
+       in-place root bare — then rethrow so the existing throw contract is
+       preserved. (String/DOM-copy paths never return the partial body, so the
+       propagating throw is already fail-closed there.) */
+    try {
+      while (currentNode = nodeIterator.nextNode()) {
+        /* Sanitize tags and elements */
+        _sanitizeElements(currentNode);
+        /* Check attributes next */
+        _sanitizeAttributes(currentNode);
+        /* Shadow DOM detected, sanitize it.
+           Realm-safe check (GHSA-hpcv-96wg-7vj8): nodeType-based detection
+           instead of instanceof, so foreign-realm <template>.content is
+           walked correctly. */
+        if (_isDocumentFragment(currentNode.content)) {
+          _sanitizeShadowDOM2(currentNode.content);
+        }
       }
+    } catch (error) {
+      if (inPlace) {
+        _neutralizeRoot(dirty);
+      }
+      throw error;
     }
     /* If we sanitized `dirty` in-place, return it. */
-    if (IN_PLACE) {
+    if (inPlace) {
+      /* Fail-closed completion of the audit-5 F1 fix: every node removed from
+         the caller's live tree is detached but may still hold a queued
+         resource-event handler that fires in page scope after we return. The
+         move-hoist covers only disallowed-tag KEEP_CONTENT removals; strip the
+         non-allow-listed attributes off every other removed subtree (clobber,
+         mXSS, namespace, comments, KEEP_CONTENT:false, …) so those handlers are
+         cancelled before any event can fire. Runs synchronously, pre-return. */
+      arrayForEach(DOMPurify.removed, entry => {
+        if (entry.element) {
+          _neutralizeSubtree(entry.element);
+        }
+      });
       if (SAFE_FOR_TEMPLATES) {
-        _scrubTemplateExpressions(dirty);
+        _scrubTemplateExpressions2(dirty);
       }
       return dirty;
     }
     /* Return sanitized string or DOM */
     if (RETURN_DOM) {
       if (SAFE_FOR_TEMPLATES) {
-        _scrubTemplateExpressions(body);
+        _scrubTemplateExpressions2(body);
       }
       if (RETURN_DOM_FRAGMENT) {
         returnNode = createDocumentFragment.call(body.ownerDocument);
@@ -1542,7 +2029,7 @@ function createDOMPurify() {
         serializedHTML = stringReplace(serializedHTML, expr, ' ');
       });
     }
-    return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? trustedTypesPolicy.createHTML(serializedHTML) : serializedHTML;
+    return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? _createTrustedHTML(serializedHTML) : serializedHTML;
   };
   DOMPurify.setConfig = function () {
     let cfg = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -1552,6 +2039,12 @@ function createDOMPurify() {
   DOMPurify.clearConfig = function () {
     CONFIG = null;
     SET_CONFIG = false;
+    // Drop any caller-supplied Trusted Types policy so it cannot poison later
+    // `RETURN_TRUSTED_TYPE` output. The internal default policy (cached, and
+    // never recreated — Trusted Types throws on duplicate names) is restored by
+    // the next `_parseConfig`. See GHSA-vxr8-fq34-vvx9.
+    trustedTypesPolicy = defaultTrustedTypesPolicy;
+    emptyHTML = '';
   };
   DOMPurify.isValidAttribute = function (tag, attr, value) {
     /* Initialize shared config vars if necessary. */

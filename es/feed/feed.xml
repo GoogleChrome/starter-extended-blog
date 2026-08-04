@@ -5,18 +5,18 @@
   <script src="/assets/js/xslt-polyfill/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
   <title>Publicaciones - Starter Extended Blog</title>
   <subtitle>I am writing about my experiences as a naval navel-gazer.</subtitle>
-  <link href="https://example.com/starter-extended-blog/es/feed/feed.xml" rel="self" />
-  <link href="https://example.com/starter-extended-blog/" />
+  <link href="https://example.com/es/feed/feed.xml" rel="self" />
+  <link href="https://example.com/" />
   <updated>2018-05-01T00:00:00Z</updated>
-  <id>https://example.com/starter-extended-blog/</id>
+  <id>https://example.com/</id>
   <author>
     <name>Jane Doe y John Doe</name>
   </author>
   <entry>
     <title>Esta es mi primera publicación.</title>
-    <link href="https://example.com/starter-extended-blog/es/blog/firstpost/" />
+    <link href="https://example.com/es/blog/firstpost/" />
     <updated>2018-05-01T00:00:00Z</updated>
-    <id>https://example.com/starter-extended-blog/es/blog/firstpost/</id>
+    <id>https://example.com/es/blog/firstpost/</id>
     <content type="html">&lt;p&gt;Aproveche los marcos ágiles para proporcionar una sinopsis sólida para resúmenes de alto nivel. Los enfoques iterativos para la estrategia corporativa fomentan el pensamiento colaborativo para promover la propuesta de valor general. Haga crecer orgánicamente la visión del mundo holística de la innovación disruptiva a través de la diversidad y el empoderamiento en el lugar de trabajo.&lt;/p&gt;
 &lt;p&gt;Traiga a la mesa estrategias de supervivencia en las que todos ganen para asegurar una dominación proactiva. Al final del día, de ahora en adelante, una nueva normalidad que ha evolucionado de la generación X está en la pista de aterrizaje dirigiéndose hacia una solución en la nube optimizada. El contenido generado por el usuario en tiempo real tendrá múltiples puntos de contacto para la deslocalización.&lt;/p&gt;
 &lt;h2 id=&quot;encabezado-de-seccion&quot;&gt;Encabezado de Sección&lt;/h2&gt;

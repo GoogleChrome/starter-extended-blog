@@ -1,8 +1,3 @@
-/**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
 // GitHub: https://github.com/apache/avro
 // Docs: https://avro.apache.org/docs/current/idl.html
 

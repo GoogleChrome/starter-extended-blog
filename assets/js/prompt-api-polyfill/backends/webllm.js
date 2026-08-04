@@ -1,4 +1,4 @@
-import { n as e, t } from "../chunks/defaults-DMD-8IKq.js";
+import { n as e, t } from "../chunks/defaults-n7NcZd-K.js";
 import { CreateMLCEngine as n, prebuiltAppConfig as r } from "@mlc-ai/web-llm";
 //#region backends/webllm.js
 var i = class extends e {

@@ -1,9 +1,4 @@
 /**
- * Copyright 2026 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-
-/**
  * # ONNX Runtime JavaScript API
  *
  * ONNX Runtime JavaScript API is a unified API for all JavaScript usages, including the following NPM packages:
