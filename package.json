@@ -7,14 +7,14 @@
     "clean": "shx rm -rf _site",
     "build": "npm run clean && npx @11ty/eleventy && npx pagefind --site _site",
     "build-nocolor": "npm run clean && cross-env NODE_DISABLE_COLORS=1 npx @11ty/eleventy",
-    "build-ghpages": "npm run clean && npx @11ty/eleventy --pathprefix=/starter-extended-blog/",
+    "build-ghpages": "npm run clean && npx @11ty/eleventy --pathprefix=/starter-extended-blog/ && npx pagefind --site _site",
     "start": "npx @11ty/eleventy --serve --quiet",
     "start-ghpages": "npx @11ty/eleventy --pathprefix=/starter-extended-blog/ --serve --quiet",
     "debug": "cross-env DEBUG=Eleventy* npx @11ty/eleventy",
     "debugstart": "cross-env DEBUG=Eleventy* npx @11ty/eleventy --serve --quiet",
     "benchmark": "cross-env DEBUG=Eleventy:Benchmark* npx @11ty/eleventy",
     "format": "npx prettier --write .",
-    "deploy": "npm run build && git push origin main && gh-pages -d _site"
+    "deploy": "npm run build-ghpages && git push origin main && gh-pages -d _site"
   },
   "repository": {
     "type": "git",
