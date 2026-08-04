@@ -6,6 +6,7 @@
 import { detectLanguage } from './ai-language-detection.js';
 import { customAlert, customConfirm } from '../utils/dialog-utils.js';
 import { getMonitor, runAIAction } from './ai-features.js';
+import { isNativeAIFeature } from './ai-ui-utils.js';
 import { refreshAIVisibility } from './ai-toggle.js';
 
 /**
@@ -84,7 +85,7 @@ export async function initAIWriter(ui, updateCallback) {
       }
     }
 
-    const isNative = Writer.toString().includes('[native code]');
+    const isNative = isNativeAIFeature(Writer);
 
     await runAIAction(
       ui,
