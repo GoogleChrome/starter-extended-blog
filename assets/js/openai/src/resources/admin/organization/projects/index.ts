@@ -78,17 +78,24 @@ export {
   type ServiceAccountListParams,
   type ServiceAccountDeleteParams,
   type ProjectServiceAccountsPage,
-} from './service-accounts';
+} from './service-accounts/index';
 export {
   SpendAlerts,
   type ProjectSpendAlert,
   type ProjectSpendAlertDeleted,
   type SpendAlertCreateParams,
+  type SpendAlertRetrieveParams,
   type SpendAlertUpdateParams,
   type SpendAlertListParams,
   type SpendAlertDeleteParams,
   type ProjectSpendAlertsPage,
 } from './spend-alerts';
+export {
+  SpendLimit,
+  type ProjectSpendLimit,
+  type ProjectSpendLimitDeleted,
+  type SpendLimitUpdateParams,
+} from './spend-limit';
 export {
   Users,
   type ProjectUser,

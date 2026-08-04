@@ -40,6 +40,9 @@ interface ErrorParams {
     };
     [AppError.DUPLICATE_APP]: {
         appName: string;
+        mismatchedParam: string;
+        oldValue: string;
+        newValue: string;
     };
     [AppError.APP_DELETED]: {
         appName: string;

@@ -8,7 +8,10 @@ import { OpenAI } from './client';
 import type { ClientOptions } from './client';
 
 /** API Client for interfacing with the Azure OpenAI API. */
-export interface AzureClientOptions extends ClientOptions {
+export interface AzureClientOptions extends Omit<ClientOptions, 'provider'> {
+  /** AzureOpenAI does not support third-party provider configuration. */
+  provider?: never;
+
   /**
    * Defaults to process.env['OPENAI_API_VERSION'].
    */
@@ -104,7 +107,11 @@ export class AzureOpenAI extends OpenAI {
         );
       }
 
-      baseURL = `${endpoint}/openai`;
+      let endpointEnd = endpoint.length;
+      while (endpointEnd > 0 && endpoint[endpointEnd - 1] === '/') {
+        endpointEnd--;
+      }
+      baseURL = `${endpoint.slice(0, endpointEnd)}/openai`;
     } else {
       if (endpoint) {
         throw new Errors.OpenAIError('baseURL and endpoint are mutually exclusive');

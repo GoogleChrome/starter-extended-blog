@@ -1852,6 +1852,10 @@ export interface RealtimeResponseCreateMcpTool {
      */
     type: 'mcp';
     /**
+     * The tool invocation context(s).
+     */
+    allowed_callers?: Array<'direct' | 'programmatic'> | null;
+    /**
      * List of allowed tool names or a filter object.
      */
     allowed_tools?: Array<string> | RealtimeResponseCreateMcpTool.McpToolFilter | null;
@@ -1863,8 +1867,8 @@ export interface RealtimeResponseCreateMcpTool {
     authorization?: string;
     /**
      * Identifier for service connectors, like those available in ChatGPT. One of
-     * `server_url` or `connector_id` must be provided. Learn more about service
-     * connectors
+     * `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more about
+     * service connectors
      * [here](https://platform.openai.com/docs/guides/tools-remote-mcp#connectors).
      *
      * Currently supported `connector_id` values are:
@@ -1899,10 +1903,15 @@ export interface RealtimeResponseCreateMcpTool {
      */
     server_description?: string;
     /**
-     * The URL for the MCP server. One of `server_url` or `connector_id` must be
-     * provided.
+     * The URL for the MCP server. One of `server_url`, `connector_id`, or `tunnel_id`
+     * must be provided.
      */
     server_url?: string;
+    /**
+     * The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+     * `server_url`, `connector_id`, or `tunnel_id` must be provided.
+     */
+    tunnel_id?: string;
 }
 export declare namespace RealtimeResponseCreateMcpTool {
     /**
@@ -2583,7 +2592,7 @@ export interface RealtimeSessionCreateRequest {
     /**
      * The Realtime model used for this session.
      */
-    model?: (string & {}) | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15';
+    model?: (string & {}) | 'gpt-realtime' | 'gpt-realtime-1.5' | 'gpt-realtime-2' | 'gpt-realtime-2.1' | 'gpt-realtime-2.1-mini' | 'gpt-realtime-2025-08-28' | 'gpt-4o-realtime-preview' | 'gpt-4o-realtime-preview-2024-10-01' | 'gpt-4o-realtime-preview-2024-12-17' | 'gpt-4o-realtime-preview-2025-06-03' | 'gpt-4o-mini-realtime-preview' | 'gpt-4o-mini-realtime-preview-2024-12-17' | 'gpt-realtime-mini' | 'gpt-realtime-mini-2025-10-06' | 'gpt-realtime-mini-2025-12-15' | 'gpt-audio-1.5' | 'gpt-audio-mini' | 'gpt-audio-mini-2025-10-06' | 'gpt-audio-mini-2025-12-15';
     /**
      * The set of modalities the model can respond with. It defaults to `["audio"]`,
      * indicating that the model will respond with audio plus a transcript. `["text"]`
@@ -2677,6 +2686,10 @@ export declare namespace RealtimeToolsConfigUnion {
          */
         type: 'mcp';
         /**
+         * The tool invocation context(s).
+         */
+        allowed_callers?: Array<'direct' | 'programmatic'> | null;
+        /**
          * List of allowed tool names or a filter object.
          */
         allowed_tools?: Array<string> | Mcp.McpToolFilter | null;
@@ -2688,8 +2701,8 @@ export declare namespace RealtimeToolsConfigUnion {
         authorization?: string;
         /**
          * Identifier for service connectors, like those available in ChatGPT. One of
-         * `server_url` or `connector_id` must be provided. Learn more about service
-         * connectors
+         * `server_url`, `connector_id`, or `tunnel_id` must be provided. Learn more about
+         * service connectors
          * [here](https://platform.openai.com/docs/guides/tools-remote-mcp#connectors).
          *
          * Currently supported `connector_id` values are:
@@ -2724,10 +2737,15 @@ export declare namespace RealtimeToolsConfigUnion {
          */
         server_description?: string;
         /**
-         * The URL for the MCP server. One of `server_url` or `connector_id` must be
-         * provided.
+         * The URL for the MCP server. One of `server_url`, `connector_id`, or `tunnel_id`
+         * must be provided.
          */
         server_url?: string;
+        /**
+         * The Secure MCP Tunnel ID to use instead of a direct server URL. One of
+         * `server_url`, `connector_id`, or `tunnel_id` must be provided.
+         */
+        tunnel_id?: string;
     }
     namespace Mcp {
         /**

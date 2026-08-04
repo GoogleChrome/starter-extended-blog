@@ -1,11 +1,66 @@
 var _AbstractChatCompletionRunner_instances, _AbstractChatCompletionRunner_getFinalContent, _AbstractChatCompletionRunner_getFinalMessage, _AbstractChatCompletionRunner_getFinalFunctionToolCall, _AbstractChatCompletionRunner_getFinalFunctionToolCallResult, _AbstractChatCompletionRunner_calculateTotalUsage, _AbstractChatCompletionRunner_validateParams, _AbstractChatCompletionRunner_stringifyFunctionCallResult;
 import { __classPrivateFieldGet } from "../internal/tslib.mjs";
 import { OpenAIError } from "../error.mjs";
+import { uuid4 } from "../internal/utils/uuid.mjs";
 import { isAutoParsableTool, parseChatCompletion } from "../lib/parser.mjs";
 import { isAssistantMessage, isToolMessage } from "./chatCompletionUtils.mjs";
 import { EventStream } from "./EventStream.mjs";
 import { isRunnableFunctionWithParse, } from "./RunnableFunction.mjs";
 const DEFAULT_MAX_CHAT_COMPLETIONS = 10;
+function normalizeToolCallIds(chatCompletion) {
+    for (const choice of chatCompletion.choices) {
+        for (const toolCall of choice.message.tool_calls ?? []) {
+            // Some OpenAI-compatible providers omit tool call IDs or return an empty string.
+            // Generate a unique ID before the completion is stored or emitted so the assistant
+            // tool call and its result message always reference the same value.
+            if (!toolCall.id) {
+                toolCall.id = `call_${uuid4()}`;
+            }
+        }
+    }
+}
+/**
+ * Parsed completions contain response-only and helper-only fields. Keep those
+ * on runner.messages for callers, but only replay valid request fields.
+ */
+function toRequestMessage(message) {
+    if (!isAssistantMessage(message))
+        return message;
+    const requestMessage = { role: 'assistant' };
+    if (message.audio != null)
+        requestMessage.audio = { id: message.audio.id };
+    if (message.content !== undefined)
+        requestMessage.content = message.content;
+    if (message.function_call != null)
+        requestMessage.function_call = message.function_call;
+    if (message.name !== undefined)
+        requestMessage.name = message.name;
+    if (message.refusal != null)
+        requestMessage.refusal = message.refusal;
+    if (message.tool_calls !== undefined) {
+        requestMessage.tool_calls = message.tool_calls.map((toolCall) => {
+            if (toolCall.type === 'custom') {
+                return {
+                    id: toolCall.id,
+                    type: toolCall.type,
+                    custom: {
+                        input: toolCall.custom.input,
+                        name: toolCall.custom.name,
+                    },
+                };
+            }
+            return {
+                id: toolCall.id,
+                type: toolCall.type,
+                function: {
+                    arguments: toolCall.function.arguments,
+                    name: toolCall.function.name,
+                },
+            };
+        });
+    }
+    return requestMessage;
+}
 export class AbstractChatCompletionRunner extends EventStream {
     constructor() {
         super(...arguments);
@@ -14,6 +69,7 @@ export class AbstractChatCompletionRunner extends EventStream {
         this.messages = [];
     }
     _addChatCompletion(chatCompletion) {
+        normalizeToolCallIds(chatCompletion);
         this._chatCompletions.push(chatCompletion);
         this._emit('chatCompletion', chatCompletion);
         const message = chatCompletion.choices[0]?.message;
@@ -60,7 +116,7 @@ export class AbstractChatCompletionRunner extends EventStream {
         return __classPrivateFieldGet(this, _AbstractChatCompletionRunner_instances, "m", _AbstractChatCompletionRunner_getFinalContent).call(this);
     }
     /**
-     * @returns a promise that resolves with the the final assistant ChatCompletionMessage response,
+     * @returns a promise that resolves with the final assistant ChatCompletionMessage response,
      * or rejects if an error occurred or the stream ended prematurely without producing a ChatCompletionMessage.
      */
     async finalMessage() {
@@ -107,12 +163,7 @@ export class AbstractChatCompletionRunner extends EventStream {
         }
     }
     async _createChatCompletion(client, params, options) {
-        const signal = options?.signal;
-        if (signal) {
-            if (signal.aborted)
-                this.controller.abort();
-            signal.addEventListener('abort', () => this.controller.abort());
-        }
+        this._listenForAbort(options?.signal);
         __classPrivateFieldGet(this, _AbstractChatCompletionRunner_instances, "m", _AbstractChatCompletionRunner_validateParams).call(this, params);
         const chatCompletion = await client.chat.completions.create({ ...params, stream: false }, { ...options, signal: this.controller.signal });
         this._connected();
@@ -124,11 +175,12 @@ export class AbstractChatCompletionRunner extends EventStream {
         }
         return await this._createChatCompletion(client, params, options);
     }
-    async _runTools(client, params, options) {
+    async _runTools(client, params, runner, options) {
         const role = 'tool';
-        const { tool_choice = 'auto', stream, ...restParams } = params;
+        const { tool_choice = 'auto', stream, toolContext: inputToolContext, ...restParams } = params;
+        const toolContext = inputToolContext;
         const singleFunctionToCall = typeof tool_choice !== 'string' && tool_choice.type === 'function' && tool_choice?.function?.name;
-        const { maxChatCompletions = DEFAULT_MAX_CHAT_COMPLETIONS } = options || {};
+        const { maxChatCompletions = DEFAULT_MAX_CHAT_COMPLETIONS, afterCompletion } = options || {};
         // TODO(someday): clean this logic up
         const inputTools = params.tools.map((tool) => {
             if (isAutoParsableTool(tool)) {
@@ -171,55 +223,83 @@ export class AbstractChatCompletionRunner extends EventStream {
         for (const message of params.messages) {
             this._addMessage(message, false);
         }
+        const runToolCall = async (toolCall) => {
+            if (toolCall.type !== 'function')
+                return { message: undefined, functionCalled: false };
+            const tool_call_id = toolCall.id;
+            const { name, arguments: args } = toolCall.function;
+            const fn = functionsByName[name];
+            if (!fn) {
+                const content = `Invalid tool_call: ${JSON.stringify(name)}. Available options are: ${Object.keys(functionsByName)
+                    .map((name) => JSON.stringify(name))
+                    .join(', ')}. Please try again`;
+                return { message: { role, tool_call_id, content }, functionCalled: false };
+            }
+            if (singleFunctionToCall && singleFunctionToCall !== name) {
+                const content = `Invalid tool_call: ${JSON.stringify(name)}. ${JSON.stringify(singleFunctionToCall)} requested. Please try again`;
+                return { message: { role, tool_call_id, content }, functionCalled: false };
+            }
+            let rawContent;
+            if (isRunnableFunctionWithParse(fn)) {
+                let parsed;
+                try {
+                    parsed = await fn.parse(args);
+                }
+                catch (error) {
+                    const content = error instanceof Error ? error.message : String(error);
+                    return { message: { role, tool_call_id, content }, functionCalled: false };
+                }
+                rawContent = await fn.function(parsed, runner, toolContext);
+            }
+            else {
+                rawContent = await fn.function(args, runner, toolContext);
+            }
+            const content = __classPrivateFieldGet(this, _AbstractChatCompletionRunner_instances, "m", _AbstractChatCompletionRunner_stringifyFunctionCallResult).call(this, rawContent);
+            return { message: { role, tool_call_id, content }, functionCalled: true };
+        };
         for (let i = 0; i < maxChatCompletions; ++i) {
             const chatCompletion = await this._createChatCompletion(client, {
                 ...restParams,
                 tool_choice,
                 tools,
-                messages: [...this.messages],
+                messages: this.messages.map(toRequestMessage),
             }, options);
             const message = chatCompletion.choices[0]?.message;
             if (!message) {
                 throw new OpenAIError(`missing message in ChatCompletion response`);
             }
             if (!message.tool_calls?.length) {
+                await afterCompletion?.(chatCompletion, runner);
                 return;
             }
-            for (const tool_call of message.tool_calls) {
-                if (tool_call.type !== 'function')
-                    continue;
-                const tool_call_id = tool_call.id;
-                const { name, arguments: args } = tool_call.function;
-                const fn = functionsByName[name];
-                if (!fn) {
-                    const content = `Invalid tool_call: ${JSON.stringify(name)}. Available options are: ${Object.keys(functionsByName)
-                        .map((name) => JSON.stringify(name))
-                        .join(', ')}. Please try again`;
-                    this._addMessage({ role, tool_call_id, content });
-                    continue;
-                }
-                else if (singleFunctionToCall && singleFunctionToCall !== name) {
-                    const content = `Invalid tool_call: ${JSON.stringify(name)}. ${JSON.stringify(singleFunctionToCall)} requested. Please try again`;
-                    this._addMessage({ role, tool_call_id, content });
-                    continue;
-                }
-                let parsed;
-                try {
-                    parsed = isRunnableFunctionWithParse(fn) ? await fn.parse(args) : args;
-                }
-                catch (error) {
-                    const content = error instanceof Error ? error.message : String(error);
-                    this._addMessage({ role, tool_call_id, content });
-                    continue;
-                }
-                // @ts-expect-error it can't rule out `never` type.
-                const rawContent = await fn.function(parsed, this);
-                const content = __classPrivateFieldGet(this, _AbstractChatCompletionRunner_instances, "m", _AbstractChatCompletionRunner_stringifyFunctionCallResult).call(this, rawContent);
-                this._addMessage({ role, tool_call_id, content });
-                if (singleFunctionToCall) {
-                    return;
+            if (singleFunctionToCall || params.parallel_tool_calls === false) {
+                for (const toolCall of message.tool_calls) {
+                    const result = await runToolCall(toolCall);
+                    if (result.message)
+                        this._addMessage(result.message);
+                    if (singleFunctionToCall && result.functionCalled) {
+                        await afterCompletion?.(chatCompletion, runner);
+                        return;
+                    }
                 }
             }
+            else {
+                const results = await Promise.allSettled(message.tool_calls.map(runToolCall));
+                // Wait for every concurrently running tool to settle before surfacing an
+                // error so tool side effects cannot continue after the runner has ended.
+                for (const result of results) {
+                    if (result.status === 'rejected')
+                        throw result.reason;
+                }
+                // Promise.allSettled preserves input order, so the next request receives
+                // tool result messages in the same order as the assistant's tool calls.
+                for (const result of results) {
+                    if (result.status === 'fulfilled' && result.value.message) {
+                        this._addMessage(result.value.message);
+                    }
+                }
+            }
+            await afterCompletion?.(chatCompletion, runner);
         }
         return;
     }
@@ -245,7 +325,12 @@ _AbstractChatCompletionRunner_instances = new WeakSet(), _AbstractChatCompletion
     for (let i = this.messages.length - 1; i >= 0; i--) {
         const message = this.messages[i];
         if (isAssistantMessage(message) && message?.tool_calls?.length) {
-            return message.tool_calls.filter((x) => x.type === 'function').at(-1)?.function;
+            for (let j = message.tool_calls.length - 1; j >= 0; j--) {
+                const toolCall = message.tool_calls[j];
+                if (toolCall?.type === 'function') {
+                    return toolCall.function;
+                }
+            }
         }
     }
     return;

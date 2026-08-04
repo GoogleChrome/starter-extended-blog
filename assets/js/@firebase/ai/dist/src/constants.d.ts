@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 export declare const AI_TYPE = "AI";
-export declare const DEFAULT_LOCATION = "us-central1";
+export declare const LEGACY_DEFAULT_LOCATION = "us-central1";
+export declare const DEFAULT_LOCATION = "global";
 export declare const DEFAULT_DOMAIN = "firebasevertexai.googleapis.com";
 export declare const STAGING_URL = "https://staging-firebasevertexai.sandbox.googleapis.com";
 export declare const DEFAULT_API_VERSION = "v1beta";

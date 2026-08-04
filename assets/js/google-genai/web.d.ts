@@ -1,8 +1,5 @@
-/// <reference types="node" />
-
 import type { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { GoogleAuthOptions } from 'google-auth-library';
-import { ReadableStream as ReadableStream_2 } from 'stream/web';
 
 /** Marks the end of user activity.
 
@@ -66,224 +63,114 @@ export declare enum AdapterSize {
     ADAPTER_SIZE_THIRTY_TWO = "ADAPTER_SIZE_THIRTY_TWO"
 }
 
+declare type Agent$ = Agent;
+
 /**
- * An agent definition for the CreateAgent API. This message is the target for
- * annotation-parser-based JSON parsing. New format: { "id": "customer-sentinel",
- * "base_agent": "", "system_instruction": "...", "base_environment": { "type":
- * "remote", "sources": [...] }, "tools": [ {"type": "code_execution"} ] }
+ * An agent definition for the CreateAgent API.
+ *
+ * @remarks
+ * This message is the target for annotation-parser-based JSON parsing.
+ * New format:
+ *   {
+ *     "id": "customer-sentinel",
+ *     "base_agent": "",
+ *     "system_instruction": "...",
+ *     "base_environment": { "type": "remote", "sources": [...] },
+ *     "tools": [ {"type": "code_execution"} ]
+ *   }
  */
-declare interface Agent {
+declare type Agent = {
     /**
-     * The unique identifier for the agent.
+     * Configuration parameters for the agent.
      */
-    id?: string;
+    agent_config?: interactions.AntigravityAgentConfig | undefined;
     /**
      * The base agent to extend.
      */
-    base_agent?: string;
+    base_agent?: string | undefined;
     /**
      * The environment configuration for the agent.
      */
-    base_environment?: InteractionsAPI.Environment | string;
+    base_environment?: interactions.Environment | string | undefined;
     /**
      * Agent description for developers to quickly read and understand.
      */
-    description?: string;
+    description?: string | undefined;
+    /**
+     * The unique identifier for the agent.
+     */
+    id?: string | undefined;
     /**
      * System instruction for the agent.
      */
-    system_instruction?: string;
+    system_instruction?: string | undefined;
     /**
      * The tools available to the agent.
      */
-    tools?: Array<Agent.CodeExecution | Agent.GoogleSearch | Agent.URLContext | Agent.MCPServer>;
-}
-
-declare namespace Agent {
-    /**
-     * A tool that can be used by the model to execute code.
-     */
-    interface CodeExecution {
-        type: 'code_execution';
-    }
-    /**
-     * A tool that can be used by the model to search Google.
-     */
-    interface GoogleSearch {
-        type: 'google_search';
-        /**
-         * The types of search grounding to enable.
-         */
-        search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-    }
-    /**
-     * A tool that can be used by the model to fetch URL context.
-     */
-    interface URLContext {
-        type: 'url_context';
-    }
-    /**
-     * A MCPServer is a server that can be called by the model to perform actions.
-     */
-    interface MCPServer {
-        type: 'mcp_server';
-        /**
-         * The allowed tools.
-         */
-        allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-        /**
-         * Optional: Fields for authentication headers, timeouts, etc., if needed.
-         */
-        headers?: {
-            [key: string]: string;
-        };
-        /**
-         * The name of the MCPServer.
-         */
-        name?: string;
-        /**
-         * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-         */
-        url?: string;
-    }
-}
-
-declare interface AgentCreateParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Body param: The unique identifier for the agent.
-     */
-    id?: string;
-    /**
-     * Body param: The base agent to extend.
-     */
-    base_agent?: string;
-    /**
-     * Body param: The environment configuration for the agent.
-     */
-    base_environment?: InteractionsAPI.Environment | string;
-    /**
-     * Body param: Agent description for developers to quickly read and understand.
-     */
-    description?: string;
-    /**
-     * Body param: System instruction for the agent.
-     */
-    system_instruction?: string;
-    /**
-     * Body param: The tools available to the agent.
-     */
-    tools?: Array<AgentCreateParams.CodeExecution | AgentCreateParams.GoogleSearch | AgentCreateParams.URLContext | AgentCreateParams.MCPServer>;
-}
-
-declare namespace AgentCreateParams {
-    /**
-     * A tool that can be used by the model to execute code.
-     */
-    interface CodeExecution {
-        type: 'code_execution';
-    }
-    /**
-     * A tool that can be used by the model to search Google.
-     */
-    interface GoogleSearch {
-        type: 'google_search';
-        /**
-         * The types of search grounding to enable.
-         */
-        search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-    }
-    /**
-     * A tool that can be used by the model to fetch URL context.
-     */
-    interface URLContext {
-        type: 'url_context';
-    }
-    /**
-     * A MCPServer is a server that can be called by the model to perform actions.
-     */
-    interface MCPServer {
-        type: 'mcp_server';
-        /**
-         * The allowed tools.
-         */
-        allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-        /**
-         * Optional: Fields for authentication headers, timeouts, etc., if needed.
-         */
-        headers?: {
-            [key: string]: string;
-        };
-        /**
-         * The name of the MCPServer.
-         */
-        name?: string;
-        /**
-         * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-         */
-        url?: string;
-    }
-}
-
-declare interface AgentDeleteParams {
-    /**
-     * Which version of the API to use.
-     */
-    api_version?: string;
-}
+    tools?: Array<AgentTool> | undefined;
+};
 
 /**
- * A generic empty message that you can re-use to avoid defining duplicated empty
- * messages in your APIs. A typical example is to use it as the request or the
- * response type of an API method. For instance:
- *
- *     service Foo {
- *       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- *     }
+ * Configuration parameters for the agent.
  */
-declare interface AgentDeleteResponse {
-}
+declare type AgentConfig = interactions.AntigravityAgentConfig;
 
-declare interface AgentGetParams {
-    /**
-     * Which version of the API to use.
-     */
-    api_version?: string;
-}
+declare type AgentCreateParams$ = CreateAgentParams;
 
-declare interface AgentListParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Query param
-     */
-    pageSize?: number;
-    /**
-     * Query param
-     */
-    pageToken?: string;
-    /**
-     * Query param
-     */
-    parent?: string;
-}
+declare type AgentDeleteParams$ = DeleteAgentParams;
 
-declare interface AgentListResponse {
-    agents?: Array<Agent>;
-    nextPageToken?: string;
-}
+declare type AgentDeleteResponse$ = Empty;
 
-export declare class Agents extends BaseAgents {
-}
+declare type AgentGetParams$ = GetAgentParams;
+
+declare type AgentListParams$ = ListAgentsParams;
+
+declare type AgentListResponse$ = AgentListResponse;
+
+declare type AgentListResponse = {
+    agents?: Array<Agent> | undefined;
+    next_page_token?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The agent to interact with.
+ */
+declare type AgentOption = "deep-research-pro-preview-12-2025" | "deep-research-preview-04-2026" | "deep-research-max-preview-04-2026" | "antigravity-preview-05-2026" | (string & {});
 
 export declare namespace Agents {
-    export { type Agent as Agent, type AgentListResponse as AgentListResponse, type AgentDeleteResponse as AgentDeleteResponse, type AgentCreateParams as AgentCreateParams, type AgentListParams as AgentListParams, type AgentDeleteParams as AgentDeleteParams, type AgentGetParams as AgentGetParams, };
+    export type Agent = Agent$;
+    export type AgentCreateParams = AgentCreateParams$;
+    export type AgentDeleteParams = AgentDeleteParams$;
+    export type AgentDeleteResponse = AgentDeleteResponse$;
+    export type AgentGetParams = AgentGetParams$;
+    export type AgentListParams = AgentListParams$;
+    export type AgentListResponse = AgentListResponse$;
+    export type AgentTool = AgentTool$;
 }
+
+declare namespace agents {
+    export {
+        AgentListResponse,
+        AgentTool,
+        AgentConfig,
+        BaseEnvironment,
+        Agent
+    }
+}
+
+declare type AgentTool$ = AgentTool;
+
+/**
+ * A tool that the agent can use.
+ */
+declare type AgentTool = interactions.CodeExecution | interactions.FunctionT | interactions.GoogleSearch | interactions.MCPServer | interactions.URLContext;
 
 /** Aggregation metric. This enum is not supported in Gemini API. */
 export declare enum AggregationMetric {
@@ -359,24 +246,87 @@ export declare interface AggregationResult {
     rougeMetricValue?: RougeMetricValue;
 }
 
+declare type AllowedTools$ = AllowedTools;
+
 /**
  * The configuration for allowed tools.
  */
-declare interface AllowedTools {
-    /**
-     * The mode of the tool choice.
-     */
-    mode?: ToolChoiceType;
+declare type AllowedTools = {
+    mode?: ToolChoiceType | undefined;
     /**
      * The names of the allowed tools.
      */
-    tools?: Array<string>;
-}
+    tools?: Array<string> | undefined;
+};
+
+declare type Allowlist$ = Allowlist;
+
+declare type Allowlist$2 = Allowlist;
+
+declare type Allowlist$3 = Allowlist;
+
+/**
+ * Outbound networking configuration for the sandbox. When specified, restricts which external domains the sandbox can reach. Omit entirely to allow all outbound traffic with no header injection.
+ */
+declare type Allowlist = {
+    /**
+     * List of allowed outbound domains. Only requests to listed domains are permitted. Use [{'domain': '*'}] to allow all domains while still injecting headers on specific ones.
+     */
+    allowlist?: Array<AllowlistEntry> | undefined;
+};
+
+/**
+ * A single domain allowlist rule with optional header injection.
+ */
+declare type AllowlistEntry = {
+    /**
+     * Domain to allow outbound requests to. Supports wildcards (e.g. '*.googleapis.com'). Use '*' to allow all domains.
+     */
+    domain: string;
+    /**
+     * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
+     */
+    transform?: {
+        [k: string]: string;
+    } | Array<{
+        [k: string]: string;
+    }> | undefined;
+};
+
+declare type Annotation$ = Annotation;
 
 /**
  * Citation information for model-generated content.
  */
-declare type Annotation = URLCitation | FileCitation | PlaceCitation;
+declare type Annotation = FileCitation | PlaceCitation | URLCitation | WordInfo_2;
+
+declare type AntigravityAgentConfig$ = AntigravityAgentConfig;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Configuration for the Antigravity agent runtime.
+ *
+ * @remarks
+ * Provides server-side control over the agent's execution environment
+ * and tool configuration.
+ */
+declare type AntigravityAgentConfig = {
+    /**
+     * Max total tokens for the agent run.
+     */
+    max_total_tokens?: string | undefined;
+    /**
+     * The model to use for agent reasoning.
+     */
+    model?: string | undefined;
+    type: "antigravity";
+};
 
 /** The generic reusable api auth config. Deprecated. Please use AuthConfig (google/cloud/aiplatform/master/auth.proto) instead. This data type is not supported in Gemini API. */
 export declare interface ApiAuth {
@@ -399,7 +349,7 @@ export declare interface ApiAuthApiKeyConfig {
  * WARNING: This is an internal API and may change without notice. Direct usage
  * is not supported and may break your application.
  */
-declare class ApiClient implements GeminiNextGenAPIClientAdapter {
+declare class ApiClient {
     readonly clientOptions: ApiClientInitOptions;
     private readonly customBaseUrl?;
     constructor(opts: ApiClientInitOptions);
@@ -523,31 +473,6 @@ declare interface ApiClientInitOptions {
     userAgentExtra?: string;
 }
 
-declare class APIConnectionError extends APIError<undefined, undefined, undefined> {
-    constructor({ message, cause }: {
-        message?: string | undefined;
-        cause?: Error | undefined;
-    });
-}
-
-declare class APIConnectionTimeoutError extends APIConnectionError {
-    constructor({ message }?: {
-        message?: string;
-    });
-}
-
-declare class APIError<TStatus extends number | undefined = number | undefined, THeaders extends Headers | undefined = Headers | undefined, TError extends Object | undefined = Object | undefined> extends GeminiNextGenAPIClientError {
-    /** HTTP status for the response that caused the error */
-    readonly status: TStatus;
-    /** HTTP headers for the response that caused the error */
-    readonly headers: THeaders;
-    /** JSON body of the response that caused the error */
-    readonly error: TError;
-    constructor(status: TStatus, error: TError, message: string | undefined, headers: THeaders);
-    private static makeMessage;
-    static generate(status: number | undefined, errorResponse: Object | undefined, message: string | undefined, headers: Headers | undefined): APIError;
-}
-
 /**
  * API errors raised by the GenAI API.
  */
@@ -584,68 +509,6 @@ export declare interface ApiKeyConfig {
     name?: string;
 }
 
-/**
- * A subclass of `Promise` providing additional helper methods
- * for interacting with the SDK.
- */
-declare class APIPromise<T> extends Promise<T> {
-    private responsePromise;
-    private parseResponse;
-    private parsedPromise;
-    private client;
-    constructor(client: BaseGeminiNextGenAPIClient, responsePromise: Promise<APIResponseProps>, parseResponse?: (client: BaseGeminiNextGenAPIClient, props: APIResponseProps) => PromiseOrValue<T>);
-    _thenUnwrap<U>(transform: (data: T, props: APIResponseProps) => U): APIPromise<U>;
-    /**
-     * Gets the raw `Response` instance instead of parsing the response
-     * data.
-     *
-     * If you want to parse the response body but still get the `Response`
-     * instance, you can use {@link withResponse()}.
-     *
-     * 👋 Getting the wrong TypeScript type for `Response`?
-     * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
-     * to your `tsconfig.json`.
-     */
-    asResponse(): Promise<Response>;
-    /**
-     * Gets the parsed response data and the raw `Response` instance.
-     *
-     * If you just want to get the raw `Response` instance without parsing it,
-     * you can use {@link asResponse()}.
-     *
-     * 👋 Getting the wrong TypeScript type for `Response`?
-     * Try setting `"moduleResolution": "NodeNext"` or add `"lib": ["DOM"]`
-     * to your `tsconfig.json`.
-     */
-    withResponse(): Promise<{
-        data: T;
-        response: Response;
-    }>;
-    private parse;
-    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
-    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
-    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
-}
-
-declare abstract class APIResource {
-    /**
-     * The key path from the client. For example, a resource accessible as `client.resource.subresource` would
-     * have a property `static override readonly _key = Object.freeze(['resource', 'subresource'] as const);`.
-     */
-    static readonly _key: readonly string[];
-    protected _client: BaseGeminiNextGenAPIClient;
-    constructor(client: BaseGeminiNextGenAPIClient);
-}
-
-declare type APIResponseProps = {
-    response: Response;
-    options: FinalRequestOptions;
-    controller: AbortController;
-    requestLogID: string;
-    retryOfRequestLogID: string | undefined;
-    startTime: number;
-};
-
 /** The API spec that the external API implements. This enum is not supported in Gemini API. */
 export declare enum ApiSpec {
     /**
@@ -662,11 +525,95 @@ export declare enum ApiSpec {
     ELASTIC_SEARCH = "ELASTIC_SEARCH"
 }
 
-declare class APIUserAbortError extends APIError<undefined, undefined, undefined> {
-    constructor({ message }?: {
-        message?: string;
-    });
+declare type Arguments$ = CodeExecutionCallArguments;
+
+declare type Arguments$2 = GoogleMapsCallArguments;
+
+declare type Arguments$3 = GoogleSearchCallArguments;
+
+declare type Arguments$4 = RetrievalCallArguments;
+
+declare type Arguments$5 = URLContextCallArguments;
+
+declare type ArgumentsDelta$ = ArgumentsDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ArgumentsDelta = {
+    arguments?: string | undefined;
+    type: "arguments_delta";
+};
+
+/** The aspect ratio for the image output. */
+export declare enum AspectRatio {
+    /**
+     * Default value. This value is unused.
+     */
+    ASPECT_RATIO_UNSPECIFIED = "ASPECT_RATIO_UNSPECIFIED",
+    /**
+     * 1:1 aspect ratio.
+     */
+    ASPECT_RATIO_ONE_BY_ONE = "ASPECT_RATIO_ONE_BY_ONE",
+    /**
+     * 2:3 aspect ratio.
+     */
+    ASPECT_RATIO_TWO_BY_THREE = "ASPECT_RATIO_TWO_BY_THREE",
+    /**
+     * 3:2 aspect ratio.
+     */
+    ASPECT_RATIO_THREE_BY_TWO = "ASPECT_RATIO_THREE_BY_TWO",
+    /**
+     * 3:4 aspect ratio.
+     */
+    ASPECT_RATIO_THREE_BY_FOUR = "ASPECT_RATIO_THREE_BY_FOUR",
+    /**
+     * 4:3 aspect ratio.
+     */
+    ASPECT_RATIO_FOUR_BY_THREE = "ASPECT_RATIO_FOUR_BY_THREE",
+    /**
+     * 4:5 aspect ratio.
+     */
+    ASPECT_RATIO_FOUR_BY_FIVE = "ASPECT_RATIO_FOUR_BY_FIVE",
+    /**
+     * 5:4 aspect ratio.
+     */
+    ASPECT_RATIO_FIVE_BY_FOUR = "ASPECT_RATIO_FIVE_BY_FOUR",
+    /**
+     * 9:16 aspect ratio.
+     */
+    ASPECT_RATIO_NINE_BY_SIXTEEN = "ASPECT_RATIO_NINE_BY_SIXTEEN",
+    /**
+     * 16:9 aspect ratio.
+     */
+    ASPECT_RATIO_SIXTEEN_BY_NINE = "ASPECT_RATIO_SIXTEEN_BY_NINE",
+    /**
+     * 21:9 aspect ratio.
+     */
+    ASPECT_RATIO_TWENTY_ONE_BY_NINE = "ASPECT_RATIO_TWENTY_ONE_BY_NINE",
+    /**
+     * 1:8 aspect ratio.
+     */
+    ASPECT_RATIO_ONE_BY_EIGHT = "ASPECT_RATIO_ONE_BY_EIGHT",
+    /**
+     * 8:1 aspect ratio.
+     */
+    ASPECT_RATIO_EIGHT_BY_ONE = "ASPECT_RATIO_EIGHT_BY_ONE",
+    /**
+     * 1:4 aspect ratio.
+     */
+    ASPECT_RATIO_ONE_BY_FOUR = "ASPECT_RATIO_ONE_BY_FOUR",
+    /**
+     * 4:1 aspect ratio.
+     */
+    ASPECT_RATIO_FOUR_BY_ONE = "ASPECT_RATIO_FOUR_BY_ONE"
 }
+
+declare type Audio$ = AudioDelta;
 
 /** Representation of an audio chunk. */
 export declare interface AudioChunk {
@@ -679,62 +626,152 @@ export declare interface AudioChunk {
     sourceMetadata?: LiveMusicSourceMetadata;
 }
 
+declare type AudioContent$ = AudioContent;
+
 /**
  * An audio content block.
  */
-declare interface AudioContent {
-    type: 'audio';
+declare type AudioContent = {
     /**
      * The number of audio channels.
      */
-    channels?: number;
+    channels?: number | undefined;
     /**
      * The audio content.
      */
-    data?: string;
+    data?: string | undefined;
     /**
      * The mime type of the audio.
      */
-    mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac' | 'audio/mpeg' | 'audio/m4a' | 'audio/l16' | 'audio/opus' | 'audio/alaw' | 'audio/mulaw';
+    mime_type?: AudioContentMimeType | undefined;
     /**
      * The sample rate of the audio.
      */
-    sample_rate?: number;
+    sample_rate?: number | undefined;
+    type: "audio";
     /**
      * The URI of the audio.
      */
-    uri?: string;
+    uri?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The mime type of the audio.
+ */
+declare type AudioContentMimeType = "audio/wav" | "audio/mp3" | "audio/aiff" | "audio/aac" | "audio/ogg" | "audio/flac" | "audio/mpeg" | "audio/m4a" | "audio/l16" | "audio/opus" | "audio/alaw" | "audio/mulaw" | (string & {});
+
+declare type AudioDelta = {
+    /**
+     * The number of audio channels.
+     */
+    channels?: number | undefined;
+    data?: string | undefined;
+    mime_type?: AudioDeltaMimeType | undefined;
+    /**
+     * Deprecated. Use sample_rate instead. The value is ignored.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    rate?: number | undefined;
+    /**
+     * The sample rate of the audio.
+     */
+    sample_rate?: number | undefined;
+    type: "audio";
+    uri?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type AudioDeltaMimeType = "audio/wav" | "audio/mp3" | "audio/aiff" | "audio/aac" | "audio/ogg" | "audio/flac" | "audio/mpeg" | "audio/m4a" | "audio/l16" | "audio/opus" | "audio/alaw" | "audio/mulaw" | (string & {});
+
+declare type AudioResponseFormat$ = AudioResponseFormat_2;
+
+/** Configuration for audio-specific output formatting. */
+export declare class AudioResponseFormat {
+    /** Optional. Bit rate in bits per second (bps). Only applicable for compressed formats (MP3, Opus). */
+    bitRate?: number;
+    /** Optional. Delivery mode for the generated content. */
+    delivery?: Delivery;
+    /** Optional. The MIME type of the audio output. */
+    mimeType?: string;
+    /** Optional. Sample rate for the generated audio in Hertz. */
+    sampleRate?: number;
 }
 
 /**
  * Configuration for audio output format.
  */
-declare interface AudioResponseFormat {
-    type: 'audio';
+declare type AudioResponseFormat_2 = {
     /**
-     * Bit rate in bits per second (bps). Only applicable for compressed formats (MP3,
-     * Opus).
+     * Bit rate in bits per second (bps). Only applicable for compressed formats
+     *
+     * @remarks
+     * (MP3, Opus).
      */
-    bit_rate?: number;
+    bit_rate?: number | undefined;
     /**
      * The delivery mode for the audio output.
      */
-    delivery?: 'inline' | 'uri';
+    delivery?: AudioResponseFormatDelivery | undefined;
     /**
      * The MIME type of the audio output.
      */
-    mime_type?: 'audio/mp3' | 'audio/ogg_opus' | 'audio/l16' | 'audio/wav' | 'audio/alaw' | 'audio/mulaw';
+    mime_type?: AudioResponseFormatMimeType | undefined;
     /**
      * Sample rate in Hz.
      */
-    sample_rate?: number;
-}
+    sample_rate?: number | undefined;
+    type: "audio";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The delivery mode for the audio output.
+ */
+declare type AudioResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
+ * The MIME type of the audio output.
+ */
+declare type AudioResponseFormatMimeType = "audio/mp3" | "audio/ogg_opus" | "audio/l16" | "audio/wav" | "audio/alaw" | "audio/mulaw" | (string & {});
 
 /** The audio transcription configuration in Setup. */
 export declare interface AudioTranscriptionConfig {
-    /** The language codes of the audio. BCP-47 language code. If not set, the transcription will be in the language detected by the model. If set, the server will use the language code specified in the model config as a hint for the language of the audio
-     */
+    /** BCP-47 language codes providing hints about the languages present in the audio. If omitted or empty, defaults to automatic language detection. */
     languageCodes?: string[];
+    /** Deprecated: Auto-detection is now the default when language_codes is omitted. This field will be removed in a future version. */
+    languageAuto?: LanguageAuto;
+    /** Deprecated: Use top-level language_codes instead. This field will be removed in a future version. */
+    languageHints?: LanguageHints;
+    /** A list of custom vocabulary phrases, which biases the ASR model to improve recognition of these specific terms. */
+    customVocabulary?: string[];
+    /** Deprecated. A list of phrases used for speech adaptation, which biases the ASR model to improve recognition of these specific terms. */
+    adaptationPhrases?: string[];
+    /** Configures word-level timestamp generation.
+     */
+    wordTimestamp?: boolean;
+    /** Configures speaker diarization.
+     */
+    diarization?: boolean;
 }
 
 /**
@@ -799,9 +836,6 @@ export declare interface AuthConfigOidcConfig {
     idToken?: string;
     /** The service account used to generate an OpenID Connect (OIDC)-compatible JWT token signed by the Google OIDC Provider (accounts.google.com) for extension endpoint (https://cloud.google.com/iam/docs/create-short-lived-credentials-direct#sa-credentials-oidc). - The audience for the token will be set to the URL in the server url defined in the OpenApi spec. - If the service account is provided, the service account should grant `iam.serviceAccounts.getOpenIdToken` permission to Vertex AI Extension Service Agent (https://cloud.google.com/vertex-ai/docs/general/access-control#service-agents). */
     serviceAccount?: string;
-}
-
-declare class AuthenticationError extends APIError<401, Headers> {
 }
 
 /** Config for auth_tokens.create parameters. */
@@ -913,322 +947,24 @@ export declare interface AvatarConfig {
     videoBitrateBps?: number;
 }
 
-declare class BadRequestError extends APIError<400, Headers> {
-}
-
-declare class BaseAgents extends APIResource {
-    static readonly _key: readonly ['agents'];
-    /**
-     * Creates a new Agent (Typed version for SDK).
-     */
-    create(params?: AgentCreateParams | null | undefined, options?: RequestOptions): APIPromise<Agent>;
-    /**
-     * Lists all Agents.
-     */
-    list(params?: AgentListParams | null | undefined, options?: RequestOptions): APIPromise<AgentListResponse>;
-    /**
-     * Deletes an Agent.
-     */
-    delete(id: string, params?: AgentDeleteParams | null | undefined, options?: RequestOptions): APIPromise<AgentDeleteResponse>;
-    /**
-     * Gets a specific Agent.
-     */
-    get(id: string, params?: AgentGetParams | null | undefined, options?: RequestOptions): APIPromise<Agent>;
-}
-
-declare interface BaseCreateAgentInteractionParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Body param: The name of the `Agent` used for generating the interaction.
-     */
-    agent: 'deep-research-pro-preview-12-2025' | 'deep-research-preview-04-2026' | 'deep-research-max-preview-04-2026' | (string & {});
-    /**
-     * Body param: The input for the interaction.
-     */
-    input: string | Array<Step> | Array<Content_2> | TextContent | ImageContent | AudioContent | DocumentContent | VideoContent;
-    /**
-     * Body param: Configuration parameters for the agent interaction.
-     */
-    agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
-    /**
-     * Body param: Input only. Whether to run the model interaction in the background.
-     */
-    background?: boolean;
-    /**
-     * Body param: The environment configuration for the interaction. Can be an object
-     * specifying remote environment sources or a string referencing an existing
-     * environment ID.
-     */
-    environment?: string | Environment_2;
-    /**
-     * Body param: The ID of the previous interaction, if any.
-     */
-    previous_interaction_id?: string;
-    /**
-     * Body param: Enforces that the generated response is a JSON object that complies
-     * with the JSON schema specified in this field.
-     */
-    response_format?: Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown> | AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown;
-    /**
-     * @deprecated Body param: The mime type of the response. This is required if
-     * response_format is set.
-     */
-    response_mime_type?: string;
-    /**
-     * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
-     */
-    response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
-    /**
-     * Body param: The service tier for the interaction.
-     */
-    service_tier?: 'flex' | 'standard' | 'priority';
-    /**
-     * Body param: Input only. Whether to store the response and request for later
-     * retrieval.
-     */
-    store?: boolean;
-    /**
-     * Body param: Input only. Whether the interaction will be streamed.
-     */
-    stream?: boolean;
-    /**
-     * Body param: System instruction for the interaction.
-     */
-    system_instruction?: string;
-    /**
-     * Body param: A list of tool declarations the model may call during interaction.
-     */
-    tools?: Array<Tool_2>;
-    /**
-     * Body param: Optional. Webhook configuration for receiving notifications when the
-     * interaction completes.
-     */
-    webhook_config?: WebhookConfig_2;
-}
-
-declare interface BaseCreateModelInteractionParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Body param: The input for the interaction.
-     */
-    input: string | Array<Step> | Array<Content_2> | TextContent | ImageContent | AudioContent | DocumentContent | VideoContent;
-    /**
-     * Body param: The name of the `Model` used for generating the interaction.
-     */
-    model: Model_2;
-    /**
-     * Body param: Input only. Whether to run the model interaction in the background.
-     */
-    background?: boolean;
-    /**
-     * Body param: The environment configuration for the interaction. Can be an object
-     * specifying remote environment sources or a string referencing an existing
-     * environment ID.
-     */
-    environment?: string | Environment_2;
-    /**
-     * Body param: Input only. Configuration parameters for the model interaction.
-     */
-    generation_config?: GenerationConfig_2;
-    /**
-     * Body param: The ID of the previous interaction, if any.
-     */
-    previous_interaction_id?: string;
-    /**
-     * Body param: Enforces that the generated response is a JSON object that complies
-     * with the JSON schema specified in this field.
-     */
-    response_format?: Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown> | AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown;
-    /**
-     * @deprecated Body param: The mime type of the response. This is required if
-     * response_format is set.
-     */
-    response_mime_type?: string;
-    /**
-     * Body param: The requested modalities of the response (TEXT, IMAGE, AUDIO).
-     */
-    response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
-    /**
-     * Body param: The service tier for the interaction.
-     */
-    service_tier?: 'flex' | 'standard' | 'priority';
-    /**
-     * Body param: Input only. Whether to store the response and request for later
-     * retrieval.
-     */
-    store?: boolean;
-    /**
-     * Body param: Input only. Whether the interaction will be streamed.
-     */
-    stream?: boolean;
-    /**
-     * Body param: System instruction for the interaction.
-     */
-    system_instruction?: string;
-    /**
-     * Body param: A list of tool declarations the model may call during interaction.
-     */
-    tools?: Array<Tool_2>;
-    /**
-     * Body param: Optional. Webhook configuration for receiving notifications when the
-     * interaction completes.
-     */
-    webhook_config?: WebhookConfig_2;
-}
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type BackoffStrategy = {
+    initialInterval: number;
+    maxInterval: number;
+    exponent: number;
+    maxElapsedTime: number;
+};
 
 /**
- * Base class for Gemini Next Gen API API clients.
+ * The environment configuration for the agent.
  */
-declare class BaseGeminiNextGenAPIClient {
-    apiKey: string | null;
-    apiVersion: string;
-    baseURL: string;
-    maxRetries: number;
-    timeout: number;
-    logger: Logger;
-    logLevel: LogLevel | undefined;
-    fetchOptions: MergedRequestInit | undefined;
-    private fetch;
-    private encoder;
-    protected idempotencyHeader?: string;
-    private _options;
-    private clientAdapter;
-    /**
-     * API Client for interfacing with the Gemini Next Gen API API.
-     *
-     * @param {string | null | undefined} [opts.apiKey=process.env['GEMINI_API_KEY'] ?? null]
-     * @param {string | undefined} [opts.apiVersion=v1beta]
-     * @param {string} [opts.baseURL=process.env['GEMINI_NEXT_GEN_API_BASE_URL'] ?? https://generativelanguage.googleapis.com] - Override the default base URL for the API.
-     * @param {number} [opts.timeout=1 minute] - The maximum amount of time (in milliseconds) the client will wait for a response before timing out.
-     * @param {MergedRequestInit} [opts.fetchOptions] - Additional `RequestInit` options to be passed to `fetch` calls.
-     * @param {Fetch} [opts.fetch] - Specify a custom `fetch` function implementation.
-     * @param {number} [opts.maxRetries=2] - The maximum number of times the client will retry a request.
-     * @param {HeadersLike} opts.defaultHeaders - Default headers to include with every request to the API.
-     * @param {Record<string, string | undefined>} opts.defaultQuery - Default query parameters to include with every request to the API.
-     */
-    constructor({ baseURL, apiKey, apiVersion, ...opts }: ClientOptions);
-    /**
-     * Create a new client instance re-using the same options given to the current client with optional overriding.
-     */
-    withOptions(options: Partial<ClientOptions>): this;
-    /**
-     * Check whether the base URL is set to its default.
-     */
-    private baseURLOverridden;
-    protected defaultQuery(): Record<string, string | undefined> | undefined;
-    protected validateHeaders({ values, nulls }: NullableHeaders): void;
-    protected authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined>;
-    /**
-     * Basic re-implementation of `qs.stringify` for primitive types.
-     */
-    protected stringifyQuery(query: object | Record<string, unknown>): string;
-    private getUserAgent;
-    protected defaultIdempotencyKey(): string;
-    protected makeStatusError(status: number, error: Object, message: string | undefined, headers: Headers): Errors.APIError;
-    buildURL(path: string, query: Record<string, unknown> | null | undefined, defaultBaseURL?: string | undefined): string;
-    /**
-     * Used as a callback for mutating the given `FinalRequestOptions` object.
-
-     */
-    protected prepareOptions(options: FinalRequestOptions): Promise<void>;
-    /**
-     * Used as a callback for mutating the given `RequestInit` object.
-     *
-     * This is useful for cases where you want to add certain headers based off of
-     * the request properties, e.g. `method` or `url`.
-     */
-    protected prepareRequest(request: _RequestInit, { url, options }: {
-        url: string;
-        options: FinalRequestOptions;
-    }): Promise<void>;
-    get<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp>;
-    post<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp>;
-    patch<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp>;
-    put<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp>;
-    delete<Rsp>(path: string, opts?: PromiseOrValue<RequestOptions>): APIPromise<Rsp>;
-    private methodRequest;
-    request<Rsp>(options: PromiseOrValue<FinalRequestOptions>, remainingRetries?: number | null): APIPromise<Rsp>;
-    private makeRequest;
-    fetchWithTimeout(url: _RequestInfo, init: _RequestInit | undefined, ms: number, controller: AbortController): Promise<Response>;
-    private shouldRetry;
-    private retryRequest;
-    private calculateDefaultRetryTimeoutMillis;
-    buildRequest(inputOptions: FinalRequestOptions, { retryCount }?: {
-        retryCount?: number;
-    }): Promise<{
-        req: FinalizedRequestInit;
-        url: string;
-        timeout: number;
-    }>;
-    private buildHeaders;
-    private _makeAbort;
-    private buildBody;
-    static DEFAULT_TIMEOUT: number;
-}
-
-declare class BaseInteractions extends APIResource {
-    static readonly _key: readonly ['interactions'];
-    /**
-     * Creates a new interaction.
-     *
-     * @example
-     * ```ts
-     * const interaction = await client.interactions.create({
-     *   api_version: 'api_version',
-     *   input: { text: 'text', type: 'text' },
-     *   model: 'gemini-2.5-computer-use-preview-10-2025',
-     * });
-     * ```
-     */
-    create(params: CreateModelInteractionParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
-    create(params: CreateModelInteractionParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
-    create(params: CreateAgentInteractionParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
-    create(params: CreateAgentInteractionParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
-    create(params: BaseCreateModelInteractionParams | BaseCreateAgentInteractionParams, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent> | Interaction>;
-    /**
-     * Deletes the interaction by id.
-     *
-     * @example
-     * ```ts
-     * const interaction = await client.interactions.delete('id', {
-     *   api_version: 'api_version',
-     * });
-     * ```
-     */
-    delete(id: string, params?: InteractionDeleteParams | null | undefined, options?: RequestOptions): APIPromise<unknown>;
-    /**
-     * Cancels an interaction by id. This only applies to background interactions that
-     * are still running.
-     *
-     * @example
-     * ```ts
-     * const interaction = await client.interactions.cancel('id', {
-     *   api_version: 'api_version',
-     * });
-     * ```
-     */
-    cancel(id: string, params?: InteractionCancelParams | null | undefined, options?: RequestOptions): APIPromise<Interaction>;
-    /**
-     * Retrieves the full details of a single interaction based on its
-     * `Interaction.id`.
-     *
-     * @example
-     * ```ts
-     * const interaction = await client.interactions.get('id', {
-     *   api_version: 'api_version',
-     * });
-     * ```
-     */
-    get(id: string, params?: InteractionGetParamsNonStreaming, options?: RequestOptions): APIPromise<Interaction>;
-    get(id: string, params: InteractionGetParamsStreaming, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent>>;
-    get(id: string, params?: InteractionGetParamsBase | undefined, options?: RequestOptions): APIPromise<Stream<InteractionSSEEvent> | Interaction>;
-}
+declare type BaseEnvironment = interactions.Environment | string;
 
 /**
  * @license
@@ -1244,38 +980,6 @@ declare class BaseModule {
 export declare interface BaseUrlParameters {
     geminiUrl?: string;
     vertexUrl?: string;
-}
-
-declare class BaseWebhooks extends APIResource {
-    static readonly _key: readonly ['webhooks'];
-    /**
-     * Creates a new Webhook.
-     */
-    create(params: WebhookCreateParams, options?: RequestOptions): APIPromise<Webhook>;
-    /**
-     * Updates an existing Webhook.
-     */
-    update(id: string, params?: WebhookUpdateParams | null | undefined, options?: RequestOptions): APIPromise<Webhook>;
-    /**
-     * Lists all Webhooks.
-     */
-    list(params?: WebhookListParams | null | undefined, options?: RequestOptions): APIPromise<WebhookListResponse>;
-    /**
-     * Deletes a Webhook.
-     */
-    delete(id: string, params?: WebhookDeleteParams | null | undefined, options?: RequestOptions): APIPromise<WebhookDeleteResponse>;
-    /**
-     * Gets a specific Webhook.
-     */
-    get(id: string, params?: WebhookGetParams | null | undefined, options?: RequestOptions): APIPromise<Webhook>;
-    /**
-     * Sends a ping event to a Webhook.
-     */
-    ping(id: string, params?: WebhookPingParams | null | undefined, options?: RequestOptions): APIPromise<WebhookPingResponse>;
-    /**
-     * Generates a new signing secret for a Webhook.
-     */
-    rotateSigningSecret(id: string, params?: WebhookRotateSigningSecretParams | null | undefined, options?: RequestOptions): APIPromise<WebhookRotateSigningSecretResponse>;
 }
 
 export declare class Batches extends BaseModule {
@@ -1423,15 +1127,15 @@ export declare interface BatchJob {
     /** Configuration for the output data.
      */
     dest?: BatchJobDestination;
-    /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
-     */
-    completionStats?: CompletionStats;
     /** Information further describing the output of this job. Output only.
      */
     outputInfo?: BatchJobOutputInfo;
+    /** Statistics on completed and failed prediction instances. This field is for Gemini Enterprise Agent Platform only.
+     */
+    completionStats?: CompletionStats;
 }
 
-/** Config for `des` parameter. */
+/** Config for `dest` parameter. */
 export declare interface BatchJobDestination {
     /** Storage format of the output files. Must be one of:
      'jsonl', 'bigquery', 'vertex-dataset'.
@@ -1443,6 +1147,9 @@ export declare interface BatchJobDestination {
     /** The BigQuery URI to the output table.
      */
     bigqueryUri?: string;
+    /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
+     */
+    vertexDataset?: VertexMultimodalDatasetDestination;
     /** The Gemini Developer API's file resource name of the output data
      (e.g. "files/12345"). The file will be a JSONL file with a single response
      per line. The responses will be GenerateContentResponse messages formatted
@@ -1460,21 +1167,18 @@ export declare interface BatchJobDestination {
      the input requests.
      */
     inlinedEmbedContentResponses?: InlinedEmbedContentResponse[];
-    /** This field is experimental and may change in future versions. The Vertex AI dataset destination.
-     */
-    vertexDataset?: VertexMultimodalDatasetDestination;
 }
 
 export declare type BatchJobDestinationUnion = BatchJobDestination | string;
 
 /** Represents the `output_info` field in batch jobs. */
 export declare interface BatchJobOutputInfo {
-    /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
-    vertexMultimodalDatasetName?: string;
     /** The full path of the Cloud Storage directory created, into which the prediction output is written. */
     gcsOutputDirectory?: string;
     /** The name of the BigQuery table created, in `predictions_TIMESTAMP` format, into which the prediction output is written. */
     bigqueryOutputTable?: string;
+    /** This field is experimental and may change in future versions. The Vertex AI dataset name containing the output data. */
+    vertexMultimodalDatasetName?: string;
 }
 
 /** Config for `src` parameter. */
@@ -1489,6 +1193,9 @@ export declare interface BatchJobSource {
     /** The BigQuery URI to input table.
      */
     bigqueryUri?: string;
+    /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
+     */
+    vertexDatasetName?: string;
     /** The Gemini Developer API's file resource name of the input data
      (e.g. "files/12345").
      */
@@ -1496,14 +1203,11 @@ export declare interface BatchJobSource {
     /** The Gemini Developer API's inlined input data to run batch job.
      */
     inlinedRequests?: InlinedRequest[];
-    /** This field is experimental and may change in future versions. The Vertex AI dataset resource name to use as input. Must be of type multimodal.
-     */
-    vertexDatasetName?: string;
 }
 
 export declare type BatchJobSourceUnion = BatchJobSource | InlinedRequest[] | string;
 
-/** Specifies the function Behavior. Currently only non-blocking functions are supported. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
+/** Specifies the function Behavior. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
 export declare enum Behavior {
     /**
      * This value is unspecified.
@@ -1581,11 +1285,6 @@ export declare enum BlockedReason {
     JAILBREAK = "JAILBREAK"
 }
 
-declare const brand_privateNullableHeaders: unique symbol;
-
-/** @ts-ignore For users with \@types/bun */
-declare type BunRequestInit = globalThis.FetchRequestInit;
-
 /** A resource used in LLM queries for users to explicitly specify what to cache. */
 export declare interface CachedContent {
     /** The server-generated resource name of the cached content. */
@@ -1617,6 +1316,8 @@ export declare interface CachedContentUsageMetadata {
     /** Duration of video in seconds. This field is not supported in Gemini API. */
     videoDurationSeconds?: number;
 }
+
+declare type CachedTokensByModality$ = ModalityTokens;
 
 export declare class Caches extends BaseModule {
     private readonly apiClient;
@@ -1759,6 +1460,19 @@ export declare interface CancelBatchJobParameters {
     /** Optional parameters for the request. */
     config?: CancelBatchJobConfig;
 }
+
+declare type CancelInteractionByIdParams = Omit<CancelInteractionByIdRequest, "id">;
+
+declare type CancelInteractionByIdRequest = {
+    /**
+     * The unique identifier of the interaction to cancel.
+     */
+    id: string;
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+};
 
 /** Optional parameters for tunings.cancel method. */
 export declare interface CancelTuningJobConfig {
@@ -1984,126 +1698,74 @@ export declare interface CitationMetadata {
     citations?: Citation[];
 }
 
-declare interface ClientOptions {
-    /**
-     * Defaults to process.env['GEMINI_API_KEY'].
-     */
-    apiKey?: string | null | undefined;
-    apiVersion?: string | undefined;
-    /**
-     * Override the default base URL for the API, e.g., "https://api.example.com/v2/"
-     *
-     * Defaults to process.env['GEMINI_NEXT_GEN_API_BASE_URL'].
-     */
-    baseURL?: string | null | undefined;
-    /**
-     * The maximum amount of time (in milliseconds) that the client should wait for a response
-     * from the server before timing out a single request.
-     *
-     * Note that request timeouts are retried by default, so in a worst-case scenario you may wait
-     * much longer than this timeout before the promise succeeds or fails.
-     *
-     * @unit milliseconds
-     */
-    timeout?: number | undefined;
-    /**
-     * Additional `RequestInit` options to be passed to `fetch` calls.
-     * Properties will be overridden by per-request `fetchOptions`.
-     */
-    fetchOptions?: MergedRequestInit | undefined;
-    /**
-     * Specify a custom `fetch` function implementation.
-     *
-     * If not provided, we expect that `fetch` is defined globally.
-     */
-    fetch?: Fetch | undefined;
-    /**
-     * The maximum number of times that the client will retry a request in case of a
-     * temporary failure, like a network error or a 5XX error from the server.
-     *
-     * @default 2
-     */
-    maxRetries?: number | undefined;
-    /**
-     * Default headers to include with every request to the API.
-     *
-     * These can be removed in individual requests by explicitly setting the
-     * header to `null` in request options.
-     */
-    defaultHeaders?: HeadersLike | undefined;
-    /**
-     * Default query parameters to include with every request to the API.
-     *
-     * These can be removed in individual requests by explicitly setting the
-     * param to `undefined` in request options.
-     */
-    defaultQuery?: Record<string, string | undefined> | undefined;
-    /**
-     * Set the log level.
-     *
-     * Defaults to process.env['GEMINI_NEXT_GEN_API_LOG'] or 'warn' if it isn't set.
-     */
-    logLevel?: LogLevel | undefined;
-    /**
-     * Set the logger.
-     *
-     * Defaults to globalThis.console.
-     */
-    logger?: Logger | undefined;
-    /**
-     * The adapter to the parent API client instance (for accessing auth, project, location)
-     */
-    clientAdapter?: GeminiNextGenAPIClientAdapter | undefined;
-}
+declare type CodeExecution$ = CodeExecution;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A tool that can be used by the model to execute code.
+ */
+declare type CodeExecution = {
+    type: "code_execution";
+};
+
+declare type CodeExecutionCall$ = CodeExecutionCallDelta;
+
+declare type CodeExecutionCallArguments$ = CodeExecutionCallArguments;
 
 /**
  * The arguments to pass to the code execution.
  */
-declare interface CodeExecutionCallArguments {
+declare type CodeExecutionCallArguments = {
     /**
      * The code to be executed.
      */
-    code?: string;
+    code?: string | undefined;
     /**
      * Programming language of the `code`.
      */
-    language?: 'python';
-}
+    language?: Language_2 | undefined;
+};
+
+declare type CodeExecutionCallDelta = {
+    /**
+     * The arguments to pass to the code execution.
+     */
+    arguments: CodeExecutionCallArguments;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "code_execution_call";
+};
+
+declare type CodeExecutionCallStep$ = CodeExecutionCallStep;
 
 /**
  * Code execution call step.
  */
-declare interface CodeExecutionCallStep {
+declare type CodeExecutionCallStep = {
+    /**
+     * The arguments to pass to the code execution.
+     */
+    arguments: CodeExecutionCallArguments;
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
     /**
-     * Required. The arguments to pass to the code execution.
-     */
-    arguments: CodeExecutionCallStep.Arguments;
-    type: 'code_execution_call';
-    /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "code_execution_call";
+};
 
-declare namespace CodeExecutionCallStep {
-    /**
-     * Required. The arguments to pass to the code execution.
-     */
-    interface Arguments {
-        /**
-         * The code to be executed.
-         */
-        code?: string;
-        /**
-         * Programming language of the `code`.
-         */
-        language?: 'python';
-    }
-}
+declare type CodeExecutionResult$ = CodeExecutionResultDelta;
 
 /** Result of executing the ExecutableCode. Generated only when the `CodeExecution` tool is used. */
 export declare interface CodeExecutionResult {
@@ -2116,27 +1778,94 @@ export declare interface CodeExecutionResult {
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type CodeExecutionResultDelta = {
+    is_error?: boolean | undefined;
+    result: string;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "code_execution_result";
+};
+
+declare type CodeExecutionResultStep$ = CodeExecutionResultStep;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * Code execution result step.
  */
-declare interface CodeExecutionResultStep {
+declare type CodeExecutionResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
     /**
+     * Whether the code execution resulted in an error.
+     */
+    is_error?: boolean | undefined;
+    /**
      * Required. The output of the code execution.
      */
     result: string;
-    type: 'code_execution_result';
-    /**
-     * Whether the code execution resulted in an error.
-     */
-    is_error?: boolean;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "code_execution_result";
+};
+
+declare type CodeMenderAgentConfig$ = CodeMenderAgentConfig;
+
+/**
+ * Configuration for the CodeMender agent.
+ */
+declare type CodeMenderAgentConfig = {
+    /**
+     * Request parameters specific to FIND sessions, used for discovering
+     *
+     * @remarks
+     * vulnerabilities in a codebase.
+     */
+    find_request?: FindRequest | undefined;
+    /**
+     * Request parameters specific to FIX sessions, used for generating and
+     *
+     * @remarks
+     * validating security patches.
+     */
+    fix_request?: FixRequest | undefined;
+    /**
+     * The name of the model to use for the CodeMender agent. One
+     *
+     * @remarks
+     * CodeMender session will only use one model.
+     */
+    model?: string | undefined;
+    /**
+     * The configuration of CodeMender sessions.
+     */
+    session_config?: SessionConfig | undefined;
+    /**
+     * Parameter for grouping multiple interactions that belong to
+     *
+     * @remarks
+     * the same CodeMender session.
+     */
+    session_id?: string | undefined;
+    type: "code-mender";
+};
 
 /** Success and error statistics of processing multiple entities (for example, DataItems or structured data rows) in batch. This data type is not supported in Gemini API. */
 export declare interface CompletionStats {
@@ -2152,30 +1881,57 @@ export declare interface CompletionStats {
 
 /** Composite reinforcement tuning reward config. */
 export declare interface CompositeReinforcementTuningRewardConfig {
+    /** List of reward function configurations with weights. */
     weightedRewardConfigs?: CompositeReinforcementTuningRewardConfigWeightedRewardConfig[];
 }
 
 /** Composite reinforcement tuning reward config weighted reward config. */
 export declare interface CompositeReinforcementTuningRewardConfigWeightedRewardConfig {
+    /** Single reward configuration. */
     rewardConfig?: SingleReinforcementTuningRewardConfig;
-    /** How much this single reward contributes to the total overall reward. */
+    /** How much this single reward contributes to the total overall reward. Total reward is a linear combination of single rewards with their corresponding weights, i.e., ``` total_reward = ( weight_a * reward_a + weight_b * reward_b + ... ) / (weight_a + weight_b + ...) ``` */
     weight?: number;
 }
 
+declare type ComputerUse$ = ComputerUse_2;
+
 /** Tool to support computer use. */
 export declare interface ComputerUse {
+    /** Optional. Enables the prompt injection detection check on computer-use request. */
+    enablePromptInjectionDetection?: boolean;
     /** Required. The environment being operated. */
     environment?: Environment;
-    /** By default, predefined functions are included in the final model call.
-     Some of them can be explicitly excluded from being automatically included.
-     This can serve two purposes:
-     1. Using a more restricted / different action space.
-     2. Improving the definitions / instructions of predefined functions. */
+    /** Optional. By default, [predefined functions](https://cloud.google.com/vertex-ai/generative-ai/docs/computer-use#supported-actions) are included in the final model call. Some of them can be explicitly excluded from being automatically included. This can serve two purposes: 1. Using a more restricted / different action space. 2. Improving the definitions / instructions of predefined functions. */
     excludedPredefinedFunctions?: string[];
-    /** Optional. Whether enable the prompt injection detection check on computer-use request.
-     */
-    enablePromptInjectionDetection?: boolean;
+    /** Optional. Disabled safety policies for computer use. This field is not supported in Vertex AI. */
+    disabledSafetyPolicies?: SafetyPolicy[];
 }
+
+/**
+ * A tool that can be used by the model to interact with the computer.
+ */
+declare type ComputerUse_2 = {
+    /**
+     * Optional. Disabled safety policies for computer use.
+     */
+    disabled_safety_policies?: Array<DisabledSafetyPolicy> | undefined;
+    /**
+     * Whether enable the prompt injection detection check on computer-use
+     *
+     * @remarks
+     * request.
+     */
+    enable_prompt_injection_detection?: boolean | undefined;
+    /**
+     * The environment being operated.
+     */
+    environment?: EnvironmentEnum | undefined;
+    /**
+     * The list of predefined functions that are excluded from the model call.
+     */
+    excluded_predefined_functions?: Array<string> | undefined;
+    type: "computer_use";
+};
 
 /** Optional parameters for computing tokens. */
 export declare interface ComputeTokensConfig {
@@ -2216,12 +1972,7 @@ export declare interface ComputeTokensResult {
     tokensInfo?: TokensInfo[];
 }
 
-declare type _ConditionalNodeReadableStream<R = any> = typeof globalThis extends {
-    ReadableStream: any;
-} ? never : _NodeReadableStream<R>;
-
-declare class ConflictError extends APIError<409, Headers> {
-}
+declare type Content$ = Content_2;
 
 /** Contains the multi-part content of a message. */
 export declare interface Content {
@@ -2257,6 +2008,9 @@ export declare interface ContentEmbeddingStatistics {
     /** Gemini Enterprise Agent Platform only. Number of tokens of the input text.
      */
     tokenCount?: number;
+    /** Gemini Enterprise Agent Platform only. List of modalities and their token count for the input content.
+     */
+    tokensDetails?: ModalityTokenCount[];
 }
 
 export declare type ContentListUnion = Content | Content[] | PartUnion | PartUnion[];
@@ -2378,19 +2132,122 @@ export declare interface CountTokensResult {
     totalTokens?: number;
 }
 
-declare interface CreateAgentInteractionParamsNonStreaming extends BaseCreateAgentInteractionParams {
+/**
+ * Parameters for creating agent interactions
+ */
+declare type CreateAgentInteraction = {
     /**
-     * Body param: Input only. Whether the interaction will be streamed.
+     * The agent to interact with.
      */
-    stream?: false;
-}
+    agent: AgentOption;
+    /**
+     * Input only. Whether the interaction will be streamed.
+     */
+    stream?: boolean | undefined;
+    /**
+     * Input only. Whether to store the response and request for later retrieval.
+     */
+    store?: boolean | undefined;
+    /**
+     * Input only. Whether to run the model interaction in the background.
+     */
+    background?: boolean | undefined;
+    /**
+     * System instruction for the interaction.
+     */
+    system_instruction?: string | undefined;
+    /**
+     * A list of tool declarations the model may call during interaction.
+     */
+    tools?: Array<Tool_2> | undefined;
+    /**
+     * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+     */
+    response_modalities?: Array<ResponseModality> | undefined;
+    /**
+     * The mime type of the response. This is required if response_format is set.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    response_mime_type?: string | undefined;
+    /**
+     * The ID of the previous interaction, if any.
+     */
+    previous_interaction_id?: string | undefined;
+    service_tier?: ServiceTier_2 | undefined;
+    /**
+     * Message for configuring webhook events for a request.
+     */
+    webhook_config?: WebhookConfig_2 | undefined;
+    /**
+     * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+     */
+    response_format?: Array<ResponseFormat_2> | ResponseFormat_2 | undefined;
+    /**
+     * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+     */
+    environment?: Environment_2 | string | undefined;
+    /**
+     * Configuration parameters for the agent interaction.
+     */
+    agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | CodeMenderAgentConfig | AntigravityAgentConfig | undefined;
+    /**
+     * Safety settings for the interaction.
+     */
+    safety_settings?: Array<SafetySetting_2> | undefined;
+    /**
+     * The labels with user-defined metadata for the request.
+     */
+    labels?: {
+        [k: string]: string;
+    } | undefined;
+    /**
+     * The input for the interaction.
+     */
+    input: InteractionsInput;
+};
 
-declare interface CreateAgentInteractionParamsStreaming extends BaseCreateAgentInteractionParams {
-    /**
-     * Body param: Input only. Whether the interaction will be streamed.
-     */
+/**
+ * Configuration parameters for the agent interaction.
+ */
+declare type CreateAgentInteractionAgentConfig = DynamicAgentConfig | DeepResearchAgentConfig | CodeMenderAgentConfig | AntigravityAgentConfig;
+
+/**
+ * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ */
+declare type CreateAgentInteractionEnvironment = Environment_2 | string;
+
+declare type CreateAgentInteractionParams = Omit<CreateInteractionRequest, "body"> & CreateAgentInteraction;
+
+declare type CreateAgentInteractionParamsNonStreaming$ = CreateAgentInteraction;
+
+declare type CreateAgentInteractionParamsNonStreaming = CreateAgentInteractionParams & {
+    stream?: false | undefined;
+};
+
+declare type CreateAgentInteractionParamsStreaming$ = CreateAgentInteraction;
+
+declare type CreateAgentInteractionParamsStreaming = CreateAgentInteractionParams & {
     stream: true;
-}
+};
+
+/**
+ * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ */
+declare type CreateAgentInteractionResponseFormat = Array<ResponseFormat_2> | ResponseFormat_2;
+
+declare type CreateAgentParams = Omit<CreateAgentRequest, "body"> & CreateAgentRequest["body"];
+
+declare type CreateAgentRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * The request body.
+     */
+    body: agents.Agent;
+};
 
 /** Optional parameters. */
 export declare interface CreateAuthTokenConfig {
@@ -2576,6 +2433,29 @@ export declare interface CreateEmbeddingsBatchJobParameters {
     config?: CreateEmbeddingsBatchJobConfig;
 }
 
+declare type CreateEnvironmentRequest$ = CreateEnvironmentRequest;
+
+/**
+ * Request for `CreateEnvironment`.
+ */
+declare type CreateEnvironmentRequest = {
+    /**
+     * Network configuration for the environment.
+     */
+    network?: interactions.EnvironmentNetworkEgressAllowlist | CreateEnvironmentRequestNetworkEnum | undefined;
+    /**
+     * Sources to be mounted into the environment.
+     */
+    sources?: Array<interactions.Source> | undefined;
+};
+
+declare type CreateEnvironmentRequestNetworkEnum = "disabled";
+
+/**
+ * Network configuration for the environment.
+ */
+declare type CreateEnvironmentRequestNetworkUnion = interactions.EnvironmentNetworkEgressAllowlist | CreateEnvironmentRequestNetworkEnum;
+
 /** Used to override the default configuration. */
 export declare interface CreateFileConfig {
     /** Used to override HTTP request options. */
@@ -2645,24 +2525,130 @@ export declare function createFunctionResponsePartFromBase64(data: string, mimeT
  */
 export declare function createFunctionResponsePartFromUri(uri: string, mimeType: string): FunctionResponsePart;
 
+declare type CreateInteractionParams = Omit<CreateInteractionRequest, "body"> & CreateInteractionRequest["body"];
+
+declare type CreateInteractionParamsNonStreaming = CreateInteractionParams & {
+    stream?: false | undefined;
+};
+
+declare type CreateInteractionParamsStreaming = CreateInteractionParams & {
+    stream: true;
+};
+
+declare type CreateInteractionRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * The request body.
+     */
+    body: interactions.CreateModelInteraction | interactions.CreateAgentInteraction;
+};
+
 /**
  * Creates a `Content` object with a model role from a `PartListUnion` object or `string`.
  */
 export declare function createModelContent(partOrString: PartListUnion | string): Content;
 
-declare interface CreateModelInteractionParamsNonStreaming extends BaseCreateModelInteractionParams {
+/**
+ * Parameters for creating model interactions
+ */
+declare type CreateModelInteraction = {
     /**
-     * Body param: Input only. Whether the interaction will be streamed.
+     * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
      */
-    stream?: false;
-}
+    model: Model_2;
+    /**
+     * Input only. Whether the interaction will be streamed.
+     */
+    stream?: boolean | undefined;
+    /**
+     * Input only. Whether to store the response and request for later retrieval.
+     */
+    store?: boolean | undefined;
+    /**
+     * Input only. Whether to run the model interaction in the background.
+     */
+    background?: boolean | undefined;
+    /**
+     * System instruction for the interaction.
+     */
+    system_instruction?: string | undefined;
+    /**
+     * A list of tool declarations the model may call during interaction.
+     */
+    tools?: Array<Tool_2> | undefined;
+    /**
+     * The requested modalities of the response (TEXT, IMAGE, AUDIO).
+     */
+    response_modalities?: Array<ResponseModality> | undefined;
+    /**
+     * The mime type of the response. This is required if response_format is set.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    response_mime_type?: string | undefined;
+    /**
+     * The ID of the previous interaction, if any.
+     */
+    previous_interaction_id?: string | undefined;
+    service_tier?: ServiceTier_2 | undefined;
+    /**
+     * Message for configuring webhook events for a request.
+     */
+    webhook_config?: WebhookConfig_2 | undefined;
+    /**
+     * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+     */
+    response_format?: Array<ResponseFormat_2> | ResponseFormat_2 | undefined;
+    /**
+     * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+     */
+    environment?: Environment_2 | string | undefined;
+    /**
+     * Configuration parameters for model interactions.
+     */
+    generation_config?: GenerationConfig_2 | undefined;
+    /**
+     * Safety settings for the interaction.
+     */
+    safety_settings?: Array<SafetySetting_2> | undefined;
+    /**
+     * The labels with user-defined metadata for the request.
+     */
+    labels?: {
+        [k: string]: string;
+    } | undefined;
+    /**
+     * The input for the interaction.
+     */
+    input: InteractionsInput;
+};
 
-declare interface CreateModelInteractionParamsStreaming extends BaseCreateModelInteractionParams {
-    /**
-     * Body param: Input only. Whether the interaction will be streamed.
-     */
+/**
+ * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ */
+declare type CreateModelInteractionEnvironment = Environment_2 | string;
+
+declare type CreateModelInteractionParams = Omit<CreateInteractionRequest, "body"> & CreateModelInteraction;
+
+declare type CreateModelInteractionParamsNonStreaming$ = CreateModelInteraction;
+
+declare type CreateModelInteractionParamsNonStreaming = CreateModelInteractionParams & {
+    stream?: false | undefined;
+};
+
+declare type CreateModelInteractionParamsStreaming$ = CreateModelInteraction;
+
+declare type CreateModelInteractionParamsStreaming = CreateModelInteractionParams & {
     stream: true;
-}
+};
+
+/**
+ * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ */
+declare type CreateModelInteractionResponseFormat = Array<ResponseFormat_2> | ResponseFormat_2;
 
 /**
  * Creates a `Part` object from a `base64` encoded `string`.
@@ -2698,6 +2684,16 @@ export declare function createPartFromText(text: string): Part;
  * Creates a `Part` object from a `URI` string.
  */
 export declare function createPartFromUri(uri: string, mimeType: string, mediaResolution?: PartMediaResolutionLevel): Part;
+
+declare type CreateTriggerParams = Omit<CreateTriggerRequest, "body"> & CreateTriggerRequest["body"];
+
+declare type CreateTriggerRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    body: triggers.TriggerCreateParams;
+};
 
 /** Fine-tuning job creation request - optional fields. */
 export declare interface CreateTuningJobConfig {
@@ -2748,8 +2744,6 @@ export declare interface CreateTuningJobConfig {
     sftLossWeightMultiplier?: number;
     /** The Google Cloud Storage location where the tuning job outputs are written. */
     outputUri?: string;
-    /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
-    encryptionSpec?: EncryptionSpec;
     /** Reward function configuration for reinforcement tuning. Reinforcement tuning only. */
     rewardConfig?: SingleReinforcementTuningRewardConfig;
     /** Composite reward function configuration for reinforcement tuning. Reinforcement tuning only. */
@@ -2766,6 +2760,8 @@ export declare interface CreateTuningJobConfig {
     thinkingLevel?: ReinforcementTuningThinkingLevel;
     /** Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. If no validation dataset is provided, by default the API splits 25% of the training dataset or 50 examples, whichever is larger, as the validation dataset. Reinforcement tuning only. */
     validationDatasetUri?: string;
+    /** The encryption spec of the tuning job. Customer-managed encryption key options for a TuningJob. If this is set, then all resources created by the TuningJob will be encrypted with provided encryption key. */
+    encryptionSpec?: EncryptionSpec;
 }
 
 /** Fine-tuning job creation parameters - optional fields. */
@@ -2794,6 +2790,19 @@ export declare interface CreateTuningJobParametersPrivate {
  * Creates a `Content` object with a user role from a `PartListUnion` object or `string`.
  */
 export declare function createUserContent(partOrString: PartListUnion | string): Content;
+
+declare type CreateWebhookParams = Omit<CreateWebhookRequest, "body"> & CreateWebhookRequest["body"];
+
+declare type CreateWebhookRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Required. The webhook to create.
+     */
+    body: webhooks.WebhookInput;
+};
 
 /** Result for custom code execution metric. This data type is not supported in Gemini API. */
 export declare interface CustomCodeExecutionResult {
@@ -2861,12 +2870,18 @@ export declare interface DatasetDistributionDistributionBucket {
 
 /** Statistics computed over a tuning dataset. This data type is not supported in Gemini API. */
 export declare interface DatasetStats {
+    /** Output only. Dataset distributions for the number of contents per example. */
+    contentsPerExampleDistribution?: DatasetDistribution;
     /** Output only. A partial sample of the indices (starting from 1) of the dropped examples. */
     droppedExampleIndices?: string[];
     /** Output only. For each index in `dropped_example_indices`, the user-facing reason why the example was dropped. */
     droppedExampleReasons?: string[];
+    /** Output only. Sample user dataset examples in the training dataset uri for Reinforcement Tuning. */
+    reinforcementTuningUserDatasetExamples?: ReinforcementTuningUserDatasetExamples;
     /** Output only. Number of billable characters in the tuning dataset. */
     totalBillableCharacterCount?: string;
+    /** Output only. Number of billable tokens in the tuning dataset. */
+    totalBillableTokenCount?: string;
     /** Output only. Number of tuning characters in the tuning dataset. */
     totalTuningCharacterCount?: string;
     /** Output only. Number of examples in the tuning dataset. */
@@ -2883,30 +2898,42 @@ export declare interface DatasetStats {
     userOutputTokenDistribution?: DatasetDistribution;
 }
 
+declare type DeepResearchAgentConfig$ = DeepResearchAgentConfig;
+
 /**
  * Configuration for the Deep Research agent.
  */
-declare interface DeepResearchAgentConfig {
-    type: 'deep-research';
+declare type DeepResearchAgentConfig = {
     /**
-     * Enables human-in-the-loop planning for the Deep Research agent. If set to true,
-     * the Deep Research agent will provide a research plan in its response. The agent
-     * will then proceed only if the user confirms the plan in the next turn.
+     * Enables human-in-the-loop planning for the Deep Research agent. If set to
+     *
+     * @remarks
+     * true, the Deep Research agent will provide a research plan in its response.
+     * The agent will then proceed only if the user confirms the plan in the next
+     * turn.
      */
-    collaborative_planning?: boolean;
+    collaborative_planning?: boolean | undefined;
     /**
      * Enables bigquery tool for the Deep Research agent.
      */
-    enable_bigquery_tool?: boolean;
-    /**
-     * Whether to include thought summaries in the response.
-     */
-    thinking_summaries?: 'auto' | 'none';
+    enable_bigquery_tool?: boolean | undefined;
+    thinking_summaries?: ThinkingSummaries | undefined;
+    type: "deep-research";
     /**
      * Whether to include visualizations in the response.
      */
-    visualization?: 'off' | 'auto';
-}
+    visualization?: Visualization | undefined;
+};
+
+declare type DeleteAgentParams = Omit<DeleteAgentRequest, "id">;
+
+declare type DeleteAgentRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    id: string;
+};
 
 /** Optional parameters for models.get method. */
 export declare interface DeleteBatchJobConfig {
@@ -3040,6 +3067,19 @@ export declare interface DeleteFileSearchStoreParameters {
     config?: DeleteFileSearchStoreConfig;
 }
 
+declare type DeleteInteractionParams = Omit<DeleteInteractionRequest, "id">;
+
+declare type DeleteInteractionRequest = {
+    /**
+     * The unique identifier of the interaction to delete.
+     */
+    id: string;
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+};
+
 /** Configuration for deleting a tuned model. */
 export declare interface DeleteModelConfig {
     /** Used to override HTTP request options. */
@@ -3074,6 +3114,65 @@ export declare interface DeleteResourceJob {
     error?: JobError;
 }
 
+declare type DeleteTriggerParams = Omit<DeleteTriggerRequest, "id">;
+
+declare type DeleteTriggerRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Resource name of the trigger.
+     */
+    id: string;
+};
+
+declare type DeleteWebhookParams = Omit<DeleteWebhookRequest, "id">;
+
+declare type DeleteWebhookRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Required. The ID of the webhook to delete.
+     *
+     * @remarks
+     * Format: `{webhook_id}`
+     */
+    id: string;
+};
+
+/** Delivery mode for the generated content. */
+export declare enum Delivery {
+    /**
+     * Default value. This value is unused.
+     */
+    DELIVERY_UNSPECIFIED = "DELIVERY_UNSPECIFIED",
+    /**
+     * Generated bytes are returned inline in the response.
+     */
+    INLINE = "INLINE",
+    /**
+     * Generated content is stored and a URI is returned.
+     */
+    URI = "URI"
+}
+
+/**
+ * Turns all network off.
+ */
+declare type Disabled = "disabled";
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type DisabledSafetyPolicy = "financial_transactions" | "sensitive_data_modification" | "communication_tool" | "account_creation" | "data_modification" | "user_consent_management" | "legal_terms_and_agreements" | (string & {});
+
 /** Statistics for distillation prompt dataset. These statistics do not include the responses sampled from the teacher model. This data type is not supported in Gemini API. */
 export declare interface DistillationDataStats {
     /** Output only. Statistics computed for the training dataset. */
@@ -3082,13 +3181,18 @@ export declare interface DistillationDataStats {
 
 /** Distillation hyperparameters for tuning. */
 export declare interface DistillationHyperParameters {
-    /** The size of the adapter. Can be 'small', 'medium', or 'large'. */
-    adapterSize?: AdapterSize;
     /** Number of complete passes the model makes over the entire training dataset
      during training. */
     epochCount?: string;
     /** Multiplier for adjusting the default learning rate. */
     learningRateMultiplier?: number;
+    /** The size of the adapter. Can be 'small', 'medium', or 'large'. */
+    adapterSize?: AdapterSize;
+    /** Batch size for tuning. This feature is only available for open
+     source models. */
+    batchSize?: number;
+    /** The learning rate for distillation tuning. */
+    learningRate?: number;
     /** Generation config for Distillation teacher model sampling. Only the
      following fields are supported for distillation teacher samplings:
      - temperature
@@ -3097,92 +3201,119 @@ export declare interface DistillationHyperParameters {
      - candidate_count
      - thinking_config */
     generationConfig?: GenerationConfig;
-    /** The learning rate for distillation tuning. */
-    learningRate?: number;
-    /** Batch size for tuning. This feature is only available for open
-     source models. */
-    batchSize?: number;
 }
 
 /** Distillation sampling spec for tuning. */
 export declare interface DistillationSamplingSpec {
+    /** Cloud Storage path to file containing prompt dataset for distillation.
+     The dataset must be formatted as a JSONL file. */
+    promptDatasetUri?: string;
+    /** Cloud Storage path to file containing validation dataset for distillation.
+     The dataset must be formatted as a JSONL file. */
+    validationDatasetUri?: string;
     /** The base teacher model that is being distilled. See [Supported
      models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
     baseTeacherModel?: string;
     /** The resource name of the Tuned teacher model. Format:
      `projects/{project}/locations/{location}/models/{model}`. */
     tunedTeacherModelSource?: string;
-    /** Cloud Storage path to file containing validation dataset for distillation.
-     The dataset must be formatted as a JSONL file. */
-    validationDatasetUri?: string;
-    /** Cloud Storage path to file containing prompt dataset for distillation.
-     The dataset must be formatted as a JSONL file. */
-    promptDatasetUri?: string;
     /** Hyperparameters for distillation tuning. */
     hyperparameters?: DistillationHyperParameters;
 }
 
 /** Distillation tuning spec for tuning. */
 export declare interface DistillationSpec {
-    /** Optional. Cloud Storage path to file containing prompt dataset for distillation. The dataset must be formatted as a JSONL file. */
-    promptDatasetUri?: string;
     /** The base teacher model that is being distilled. See [Supported models](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/tuning#supported_models). */
     baseTeacherModel?: string;
     /** Optional. Hyperparameters for Distillation. */
     hyperParameters?: DistillationHyperParameters;
     /** Deprecated. A path in a Cloud Storage bucket, which will be treated as the root output directory of the distillation pipeline. It is used by the system to generate the paths of output artifacts. */
     pipelineRootDirectory?: string;
+    /** Optional. Cloud Storage path to file containing prompt dataset for distillation. The dataset must be formatted as a JSONL file. */
+    promptDatasetUri?: string;
     /** The student model that is being tuned, e.g., "google/gemma-2b-1.1-it". Deprecated. Use base_model instead. */
     studentModel?: string;
     /** Deprecated. Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
     trainingDatasetUri?: string;
     /** The resource name of the Tuned teacher model. Format: `projects/{project}/locations/{location}/models/{model}`. */
     tunedTeacherModelSource?: string;
-    /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
-    validationDatasetUri?: string;
     /** Optional. Specifies the tuning mode for distillation (sft part). This feature is only available for open source models. */
     tuningMode?: TuningMode;
+    /** Optional. Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+    validationDatasetUri?: string;
 }
+
+declare type Document$ = DocumentDelta;
 
 /** A Document is a collection of Chunks. */
 declare interface Document_2 {
-    /** Immutable. Identifier. The `Document` resource name. The ID (name excluding the "fileSearchStores/&#42;/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c` */
-    name?: string;
-    /** Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation". */
-    displayName?: string;
-    /** Output only. Current state of the `Document`. */
-    state?: DocumentState;
-    /** Output only. The size of raw bytes ingested into the Document. */
-    sizeBytes?: string;
-    /** Output only. The mime type of the Document. */
-    mimeType?: string;
     /** Output only. The Timestamp of when the `Document` was created. */
     createTime?: string;
     /** Optional. User provided custom metadata stored as key-value pairs used for querying. A `Document` can have a maximum of 20 `CustomMetadata`. */
     customMetadata?: CustomMetadata[];
+    /** Optional. The human-readable display name for the `Document`. The display name must be no more than 512 characters in length, including spaces. Example: "Semantic Retriever Documentation". */
+    displayName?: string;
+    /** Output only. The mime type of the Document. */
+    mimeType?: string;
+    /** Immutable. Identifier. The `Document` resource name. The ID (name excluding the "fileSearchStores/&#42;/documents/" prefix) can contain up to 40 characters that are lowercase alphanumeric or dashes (-). The ID cannot start or end with a dash. If the name is empty on create, a unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/{file_search_store_id}/documents/my-awesome-doc-123a456b789c` */
+    name?: string;
+    /** Output only. The size of raw bytes ingested into the Document. */
+    sizeBytes?: string;
+    /** Output only. Current state of the `Document`. */
+    state?: DocumentState;
     /** Output only. The Timestamp of when the `Document` was last updated. */
     updateTime?: string;
 }
 export { Document_2 as Document }
 
+declare type DocumentContent$ = DocumentContent;
+
 /**
  * A document content block.
  */
-declare interface DocumentContent {
-    type: 'document';
+declare type DocumentContent = {
     /**
      * The document content.
      */
-    data?: string;
+    data?: string | undefined;
     /**
      * The mime type of the document.
      */
-    mime_type?: 'application/pdf' | 'text/csv';
+    mime_type?: DocumentContentMimeType | undefined;
+    type: "document";
     /**
      * The URI of the document.
      */
-    uri?: string;
-}
+    uri?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The mime type of the document.
+ */
+declare type DocumentContentMimeType = "application/pdf" | "text/csv" | (string & {});
+
+declare type DocumentDelta = {
+    data?: string | undefined;
+    mime_type?: DocumentDeltaMimeType | undefined;
+    type: "document";
+    uri?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type DocumentDeltaMimeType = "application/pdf" | "text/csv" | (string & {});
 
 declare class Documents extends BaseModule {
     private readonly apiClient;
@@ -3238,9 +3369,6 @@ export declare enum DocumentState {
     STATE_FAILED = "STATE_FAILED"
 }
 
-/** @ts-ignore */
-declare type _DOMReadableStream<R = any> = globalThis.ReadableStream<R>;
-
 export declare type DownloadableFileUnion = string | File_2 | GeneratedVideo | Video;
 
 declare interface Downloader {
@@ -3290,13 +3418,22 @@ export declare interface DownloadMediaConfig {
     abortSignal?: AbortSignal;
 }
 
+declare type DynamicAgentConfig$ = DynamicAgentConfig;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * Configuration for dynamic agents.
  */
-declare interface DynamicAgentConfig {
-    type: 'dynamic';
-    [k: string]: unknown;
-}
+declare type DynamicAgentConfig = {
+    type: "dynamic";
+    [additionalProperties: string]: unknown;
+};
 
 /** Describes the options to customize dynamic retrieval. */
 export declare interface DynamicRetrievalConfig {
@@ -3417,6 +3554,15 @@ export declare interface EmbedContentBatch {
 
 /** Optional parameters for the embed_content method. */
 export declare interface EmbedContentConfig {
+    /** Used to override HTTP request options. */
+    httpOptions?: HttpOptions;
+    /** Abort signal which can be used to cancel the request.
+
+     NOTE: AbortSignal is a client-only operation. Using it to cancel an
+     operation will not cancel the request in the service. You will still
+     be charged usage for any applicable operations.
+     */
+    abortSignal?: AbortSignal;
     /** Type of task for which the embedding will be used.
      */
     taskType?: string;
@@ -3446,15 +3592,6 @@ export declare interface EmbedContentConfig {
      Only applicable to Gemini Embedding 2 models.
      */
     audioTrackExtraction?: boolean;
-    /** Used to override HTTP request options. */
-    httpOptions?: HttpOptions;
-    /** Abort signal which can be used to cancel the request.
-
-     NOTE: AbortSignal is a client-only operation. Using it to cancel an
-     operation will not cancel the request in the service. You will still
-     be charged usage for any applicable operations.
-     */
-    abortSignal?: AbortSignal;
 }
 
 /** Request-level metadata for the Gemini Enterprise Agent Platform Embed Content API. */
@@ -3532,6 +3669,26 @@ export declare interface EmbeddingsBatchJobSource {
     inlinedRequests?: EmbedContentBatch;
 }
 
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A generic empty message that you can re-use to avoid defining duplicated
+ *
+ * @remarks
+ * empty messages in your APIs. A typical example is to use it as the request
+ * or the response type of an API method. For instance:
+ *
+ *     service Foo {
+ *       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
+ *     }
+ */
+declare type Empty = {};
+
 /** Represents a customer-managed encryption key specification that can be applied to a Vertex AI resource. This data type is not supported in Gemini API. */
 export declare interface EncryptionSpec {
     /** Required. Resource name of the Cloud KMS key used to protect the resource. The Cloud KMS key must be in the same region as the resource. It must have the format `projects/{project}/locations/{location}/keyRings/{key_ring}/cryptoKeys/{crypto_key}`. */
@@ -3549,7 +3706,7 @@ export declare interface Endpoint {
 /** End of speech sensitivity. */
 export declare enum EndSensitivity {
     /**
-     * The default is END_SENSITIVITY_LOW.
+     * The default is END_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and END_SENSITIVITY_HIGH for Gemini Live.
      */
     END_SENSITIVITY_UNSPECIFIED = "END_SENSITIVITY_UNSPECIFIED",
     /**
@@ -3578,6 +3735,10 @@ export declare interface EntityLabel {
     score?: number;
 }
 
+declare type Environment$ = Environment_3;
+
+declare type Environment$2 = Environment_2;
+
 /** The environment being operated. */
 export declare enum Environment {
     /**
@@ -3601,132 +3762,164 @@ export declare enum Environment {
 /**
  * Configuration for a custom environment.
  */
-declare interface Environment_2 {
-    type: 'remote';
+declare type Environment_2 = {
+    /**
+     * Optional. The environment ID for the interaction. If specified, the request will
+     *
+     * @remarks
+     * update the existing environment instead of creating a new one.
+     */
+    environment_id?: string | undefined;
     /**
      * Network configuration for the environment.
      */
-    network?: 'disabled' | Environment_2.Allowlist;
-    sources?: Array<Environment_2.Source>;
-}
+    network?: EnvironmentNetworkEgressAllowlist | NetworkEnum | undefined;
+    sources?: Array<Source> | undefined;
+    type: "remote";
+};
 
-declare namespace Environment_2 {
+/**
+ * An execution environment for an agent.
+ */
+declare type Environment_3 = {
     /**
-     * Outbound networking configuration for the sandbox. When specified, restricts
-     * which external domains the sandbox can reach. Omit entirely to allow all
-     * outbound traffic with no header injection.
+     * Output only. The time at which the environment was created in ISO 8601 format
+     *
+     * @remarks
+     * (YYYY-MM-DDThh:mm:ssZ).
      */
-    interface Allowlist {
-        /**
-         * List of allowed outbound domains. Only requests to listed domains are permitted.
-         * Use [{'domain': '*'}] to allow all domains while still injecting headers on
-         * specific ones.
-         */
-        allowlist?: Array<Allowlist.Allowlist>;
-    }
-    namespace Allowlist {
-        /**
-         * A single domain allowlist rule with optional header injection.
-         */
-        interface Allowlist {
-            /**
-             * Domain to allow outbound requests to. Supports wildcards (e.g.
-             * '_.googleapis.com'). Use '_' to allow all domains.
-             */
-            domain: string;
-            /**
-             * Headers to inject on all outbound requests matching this domain. Each entry is a
-             * flat {header_name: header_value} object. The egress proxy injects these
-             * automatically.
-             */
-            transform?: Array<{
-                [key: string]: string;
-            }>;
-        }
-    }
+    created?: string | undefined;
     /**
-     * A source to be mounted into the environment.
+     * Output only. The number of files in the environment, output only.
      */
-    interface Source {
-        /**
-         * The inline content if `type` is `INLINE`.
-         */
-        content?: string;
-        /**
-         * Optional encoding for inline content (e.g. `base64`).
-         */
-        encoding?: string;
-        /**
-         * The source of the environment. For GCS, this is the GCS path. For GitHub, this
-         * is the GitHub path.
-         */
-        source?: string;
-        /**
-         * Where the source should appear in the environment.
-         */
-        target?: string;
-        type?: 'gcs' | 'inline' | 'repository' | 'skill_registry';
-    }
-}
+    file_count?: string | undefined;
+    /**
+     * Required. Output only. The ID of the environment.
+     */
+    id: string;
+    /**
+     * Output only. The time at which the environment was last accessed in ISO 8601 format
+     *
+     * @remarks
+     * (YYYY-MM-DDThh:mm:ssZ).
+     */
+    last_accessed?: string | undefined;
+    /**
+     * Network configuration for the environment.
+     */
+    network?: interactions.EnvironmentNetworkEgressAllowlist | EnvironmentNetworkEnum | undefined;
+    /**
+     * Output only. The total size of the environment files in bytes, output only.
+     */
+    size_bytes?: string | undefined;
+    /**
+     * Sources to be mounted into the environment.
+     */
+    sources?: Array<interactions.Source> | undefined;
+    /**
+     * Output only. The status of the environment container.
+     */
+    status?: Status_2 | undefined;
+    /**
+     * Output only. The time at which the environment was last updated in ISO 8601 format
+     *
+     * @remarks
+     * (YYYY-MM-DDThh:mm:ssZ).
+     */
+    updated?: string | undefined;
+};
 
-declare interface ErrorEvent_2 {
-    event_type: 'error';
-    /**
-     * Error message from an interaction.
-     */
-    error?: ErrorEvent_2.Error;
-    /**
-     * The event_id token to be used to resume the interaction stream, from this event.
-     */
-    event_id?: string;
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    metadata?: ErrorEvent_2.Metadata;
-}
+declare type EnvironmentDeleteResponse$ = Empty;
 
-declare namespace ErrorEvent_2 {
-    /**
-     * Error message from an interaction.
-     */
-    interface Error {
-        /**
-         * A URI that identifies the error type.
-         */
-        code?: string;
-        /**
-         * A human-readable error message.
-         */
-        message?: string;
+/**
+ * The environment being operated.
+ */
+declare type EnvironmentEnum = "browser" | "mobile" | "desktop" | (string & {});
+
+declare type EnvironmentListResponse$ = ListEnvironmentsResponse;
+
+/**
+ * Outbound networking configuration for the sandbox. Accepts an object with an 'allowlist' array to restrict traffic, or the string 'disabled' to turn off all network access. Omit entirely to allow all outbound traffic with no header injection.
+ */
+declare type EnvironmentNetworkEgressAllowlist = Allowlist | Disabled;
+
+declare type EnvironmentNetworkEnum = "disabled";
+
+/**
+ * Network configuration for the environment.
+ */
+declare type EnvironmentNetworkUnion = interactions.EnvironmentNetworkEgressAllowlist | EnvironmentNetworkEnum;
+
+export declare namespace Environments {
+    export interface CreateEnvironmentRequest extends CreateEnvironmentRequest$ {
     }
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
+    export interface Environment extends Environment$ {
+    }
+    export type EnvironmentDeleteResponse = EnvironmentDeleteResponse$;
+    export type EnvironmentListResponse = EnvironmentListResponse$;
+    export namespace CreateEnvironmentRequest {
+        export type Allowlist = Allowlist$;
+    }
+    export namespace Environment {
+        export type Allowlist = Allowlist$2;
     }
 }
 
-declare namespace Errors {
+declare namespace environments {
     export {
-        GeminiNextGenAPIClientError,
-        APIError,
-        APIUserAbortError,
-        APIConnectionError,
-        APIConnectionTimeoutError,
-        BadRequestError,
-        AuthenticationError,
-        PermissionDeniedError,
-        NotFoundError,
-        ConflictError,
-        UnprocessableEntityError,
-        RateLimitError,
-        InternalServerError
+        CreateEnvironmentRequestNetworkEnum,
+        CreateEnvironmentRequestNetworkUnion,
+        CreateEnvironmentRequest,
+        EnvironmentNetworkEnum,
+        EnvironmentNetworkUnion,
+        Status_2 as Status,
+        Environment_3 as Environment,
+        ListEnvironmentsResponse
     }
 }
+
+declare type Error$ = ErrorT;
+
+declare type Error$2 = Status;
+
+declare type ErrorEvent$ = ErrorEvent_2;
+
+declare type ErrorEvent_2 = {
+    /**
+     * Error message from an interaction.
+     */
+    error?: ErrorT | undefined;
+    /**
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
+     */
+    event_id?: string | undefined;
+    event_type: "error";
+    metadata?: StreamMetadata | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Error message from an interaction.
+ */
+declare type ErrorT = {
+    /**
+     * A URI that identifies the error type.
+     */
+    code?: string | undefined;
+    /**
+     * A human-readable error message.
+     */
+    message?: string | undefined;
+};
 
 /** The results from an evaluation run performed by the EvaluationService. This data type is not supported in Gemini API. */
 export declare class EvaluateDatasetResponse {
@@ -3757,6 +3950,29 @@ export declare interface EvaluationDataset {
     /** Cloud storage source holds the dataset. Currently only one Cloud Storage file path is supported. */
     gcsSource?: GcsSource;
 }
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Used to specify configuration for ExaAISearch.
+ */
+declare type ExaAISearchConfig = {
+    /**
+     * Required. The API key for ExaAiSearch.
+     */
+    api_key: string;
+    /**
+     * Optional. This field can be used to pass any parameter from the Exa.ai Search API.
+     */
+    custom_config?: {
+        [k: string]: any;
+    } | undefined;
+};
 
 /** Exact match metric value for an instance. This data type is not supported in Gemini API. */
 export declare interface ExactMatchMetricValue {
@@ -3812,13 +4028,6 @@ export declare enum FeatureSelectionPreference {
     PRIORITIZE_COST = "PRIORITIZE_COST"
 }
 
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-declare type Fetch = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
-
 export declare interface FetchPredictOperationConfig {
     /** Used to override HTTP request options. */
     httpOptions?: HttpOptions;
@@ -3839,9 +4048,6 @@ export declare interface FetchPredictOperationParameters {
     /** Used to override the default configuration. */
     config?: FetchPredictOperationConfig;
 }
-
-/** @ts-ignore For users who use Deno */
-declare type FetchRequestInit = NonNullable<OverloadedParameters<typeof fetch>[1]>;
 
 /** A file uploaded to the API. */
 declare interface File_2 {
@@ -3876,48 +4082,80 @@ declare interface File_2 {
 }
 export { File_2 as File }
 
+declare type FileCitation$ = FileCitation;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * A file citation annotation.
  */
-declare interface FileCitation {
-    type: 'file_citation';
+declare type FileCitation = {
     /**
      * User provided metadata about the retrieved context.
      */
     custom_metadata?: {
-        [key: string]: unknown;
-    };
+        [k: string]: any;
+    } | undefined;
     /**
      * The URI of the file.
      */
-    document_uri?: string;
+    document_uri?: string | undefined;
     /**
      * End of the attributed segment, exclusive.
      */
-    end_index?: number;
+    end_index?: number | undefined;
     /**
      * The name of the file.
      */
-    file_name?: string;
+    file_name?: string | undefined;
     /**
      * Media ID in-case of image citations, if applicable.
      */
-    media_id?: string;
+    media_id?: string | undefined;
     /**
      * Page number of the cited document, if applicable.
      */
-    page_number?: number;
+    page_number?: number | undefined;
     /**
      * Source attributed for a portion of the text.
      */
-    source?: string;
+    source?: string | undefined;
     /**
      * Start of segment of the response that is attributed to this source.
      *
+     * @remarks
+     *
      * Index indicates the start of the segment, measured in bytes.
      */
-    start_index?: number;
-}
+    start_index?: number | undefined;
+    type: "file_citation";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Content of a single file in the codebase.
+ */
+declare type FileContent = {
+    /**
+     * The UTF-8 encoded text content of the file.
+     */
+    content?: string | undefined;
+    /**
+     * The relative path of the file from the project root.
+     */
+    path?: string | undefined;
+};
 
 /** URI-based data. A FileData message contains a URI pointing to data of a specific media type. It is used to represent images, audio, and video stored in Google Cloud Storage. */
 export declare interface FileData {
@@ -3960,7 +4198,7 @@ export declare class Files extends BaseModule {
      *     file extension.
      *  - For Blob object inputs, the `mimeType` will be set to the Blob's `type`
      *     property.
-     * Somex eamples for file extension to mimeType mapping:
+     * Some examples for file extension to mimeType mapping:
      * .txt -> text/plain
      * .json -> application/json
      * .jpg  -> image/jpeg
@@ -4049,66 +4287,152 @@ export declare class Files extends BaseModule {
     private registerFilesInternal;
 }
 
+declare type FileSearch$ = FileSearch_2;
+
 /** The FileSearch tool that retrieves knowledge from Semantic Retrieval corpora. Files are imported to Semantic Retrieval corpora using the ImportFile API. This data type is not supported in Vertex AI. */
 export declare interface FileSearch {
     /** Required. The names of the file_search_stores to retrieve from. Example: `fileSearchStores/my-file-search-store-123` */
     fileSearchStoreNames?: string[];
-    /** Optional. The number of semantic retrieval chunks to retrieve. */
-    topK?: number;
     /** Optional. Metadata filter to apply to the semantic retrieval documents and chunks. */
     metadataFilter?: string;
+    /** Optional. The number of semantic retrieval chunks to retrieve. */
+    topK?: number;
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A tool that can be used by the model to search files.
+ */
+declare type FileSearch_2 = {
+    /**
+     * The file search store names to search.
+     */
+    file_search_store_names?: Array<string> | undefined;
+    /**
+     * Metadata filter to apply to the semantic retrieval documents and chunks.
+     */
+    metadata_filter?: string | undefined;
+    /**
+     * The number of semantic retrieval chunks to retrieve.
+     */
+    top_k?: number | undefined;
+    type: "file_search";
+};
+
+declare type FileSearchCall$ = FileSearchCallDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type FileSearchCallDelta = {
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "file_search_call";
+};
+
+declare type FileSearchCallStep$ = FileSearchCallStep;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * File Search call step.
  */
-declare interface FileSearchCallStep {
+declare type FileSearchCallStep = {
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
-    type: 'file_search_call';
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "file_search_call";
+};
 
+declare type FileSearchResult$ = FileSearchResultDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The result of the File Search.
+ */
+declare type FileSearchResult = {};
+
+declare type FileSearchResultDelta = {
+    result: Array<FileSearchResult>;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "file_search_result";
+};
+
+declare type FileSearchResultStep$ = FileSearchResultStep;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * File Search result step.
  */
-declare interface FileSearchResultStep {
+declare type FileSearchResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
-    type: 'file_search_result';
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "file_search_result";
+};
 
 /** A collection of Documents. */
 export declare interface FileSearchStore {
-    /** Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the "fileSearchStores/" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated. */
-    name?: string;
-    /** Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever". */
-    displayName?: string;
-    /** Output only. The Timestamp of when the `FileSearchStore` was created. */
-    createTime?: string;
-    /** Output only. The Timestamp of when the `FileSearchStore` was last updated. */
-    updateTime?: string;
-    /** Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval. */
-    activeDocumentsCount?: string;
-    /** Output only. The number of documents in the `FileSearchStore` that are being processed. */
-    pendingDocumentsCount?: string;
-    /** Output only. The number of documents in the `FileSearchStore` that have failed processing. */
-    failedDocumentsCount?: string;
-    /** Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`. */
-    sizeBytes?: string;
     /** The embedding model used by the FileSearchStore. */
     embeddingModel?: string;
+    /** Output only. The number of documents in the `FileSearchStore` that are active and ready for retrieval. */
+    activeDocumentsCount?: string;
+    /** Output only. The Timestamp of when the `FileSearchStore` was created. */
+    createTime?: string;
+    /** Optional. The human-readable display name for the `FileSearchStore`. The display name must be no more than 512 characters in length, including spaces. Example: "Docs on Semantic Retriever". */
+    displayName?: string;
+    /** Output only. The number of documents in the `FileSearchStore` that have failed processing. */
+    failedDocumentsCount?: string;
+    /** Output only. Immutable. Identifier. The `FileSearchStore` resource name. It is an ID (name excluding the "fileSearchStores/" prefix) that can contain up to 40 characters that are lowercase alphanumeric or dashes (-). It is output only. The unique name will be derived from `display_name` along with a 12 character random suffix. Example: `fileSearchStores/my-awesome-file-search-store-123a456b789c` If `display_name` is not provided, the name will be randomly generated. */
+    name?: string;
+    /** Output only. The number of documents in the `FileSearchStore` that are being processed. */
+    pendingDocumentsCount?: string;
+    /** Output only. The size of raw bytes ingested into the `FileSearchStore`. This is the total size of all the documents in the `FileSearchStore`. */
+    sizeBytes?: string;
+    /** Output only. The Timestamp of when the `FileSearchStore` was last updated. */
+    updateTime?: string;
 }
 
 declare class FileSearchStores extends BaseModule {
@@ -4252,13 +4576,69 @@ export declare interface FileStatus {
     code?: number;
 }
 
-declare type FinalizedRequestInit = RequestInit & {
-    headers: Headers;
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Config for filters.
+ */
+declare type Filter = {
+    /**
+     * Optional. String for metadata filtering.
+     */
+    metadata_filter?: string | undefined;
+    /**
+     * Optional. Only returns contexts with vector distance smaller than the
+     *
+     * @remarks
+     * threshold.
+     */
+    vector_distance_threshold?: number | undefined;
+    /**
+     * Optional. Only returns contexts with vector similarity larger than the
+     *
+     * @remarks
+     * threshold.
+     */
+    vector_similarity_threshold?: number | undefined;
 };
 
-declare type FinalRequestOptions = RequestOptions & {
-    method: HTTPMethod;
-    path: string;
+declare type FindRequest$ = FindRequest;
+
+/**
+ * Request parameters specific to FIND sessions, used for discovering
+ *
+ * @remarks
+ * vulnerabilities in a codebase.
+ */
+declare type FindRequest = {
+    /**
+     * Additional context or custom instructions provided by the user to guide
+     *
+     * @remarks
+     * the vulnerability analysis.
+     */
+    description?: string | undefined;
+    /**
+     * The identifier of a specific finding to verify. This is primarily used in
+     *
+     * @remarks
+     * VERIFY mode to focus the agent's execution-based validation on a single
+     * vulnerability.
+     */
+    finding_id?: string | undefined;
+    /**
+     * The mode of the find session.
+     */
+    mode?: Mode | undefined;
+    /**
+     * A list of source files to provide as context for the scan.
+     */
+    source_files?: Array<FileContent> | undefined;
 };
 
 /** Output only. The reason why the model stopped generating tokens.
@@ -4335,6 +4715,38 @@ export declare enum FinishReason {
     IMAGE_OTHER = "IMAGE_OTHER"
 }
 
+declare type FixRequest$ = FixRequest;
+
+/**
+ * Request parameters specific to FIX sessions, used for generating and
+ *
+ * @remarks
+ * validating security patches.
+ */
+declare type FixRequest = {
+    /**
+     * Additional context or custom instructions provided by the user to guide
+     *
+     * @remarks
+     * the patch generation process.
+     */
+    description?: string | undefined;
+    /**
+     * The identifier of the specific security finding to be remediated. This ID
+     *
+     * @remarks
+     * maps to a previously discovered vulnerability.
+     */
+    finding_id?: string | undefined;
+    /**
+     * A list of source files providing context for the remediation. These files
+     *
+     * @remarks
+     * are typically the ones containing the identified vulnerability.
+     */
+    source_files?: Array<FileContent> | undefined;
+};
+
 /** Tuning Spec for Full Fine Tuning. This data type is not supported in Gemini API. */
 export declare interface FullFineTuningSpec {
     /** Optional. Hyperparameters for Full Fine Tuning. */
@@ -4345,31 +4757,14 @@ export declare interface FullFineTuningSpec {
     validationDatasetUri?: string;
 }
 
-/**
- * A tool that can be used by the model.
- */
-declare interface Function_2 {
-    type: 'function';
-    /**
-     * A description of the function.
-     */
-    description?: string;
-    /**
-     * The name of the function.
-     */
-    name?: string;
-    /**
-     * The JSON Schema for the function's parameters.
-     */
-    parameters?: unknown;
-}
+declare type Function$ = FunctionT;
 
 /** A predicted FunctionCall returned from the model that contains a string representing the FunctionDeclaration.name and a structured JSON object containing the parameters and their values. */
 export declare interface FunctionCall {
-    /** Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`. */
-    id?: string;
     /** Optional. The function parameters and values in JSON object format. See FunctionDeclaration.parameters for parameter details. */
     args?: Record<string, unknown>;
+    /** Optional. The unique id of the function call. If populated, the client to execute the `function_call` and return the response with the matching `id`. */
+    id?: string;
     /** Optional. The name of the function to call. Matches FunctionDeclaration.name. */
     name?: string;
     /** Optional. The partial argument value of the function call. If provided, represents the arguments/fields that are streamed incrementally. This field is not supported in Gemini API. */
@@ -4412,33 +4807,40 @@ export declare enum FunctionCallingConfigMode {
     VALIDATED = "VALIDATED"
 }
 
+declare type FunctionCallStep$ = FunctionCallStep;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * A function tool call step.
  */
-declare interface FunctionCallStep {
+declare type FunctionCallStep = {
+    /**
+     * Required. The arguments to pass to the function.
+     */
+    arguments: {
+        [k: string]: any;
+    };
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
     /**
-     * Required. The arguments to pass to the function.
-     */
-    arguments: {
-        [key: string]: unknown;
-    };
-    /**
      * Required. The name of the tool to call.
      */
     name: string;
-    type: 'function_call';
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-}
+    type: "function_call";
+};
 
 /** Structured representation of a function declaration as defined by the [OpenAPI 3.0 specification](https://spec.openapis.org/oas/v3.0.3). Included in this declaration are the function name, description, parameters and response type. This FunctionDeclaration is a representation of a block of code that can be used as a `Tool` by the model and executed by the client. */
 export declare interface FunctionDeclaration {
+    /** Optional. Specifies the function Behavior. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
+    behavior?: Behavior;
     /** Optional. Description and purpose of the function. Model uses it to decide how and whether to call the function. */
     description?: string;
     /** Required. The name of the function to call. Must start with a letter or an underscore. Must be a-z, A-Z, 0-9, or contain underscores, dots, colons and dashes, with a maximum length of 128. */
@@ -4451,53 +4853,51 @@ export declare interface FunctionDeclaration {
     response?: Schema;
     /** Optional. Describes the output from this function in JSON Schema format. The value specified by the schema is the response value of the function. This field is mutually exclusive with `response`. */
     responseJsonSchema?: unknown;
-    /** Optional. Specifies the function Behavior. Currently only non-blocking functions are supported. If not specified, the system keeps the current function call behavior. This field is currently only supported by the BidiGenerateContent method. */
-    behavior?: Behavior;
 }
 
 /** The result output from a FunctionCall that contains a string representing the FunctionDeclaration.name and a structured JSON object containing any output from the function is used as context to the model. This should contain the result of a `FunctionCall` made based on model prediction. */
 export declare class FunctionResponse {
-    /** Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`. This field is not supported in Vertex AI. */
-    willContinue?: boolean;
-    /** Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
-    scheduling?: FunctionResponseScheduling;
-    /** Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types. */
-    parts?: FunctionResponsePart[];
     /** Optional. The id of the function call this response is for. Populated by the client to match the corresponding function call `id`. */
     id?: string;
     /** Required. The name of the function to call. Matches FunctionDeclaration.name and FunctionCall.name. */
     name?: string;
+    /** Optional. Ordered `Parts` that constitute a function response. Parts may have different IANA MIME types. */
+    parts?: FunctionResponsePart[];
     /** Required. The function response in JSON object format. Use "output" key to specify function output and "error" key to specify error details (if any). If "output" and "error" keys are not specified, then whole "response" is treated as function output. */
     response?: Record<string, unknown>;
+    /** Optional. Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
+    scheduling?: FunctionResponseScheduling;
+    /** Optional. Signals that function call continues, and more responses will be returned, turning the function call into a generator. Is only applicable to NON_BLOCKING function calls, is ignored otherwise. If set to false, future responses will not be considered. It is allowed to return empty `response` with `will_continue=False` to signal that the function call is finished. This may still trigger the model generation. To avoid triggering the generation and finish the function call, additionally set `scheduling` to `SILENT`. This field is not supported in Vertex AI. */
+    willContinue?: boolean;
 }
 
 /** Raw media bytes for function response. Text should not be sent as raw bytes, use the 'text' field. */
 export declare class FunctionResponseBlob {
-    /** Required. The IANA standard MIME type of the source data. */
-    mimeType?: string;
     /** Required. Raw bytes.
      * @remarks Encoded as base64 string. */
     data?: string;
     /** Optional. Display name of the blob. Used to provide a label or filename to distinguish blobs. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. This field is not supported in Gemini API. */
     displayName?: string;
+    /** Required. The IANA standard MIME type of the source data. */
+    mimeType?: string;
 }
 
 /** URI based data for function response. This data type is not supported in Gemini API. */
 export declare class FunctionResponseFileData {
+    /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
+    displayName?: string;
     /** Required. URI. */
     fileUri?: string;
     /** Required. The IANA standard MIME type of the source data. */
     mimeType?: string;
-    /** Optional. Display name of the file data. Used to provide a label or filename to distinguish file datas. This field is only returned in PromptMessage for prompt management. It is currently used in the Gemini GenerateContent calls only when server side tools (code_execution, google_search, and url_context) are enabled. */
-    displayName?: string;
 }
 
 /** A datatype containing media that is part of a `FunctionResponse` message. A `FunctionResponsePart` consists of data which has an associated datatype. A `FunctionResponsePart` can only contain one of the accepted types in `FunctionResponsePart.data`. A `FunctionResponsePart` must have a fixed IANA MIME type identifying the type and subtype of the media if the `inline_data` field is filled with raw bytes. */
 export declare class FunctionResponsePart {
-    /** Inline media bytes. */
-    inlineData?: FunctionResponseBlob;
     /** URI based data. This field is not supported in Gemini API. */
     fileData?: FunctionResponseFileData;
+    /** Inline media bytes. */
+    inlineData?: FunctionResponseBlob;
 }
 
 /** Specifies how the response should be scheduled in the conversation. Only applicable to NON_BLOCKING function calls, is ignored otherwise. Defaults to WHEN_IDLE. */
@@ -4520,32 +4920,82 @@ export declare enum FunctionResponseScheduling {
     INTERRUPT = "INTERRUPT"
 }
 
+declare type FunctionResult$ = FunctionResultDelta;
+
+declare type FunctionResultDelta = {
+    /**
+     * Required. ID to match the ID from the function call block.
+     */
+    call_id: string;
+    is_error?: boolean | undefined;
+    name?: string | undefined;
+    result: FunctionResultDeltaResult | Array<FunctionResultSubcontent> | string;
+    type: "function_result";
+};
+
+declare type FunctionResultDeltaResult = {};
+
+declare type FunctionResultDeltaResultUnion = FunctionResultDeltaResult | Array<FunctionResultSubcontent> | string;
+
+declare type FunctionResultStep$ = FunctionResultStep;
+
 /**
  * Result of a function tool call.
  */
-declare interface FunctionResultStep {
+declare type FunctionResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
     /**
-     * The result of the tool call.
-     */
-    result: unknown | Array<TextContent | ImageContent> | string;
-    type: 'function_result';
-    /**
      * Whether the tool call resulted in an error.
      */
-    is_error?: boolean;
+    is_error?: boolean | undefined;
     /**
      * The name of the tool that was called.
      */
-    name?: string;
+    name?: string | undefined;
     /**
-     * A signature hash for backend validation.
+     * Required. The result of the tool call.
      */
-    signature?: string;
-}
+    result: FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
+    type: "function_result";
+};
+
+declare type FunctionResultStepResult = {};
+
+/**
+ * Required. The result of the tool call.
+ */
+declare type FunctionResultStepResultUnion = FunctionResultStepResult | Array<FunctionResultSubcontent> | string;
+
+declare type FunctionResultSubcontent = ImageContent | TextContent;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A tool that can be used by the model.
+ */
+declare type FunctionT = {
+    /**
+     * A description of the function.
+     */
+    description?: string | undefined;
+    /**
+     * The name of the function.
+     */
+    name?: string | undefined;
+    /**
+     * The JSON Schema for the function's parameters.
+     */
+    parameters?: any | undefined;
+    type: "function";
+};
 
 /** The Google Cloud Storage location for the input content. This data type is not supported in Gemini API. */
 export declare interface GcsSource {
@@ -4553,24 +5003,89 @@ export declare interface GcsSource {
     uris?: string[];
 }
 
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-declare interface GeminiNextGenAPIClientAdapter {
-    isVertexAI: () => boolean;
-    getProject: () => string | undefined;
-    getLocation: () => string | undefined;
-    getAuthHeaders: () => Headers | Promise<Headers>;
+declare class GeminiNextGenAgents {
+    private readonly parentClient;
+    private sdk;
+    constructor(parentClient: GoogleGenAIParentClient);
+    create(params?: CreateAgentParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<agents.Agent>;
+    list(params?: ListAgentsParams_2 | null | undefined, options?: GoogleGenAIRequestOptions): Promise<agents.AgentListResponse>;
+    get(id: string, params?: GetAgentParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<agents.Agent>;
+    delete(id: string, params?: DeleteAgentParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<interactions.Empty>;
+    private getClient;
 }
 
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-declare class GeminiNextGenAPIClientError extends Error {
+declare class GeminiNextGenEnvironments {
+    private readonly parentClient;
+    private sdk;
+    constructor(parentClient: GoogleGenAIParentClient);
+    create(params: environments.CreateEnvironmentRequest & {
+        api_version?: string;
+    }, options?: GoogleGenAIRequestOptions): Promise<environments.Environment>;
+    list(params?: ListEnvironmentsParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<environments.ListEnvironmentsResponse>;
+    get(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<environments.Environment>;
+    delete(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<interactions.Empty>;
+    private getClient;
+}
+
+declare class GeminiNextGenInteractions {
+    private readonly parentClient;
+    private sdk;
+    constructor(parentClient: GoogleGenAIParentClient);
+    create(params: CreateModelInteractionParamsNonStreaming, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction>;
+    create(params: CreateAgentInteractionParamsNonStreaming, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction>;
+    create(params: CreateModelInteractionParamsStreaming, options?: GoogleGenAIRequestOptions): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+    create(params: CreateAgentInteractionParamsStreaming, options?: GoogleGenAIRequestOptions): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+    create(params: InteractionCreateParamsStreaming, options?: GoogleGenAIRequestOptions): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+    create(params: InteractionCreateParamsNonStreaming, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction>;
+    create(params: InteractionCreateParams, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction | Stream<GoogleGenAIInteractionSSEEvent>>;
+    get(id: string, params?: InteractionGetParamsNonStreaming | null, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction>;
+    get(id: string, params: InteractionGetParamsStreaming, options?: GoogleGenAIRequestOptions): Promise<Stream<GoogleGenAIInteractionSSEEvent>>;
+    get(id: string, params?: InteractionGetParams | null, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction | Stream<GoogleGenAIInteractionSSEEvent>>;
+    delete(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<unknown>;
+    cancel(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<GoogleGenAIInteraction>;
+    private getClient;
+}
+
+declare class GeminiNextGenTriggers {
+    private readonly parentClient;
+    private sdk;
+    constructor(parentClient: GoogleGenAIParentClient);
+    create(params: CreateTriggerParams, options?: GoogleGenAIRequestOptions): Promise<triggers.Trigger>;
+    list(params?: ListTriggersParams_2 | null | undefined, options?: GoogleGenAIRequestOptions): Promise<triggers.ListTriggersResponse>;
+    get(id: string, params?: GetTriggerParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<triggers.Trigger>;
+    update(id: string, params: UpdateTriggerParams, options?: GoogleGenAIRequestOptions): Promise<triggers.Trigger>;
+    delete(id: string, params?: DeleteTriggerParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<interactions.Empty>;
+    run(trigger_id: string, params?: RunTriggerParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<triggers.TriggerExecution>;
+    listExecutions(trigger_id: string, params?: ListTriggerExecutionsParams_2 | null | undefined, options?: GoogleGenAIRequestOptions): Promise<triggers.ListTriggerExecutionsResponse>;
+    private getClient;
+}
+
+declare class GeminiNextGenWebhooks {
+    private readonly parentClient;
+    private sdk;
+    constructor(parentClient: GoogleGenAIParentClient);
+    create(params: webhooks.WebhookInput & {
+        api_version?: string;
+    }, options?: GoogleGenAIRequestOptions): Promise<webhooks.Webhook>;
+    list(params?: WebhookListParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<webhooks.WebhookListResponse>;
+    get(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<webhooks.Webhook>;
+    update(id: string, params?: WebhookUpdateParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<webhooks.Webhook>;
+    delete(id: string, params?: {
+        api_version?: string;
+    } | null | undefined, options?: GoogleGenAIRequestOptions): Promise<interactions.Empty>;
+    rotateSigningSecret(id: string, params?: WebhookRotateSigningSecretParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<webhooks.WebhookRotateSigningSecretResponse>;
+    ping(id: string, params?: WebhookPingParams | null | undefined, options?: GoogleGenAIRequestOptions): Promise<webhooks.WebhookPingResponse>;
+    private getClient;
 }
 
 /** Input example for preference optimization. This data type is not supported in Gemini API. */
@@ -4603,6 +5118,8 @@ export declare interface GenerateContentConfig {
      be charged usage for any applicable operations.
      */
     abortSignal?: AbortSignal;
+    /** The service tier to use for the request. For example, ServiceTier.FLEX. */
+    serviceTier?: ServiceTier;
     /** Instructions for the model to steer it toward better performance.
      For example, "Answer as concisely as possible" or "Don't use technical
      terms in your response".
@@ -4737,6 +5254,9 @@ export declare interface GenerateContentConfig {
     /** The thinking features configuration.
      */
     thinkingConfig?: ThinkingConfig;
+    /** Optional. Configuration for audio transcription (speech recognition).
+     */
+    audioTranscriptionConfig?: AudioTranscriptionConfig;
     /** The image generation configuration.
      */
     imageConfig?: ImageConfig;
@@ -4748,8 +5268,6 @@ export declare interface GenerateContentConfig {
      service. If supplied, safety_settings must not be supplied.
      */
     modelArmorConfig?: ModelArmorConfig;
-    /** The service tier to use for the request. For example, ServiceTier.FLEX. */
-    serviceTier?: ServiceTier;
 }
 
 /** Config for models.generate_content parameters. */
@@ -5189,6 +5707,8 @@ export declare interface GenerateVideosSource {
     video?: Video;
 }
 
+declare type GenerationConfig$ = GenerationConfig_2;
+
 /** Generation config. */
 export declare interface GenerationConfig {
     /** Optional. Config for model selection. */
@@ -5197,6 +5717,9 @@ export declare interface GenerationConfig {
      `response_schema` that accepts [JSON Schema](https://json-schema.org/).
      */
     responseJsonSchema?: unknown;
+    /** Optional. Configuration for audio transcription (speech recognition).
+     */
+    audioTranscriptionConfig?: AudioTranscriptionConfig;
     /** Optional. If enabled, audio timestamps will be included in the request to the model. This can be useful for synchronizing audio with other modalities in the response. This field is not supported in Gemini API. */
     audioTimestamp?: boolean;
     /** Optional. The number of candidate responses to generate. A higher `candidate_count` can provide more options to choose from, but it also consumes more resources. This can be useful for generating a variety of responses and selecting the best one. */
@@ -5213,13 +5736,15 @@ export declare interface GenerationConfig {
     mediaResolution?: MediaResolution;
     /** Optional. Penalizes tokens that have already appeared in the generated text. A positive value encourages the model to generate more diverse and less repetitive text. Valid values can range from [-2.0, 2.0]. */
     presencePenalty?: number;
+    /** Optional. New response format field for the model to configure output formatting and delivery. */
+    responseFormat?: ResponseFormat[];
     /** Optional. If set to true, the log probabilities of the output tokens are returned. Log probabilities are the logarithm of the probability of a token appearing in the output. A higher log probability means the token is more likely to be generated. This can be useful for analyzing the model's confidence in its own output and for debugging. */
     responseLogprobs?: boolean;
-    /** Optional. The IANA standard MIME type of the response. The model will generate output that conforms to this MIME type. Supported values include 'text/plain' (default) and 'application/json'. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. */
+    /** Optional. The IANA standard MIME type of the response. The model will generate output that conforms to this MIME type. Supported values include 'text/plain' (default) and 'application/json'. The model needs to be prompted to output the appropriate response type, otherwise the behavior is undefined. Deprecated: Use `response_format` instead. */
     responseMimeType?: string;
     /** Optional. The modalities of the response. The model will generate a response that includes all the specified modalities. For example, if this is set to `[TEXT, IMAGE]`, the response will include both text and an image. */
     responseModalities?: Modality[];
-    /** Optional. Lets you to specify a schema for the model's response, ensuring that the output conforms to a particular structure. This is useful for generating structured data such as JSON. The schema is a subset of the [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema) object. When this field is set, you must also set the `response_mime_type` to `application/json`. */
+    /** Optional. Lets you to specify a schema for the model's response, ensuring that the output conforms to a particular structure. This is useful for generating structured data such as JSON. The schema is a subset of the [OpenAPI 3.0 schema object](https://spec.openapis.org/oas/v3.0.3#schema) object. When this field is set, you must also set the `response_mime_type` to `application/json`. Deprecated: Use `response_format` instead. */
     responseSchema?: Schema;
     /** Optional. Routing configuration. This field is not supported in Gemini API. */
     routingConfig?: GenerationConfigRoutingConfig;
@@ -5239,53 +5764,51 @@ export declare interface GenerationConfig {
     topP?: number;
     /** Optional. Enables enhanced civic answers. It may not be available for all models. This field is not supported in Vertex AI. */
     enableEnhancedCivicAnswers?: boolean;
+    /** Optional. Config for translation. This field is not supported in Vertex AI. */
+    translationConfig?: TranslationConfig;
 }
 
 /**
  * Configuration parameters for model interactions.
  */
-declare interface GenerationConfig_2 {
+declare type GenerationConfig_2 = {
     /**
-     * @deprecated Configuration for image interaction.
+     * The configuration for image interaction.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
      */
-    image_config?: ImageConfig_2;
+    image_config?: ImageConfig_2 | undefined;
     /**
      * The maximum number of tokens to include in the response.
      */
-    max_output_tokens?: number;
+    max_output_tokens?: number | undefined;
     /**
      * Seed used in decoding for reproducibility.
      */
-    seed?: number;
+    seed?: number | undefined;
     /**
      * Configuration for speech interaction.
      */
-    speech_config?: Array<SpeechConfig_2>;
+    speech_config?: Array<SpeechConfig_2> | undefined;
     /**
      * A list of character sequences that will stop output interaction.
      */
-    stop_sequences?: Array<string>;
-    /**
-     * Controls the randomness of the output.
-     */
-    temperature?: number;
-    /**
-     * The level of thought tokens that the model should generate.
-     */
-    thinking_level?: ThinkingLevel_2;
-    /**
-     * Whether to include thought summaries in the response.
-     */
-    thinking_summaries?: 'auto' | 'none';
+    stop_sequences?: Array<string> | undefined;
+    thinking_level?: ThinkingLevel_2 | undefined;
+    thinking_summaries?: ThinkingSummaries | undefined;
     /**
      * The tool choice configuration.
      */
-    tool_choice?: ToolChoiceType | ToolChoiceConfig;
+    tool_choice?: ToolChoiceConfig | ToolChoiceType | undefined;
     /**
-     * The maximum cumulative probability of tokens to consider when sampling.
+     * Configuration for speech recognition (transcription).
      */
-    top_p?: number;
-}
+    transcription_config?: TranscriptionConfig | undefined;
+    /**
+     * Configuration options for video generation.
+     */
+    video_config?: VideoConfig | undefined;
+};
 
 /** The configuration for routing the request to a specific model. This can be used to control which model is used for the generation, either automatically or by specifying a model name. This data type is not supported in Gemini API. */
 export declare interface GenerationConfigRoutingConfig {
@@ -5314,6 +5837,16 @@ export declare interface GenerationConfigRoutingConfigManualRoutingMode {
  */
 export declare interface GenerationConfigThinkingConfig extends ThinkingConfig {
 }
+
+declare type GetAgentParams = Omit<GetAgentRequest, "id">;
+
+declare type GetAgentRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    id: string;
+};
 
 /** Optional parameters. */
 export declare interface GetBatchJobConfig {
@@ -5426,6 +5959,41 @@ export declare interface GetFileSearchStoreParameters {
     config?: GetFileSearchStoreConfig;
 }
 
+declare type GetInteractionByIdParams = Omit<GetInteractionByIdRequest, "id">;
+
+declare type GetInteractionByIdParamsNonStreaming = GetInteractionByIdParams & {
+    stream?: false | undefined;
+};
+
+declare type GetInteractionByIdParamsStreaming = GetInteractionByIdParams & {
+    stream: true;
+};
+
+declare type GetInteractionByIdRequest = {
+    /**
+     * The unique identifier of the interaction to retrieve.
+     */
+    id: string;
+    /**
+     * If set to true, the generated content will be streamed incrementally.
+     */
+    stream?: boolean | undefined;
+    /**
+     * Optional. If set, resumes the interaction stream from the next chunk after the event marked by the event id. Can only be used if `stream` is true.
+     */
+    last_event_id?: string | undefined;
+    /**
+     * If set to true, includes the input in the response.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    include_input?: boolean | undefined;
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+};
+
 /** Optional parameters for models.get method. */
 export declare interface GetModelConfig {
     /** Used to override HTTP request options. */
@@ -5465,6 +6033,19 @@ export declare interface GetOperationParameters {
     config?: GetOperationConfig;
 }
 
+declare type GetTriggerParams = Omit<GetTriggerRequest, "id">;
+
+declare type GetTriggerRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Resource name of the trigger.
+     */
+    id: string;
+};
+
 /** Optional parameters for tunings.get method. */
 export declare interface GetTuningJobConfig {
     /** Used to override HTTP request options. */
@@ -5484,6 +6065,19 @@ export declare interface GetTuningJobParameters {
     /** Optional parameters for the request. */
     config?: GetTuningJobConfig;
 }
+
+declare type GetWebhookParams = Omit<GetWebhookRequest, "id">;
+
+declare type GetWebhookRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Required. The ID of the webhook to retrieve.
+     */
+    id: string;
+};
 
 /**
  * The Google GenAI SDK.
@@ -5540,13 +6134,23 @@ export declare class GoogleGenAI {
     private _interactions;
     private _webhooks;
     private _agents;
+    private _environments;
     private _nextGenClient;
+    private _triggers;
     private getNextGenClient;
-    get interactions(): Interactions;
-    get webhooks(): Webhooks;
-    get agents(): Agents;
+    get interactions(): GeminiNextGenInteractions;
+    get webhooks(): GeminiNextGenWebhooks;
+    get agents(): GeminiNextGenAgents;
+    get triggers(): GeminiNextGenTriggers;
+    get environments(): GeminiNextGenEnvironments;
     constructor(options: GoogleGenAIOptions);
 }
+
+declare type GoogleGenAIInteraction = GoogleGenAIResponseWithSdkHttpResponse<Omit<interactions.Interaction, "steps"> & {
+    steps: interactions.Step[];
+}>;
+
+declare type GoogleGenAIInteractionSSEEvent = interactions.InteractionSSEEvent;
 
 /**
  * Google Gen AI SDK's configuration options.
@@ -5626,163 +6230,194 @@ export declare interface GoogleGenAIOptions {
     httpOptions?: HttpOptions;
 }
 
+declare interface GoogleGenAIParentClient {
+    isVertexAI(): boolean;
+    getProject(): string | undefined;
+    getLocation(): string | undefined;
+    getBaseUrl(): string;
+    getApiVersion(): string;
+    getDefaultHeaders?(): Record<string, string>;
+    getHeaders?(): Record<string, string> | undefined;
+    getAuthHeaders(url?: string): Headers | Promise<Headers>;
+}
+
+declare type GoogleGenAIRequestOptions = RequestOptions & {
+    timeout?: number;
+    maxRetries?: number;
+    defaultBaseURL?: string;
+    fetchOptions?: Omit<RequestInit, "method" | "body">;
+    query?: unknown;
+    body?: unknown;
+};
+
+declare type GoogleGenAIResponseWithSdkHttpResponse<T> = T & {
+    sdkHttpResponse?: GoogleGenAISdkHttpResponse;
+};
+
+declare type GoogleGenAISdkHttpResponse = {
+    headers?: Record<string, string>;
+    responseInternal: Response;
+    json(): Promise<unknown>;
+};
+
+declare type GoogleMaps$ = GoogleMaps_2;
+
 /** Tool to retrieve knowledge from Google Maps. */
 export declare interface GoogleMaps {
     /** The authentication config to access the API. Only API key is supported. This field is not supported in Gemini API. */
     authConfig?: AuthConfig;
     /** Deprecated. The Google Maps contextual widget behavior in Grounding with Google Maps is being deprecated; this field is planned for removal and no longer has any effect once removed. Optional. Whether to return a widget context token in the GroundingMetadata of the response. */
     enableWidget?: boolean;
+    /** Optional. Specifies the types of Google Maps grounding to enable. This field is not supported in Gemini API. */
+    groundingTypes?: GoogleMapsGroundingTypes;
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A tool that can be used by the model to call Google Maps.
+ */
+declare type GoogleMaps_2 = {
+    /**
+     * Whether to return a widget context token in the tool call result of the
+     *
+     * @remarks
+     * response.
+     */
+    enable_widget?: boolean | undefined;
+    /**
+     * The latitude of the user's location.
+     */
+    latitude?: number | undefined;
+    /**
+     * The longitude of the user's location.
+     */
+    longitude?: number | undefined;
+    type: "google_maps";
+};
+
+declare type GoogleMapsCall$ = GoogleMapsCallDelta;
+
+declare type GoogleMapsCallArguments$ = GoogleMapsCallArguments;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * The arguments to pass to the Google Maps tool.
  */
-declare interface GoogleMapsCallArguments {
+declare type GoogleMapsCallArguments = {
     /**
      * The queries to be executed.
      */
-    queries?: Array<string>;
-}
+    queries?: Array<string> | undefined;
+};
+
+declare type GoogleMapsCallDelta = {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCallArguments | undefined;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "google_maps_call";
+};
+
+declare type GoogleMapsCallStep$ = GoogleMapsCallStep;
 
 /**
  * Google Maps call step.
  */
-declare interface GoogleMapsCallStep {
+declare type GoogleMapsCallStep = {
+    /**
+     * The arguments to pass to the Google Maps tool.
+     */
+    arguments?: GoogleMapsCallArguments | undefined;
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
-    type: 'google_maps_call';
-    /**
-     * The arguments to pass to the Google Maps tool.
-     */
-    arguments?: GoogleMapsCallStep.Arguments;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
+    signature?: string | undefined;
+    type: "google_maps_call";
+};
+
+/** Defines the types of Google Maps grounding that can be enabled and their configurations. This data type is not supported in Gemini API. */
+export declare interface GoogleMapsGroundingTypes {
+    /** Optional. Enables grounding with Google Maps Places. This is the default grounding type when no `GroundingTypes` are specified. */
+    places?: GoogleMapsPlaces;
+    /** Optional. Enables grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). */
+    routing?: GoogleMapsRouting;
 }
 
-declare namespace GoogleMapsCallStep {
-    /**
-     * The arguments to pass to the Google Maps tool.
-     */
-    interface Arguments {
-        /**
-         * The queries to be executed.
-         */
-        queries?: Array<string>;
-    }
+/** Grounding with Google Maps Places data (e.g. QueryPlaces). This is the default Google Maps grounding type when no other type is specified. This data type is not supported in Gemini API. */
+export declare interface GoogleMapsPlaces {
 }
+
+declare type GoogleMapsResult$ = GoogleMapsResult;
+
+declare type GoogleMapsResult$2 = GoogleMapsResultDelta;
 
 /**
  * The result of the Google Maps.
  */
-declare interface GoogleMapsResult {
-    /**
-     * The places that were found.
-     */
-    places?: Array<GoogleMapsResult.Place>;
-    /**
-     * Resource name of the Google Maps widget context token.
-     */
-    widget_context_token?: string;
-}
+declare type GoogleMapsResult = {
+    places?: Array<GoogleMapsResultPlaces> | undefined;
+    widget_context_token?: string | undefined;
+};
 
-declare namespace GoogleMapsResult {
-    interface Place {
-        /**
-         * Title of the place.
-         */
-        name?: string;
-        /**
-         * The ID of the place, in `places/{place_id}` format.
-         */
-        place_id?: string;
-        /**
-         * Snippets of reviews that are used to generate answers about the features of a
-         * given place in Google Maps.
-         */
-        review_snippets?: Array<Place.ReviewSnippet>;
-        /**
-         * URI reference of the place.
-         */
-        url?: string;
-    }
-    namespace Place {
-        /**
-         * Encapsulates a snippet of a user review that answers a question about the
-         * features of a specific place in Google Maps.
-         */
-        interface ReviewSnippet {
-            /**
-             * The ID of the review snippet.
-             */
-            review_id?: string;
-            /**
-             * Title of the review.
-             */
-            title?: string;
-            /**
-             * A link that corresponds to the user review on Google Maps.
-             */
-            url?: string;
-        }
-    }
-}
+declare type GoogleMapsResultDelta = {
+    /**
+     * The results of the Google Maps.
+     */
+    result?: Array<GoogleMapsResult> | undefined;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "google_maps_result";
+};
+
+declare type GoogleMapsResultPlaces = {
+    name?: string | undefined;
+    place_id?: string | undefined;
+    review_snippets?: Array<ReviewSnippet> | undefined;
+    url?: string | undefined;
+};
+
+declare type GoogleMapsResultStep$ = GoogleMapsResultStep;
 
 /**
  * Google Maps result step.
  */
-declare interface GoogleMapsResultStep {
+declare type GoogleMapsResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
-    result: Array<GoogleMapsResultStep.Result>;
-    type: 'google_maps_result';
+    result: Array<GoogleMapsResult>;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "google_maps_result";
+};
 
-declare namespace GoogleMapsResultStep {
-    /**
-     * The result of the Google Maps.
-     */
-    interface Result {
-        places?: Array<Result.Place>;
-        widget_context_token?: string;
-    }
-    namespace Result {
-        interface Place {
-            name?: string;
-            place_id?: string;
-            review_snippets?: Array<Place.ReviewSnippet>;
-            url?: string;
-        }
-        namespace Place {
-            /**
-             * Encapsulates a snippet of a user review that answers a question about the
-             * features of a specific place in Google Maps.
-             */
-            interface ReviewSnippet {
-                /**
-                 * The ID of the review snippet.
-                 */
-                review_id?: string;
-                /**
-                 * Title of the review.
-                 */
-                title?: string;
-                /**
-                 * A link that corresponds to the user review on Google Maps.
-                 */
-                url?: string;
-            }
-        }
-    }
+/** Grounding with Google Maps Routing APIs (ComputeRoutes and SearchAlongRoute). This data type is not supported in Gemini API. */
+export declare interface GoogleMapsRouting {
 }
 
 /** The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors). This data type is not supported in Gemini API. */
@@ -5795,113 +6430,164 @@ export declare interface GoogleRpcStatus {
     message?: string;
 }
 
+declare type GoogleSearch$ = GoogleSearch_2;
+
 /** GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
 export declare interface GoogleSearch {
-    /** Optional. The set of search types to enable. If not set, web search is enabled by default. */
-    searchTypes?: SearchTypes;
     /** Optional. Sites with confidence level chosen & above this value will be blocked from the search results. This field is not supported in Gemini API. */
     blockingConfidence?: PhishBlockThreshold;
     /** Optional. List of domains to be excluded from the search results. The default limit is 2000 domains. Example: ["amazon.com", "facebook.com"]. This field is not supported in Gemini API. */
     excludeDomains?: string[];
+    /** Optional. The set of search types to enable. If not set, web search is enabled by default. */
+    searchTypes?: SearchTypes;
     /** Optional. Filter search results to a specific time range. If customers set a start time, they must set an end time (and vice versa). This field is not supported in Vertex AI. */
     timeRangeFilter?: Interval;
 }
 
 /**
+ * A tool that can be used by the model to search Google.
+ */
+declare type GoogleSearch_2 = {
+    /**
+     * The types of search grounding to enable.
+     */
+    search_types?: Array<GoogleSearchSearchType> | undefined;
+    type: "google_search";
+};
+
+declare type GoogleSearchCall$ = GoogleSearchCallDelta;
+
+declare type GoogleSearchCallArguments$ = GoogleSearchCallArguments;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * The arguments to pass to Google Search.
  */
-declare interface GoogleSearchCallArguments {
+declare type GoogleSearchCallArguments = {
     /**
      * Web search queries for the following-up web search.
      */
-    queries?: Array<string>;
-}
+    queries?: Array<string> | undefined;
+};
+
+declare type GoogleSearchCallDelta = {
+    /**
+     * The arguments to pass to Google Search.
+     */
+    arguments: GoogleSearchCallArguments;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "google_search_call";
+};
+
+declare type GoogleSearchCallStep$ = GoogleSearchCallStep;
 
 /**
  * Google Search call step.
  */
-declare interface GoogleSearchCallStep {
+declare type GoogleSearchCallStep = {
+    /**
+     * The arguments to pass to Google Search.
+     */
+    arguments: GoogleSearchCallArguments;
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
     /**
-     * Required. The arguments to pass to Google Search.
-     */
-    arguments: GoogleSearchCallStep.Arguments;
-    type: 'google_search_call';
-    /**
      * The type of search grounding enabled.
      */
-    search_type?: 'web_search' | 'image_search' | 'enterprise_web_search';
+    search_type?: GoogleSearchCallStepSearchType | undefined;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
+    signature?: string | undefined;
+    type: "google_search_call";
+};
 
-declare namespace GoogleSearchCallStep {
-    /**
-     * Required. The arguments to pass to Google Search.
-     */
-    interface Arguments {
-        /**
-         * Web search queries for the following-up web search.
-         */
-        queries?: Array<string>;
-    }
-}
+/**
+ * The type of search grounding enabled.
+ */
+declare type GoogleSearchCallStepSearchType = "web_search" | "image_search" | "enterprise_web_search" | (string & {});
 
+declare type GoogleSearchResult$ = GoogleSearchResult;
+
+declare type GoogleSearchResult$2 = GoogleSearchResultDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * The result of the Google Search.
  */
-declare interface GoogleSearchResult {
+declare type GoogleSearchResult = {
     /**
      * Web content snippet that can be embedded in a web page or an app webview.
      */
-    search_suggestions?: string;
-}
+    search_suggestions?: string | undefined;
+};
+
+declare type GoogleSearchResultDelta = {
+    is_error?: boolean | undefined;
+    result: Array<GoogleSearchResult>;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "google_search_result";
+};
+
+declare type GoogleSearchResultStep$ = GoogleSearchResultStep;
 
 /**
  * Google Search result step.
  */
-declare interface GoogleSearchResultStep {
+declare type GoogleSearchResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
     /**
-     * Required. The results of the Google Search.
-     */
-    result: Array<GoogleSearchResultStep.Result>;
-    type: 'google_search_result';
-    /**
      * Whether the Google Search resulted in an error.
      */
-    is_error?: boolean;
+    is_error?: boolean | undefined;
+    /**
+     * Required. The results of the Google Search.
+     */
+    result: Array<GoogleSearchResult>;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
-
-declare namespace GoogleSearchResultStep {
-    /**
-     * The result of the Google Search.
-     */
-    interface Result {
-        /**
-         * Web content snippet that can be embedded in a web page or an app webview.
-         */
-        search_suggestions?: string;
-    }
-}
+    signature?: string | undefined;
+    type: "google_search_result";
+};
 
 /** Tool to retrieve public web data for grounding, powered by Google. */
 export declare interface GoogleSearchRetrieval {
     /** Specifies the dynamic retrieval configuration for the given source. */
     dynamicRetrievalConfig?: DynamicRetrievalConfig;
 }
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type GoogleSearchSearchType = "web_search" | "image_search" | "enterprise_web_search" | (string & {});
 
 /** Represents a whole or partial calendar date, such as a birthday. The time of day and time zone are either specified elsewhere or are insignificant. The date is relative to the Gregorian Calendar. This can represent one of the following: * A full date, with non-zero year, month, and day values. * A month and day, with a zero year (for example, an anniversary). * A year on its own, with a zero month and a zero day. * A year and month, with a zero day (for example, a credit card expiration date). Related types: * google.type.TimeOfDay * google.type.DateTime * google.protobuf.Timestamp. This data type is not supported in Gemini API. */
 export declare interface GoogleTypeDate {
@@ -5919,14 +6605,14 @@ export declare interface GoogleTypeDate {
  is enabled, the model returns a `GroundingChunk` that contains a reference to
  the source of the information. */
 export declare interface GroundingChunk {
-    /** A grounding chunk from an image search result. See the `Image` message for details. */
-    image?: GroundingChunkImage;
     /** A `Maps` chunk is a piece of evidence that comes from Google Maps.
 
      It contains information about a place, such as its name, address, and
      reviews. This is used to provide the user with rich, location-based
      information. */
     maps?: GroundingChunkMaps;
+    /** A grounding chunk from an image search result. See the `Image` message for details. */
+    image?: GroundingChunkImage;
     /** A grounding chunk from a data source retrieved by a retrieval tool, such as Vertex AI Search. See the `RetrievedContext` message for details */
     retrievedContext?: GroundingChunkRetrievedContext;
     /** A grounding chunk from a web page, typically from Google Search. See the `Web` message for details. */
@@ -5947,14 +6633,14 @@ export declare interface GroundingChunkCustomMetadata {
 
 /** An `Image` chunk is a piece of evidence that comes from an image search result. It contains the URI of the image search result and the URI of the image. This is used to provide the user with a link to the source of the information. */
 export declare interface GroundingChunkImage {
-    /** The URI of the image search result page. */
-    sourceUri?: string;
-    /** The URI of the image. */
-    imageUri?: string;
-    /** The title of the image search result page. */
-    title?: string;
     /** The domain of the image search result page. */
     domain?: string;
+    /** The URI of the image. */
+    imageUri?: string;
+    /** The URI of the image search result page. */
+    sourceUri?: string;
+    /** The title of the image search result page. */
+    title?: string;
 }
 
 /** A `Maps` chunk is a piece of evidence that comes from Google Maps.
@@ -6048,10 +6734,10 @@ export declare interface GroundingChunkRetrievedContext {
     customMetadata?: GroundingChunkCustomMetadata[];
     /** Optional. Name of the `FileSearchStore` containing the document. Example: `fileSearchStores/123`. This field is not supported in Vertex AI. */
     fileSearchStore?: string;
-    /** Optional. Page number of the retrieved context, if applicable. This field is not supported in Vertex AI. */
-    pageNumber?: number;
     /** Optional. The media blob resource name for multimodal file search results. Format: fileSearchStores/{file_search_store_id}/media/{blob_id}. This field is not supported in Vertex AI. */
     mediaId?: string;
+    /** Optional. Page number of the retrieved context, if applicable. This field is not supported in Vertex AI. */
+    pageNumber?: number;
 }
 
 /** A list of string values. This data type is not supported in Vertex AI. */
@@ -6072,8 +6758,6 @@ export declare interface GroundingChunkWeb {
 
 /** Information for various kinds of grounding. */
 export declare interface GroundingMetadata {
-    /** Optional. The image search queries that were used to generate the content. This field is populated only when the grounding source is Google Search with the Image Search search_type enabled. */
-    imageSearchQueries?: string[];
     /** A list of supporting references retrieved from the grounding
      source. This field is populated when the grounding source is Google
      Search, Vertex AI Search, or Google Maps.
@@ -6088,8 +6772,10 @@ export declare interface GroundingMetadata {
     searchEntryPoint?: SearchEntryPoint;
     /** Web search queries for the following-up web search. */
     webSearchQueries?: string[];
-    /** Optional. Output only. A token that can be used to render a Google Maps widget with the contextual data. This field is populated only when the grounding source is Google Maps. */
+    /** Optional. Output only. Deprecated: The Google Maps contextual widget behavior in Grounding with Google Maps is being deprecated; this field is planned for removal and will no longer be populated once removed. A token that can be used to render a Google Maps widget with the contextual data. This field is populated only when the grounding source is Google Maps. */
     googleMapsWidgetContextToken?: string;
+    /** Optional. The image search queries that were used to generate the content. This field is populated only when the grounding source is Google Search with the Image Search search_type enabled. */
+    imageSearchQueries?: string[];
     /** Optional. The queries that were executed by the retrieval tools. This field is populated only when the grounding source is a retrieval tool, such as Vertex AI Search. This field is not supported in Gemini API. */
     retrievalQueries?: string[];
     /** Optional. Output only. A list of URIs that can be used to flag a place or review for inappropriate content. This field is populated only when the grounding source is Google Maps. This field is not supported in Gemini API. */
@@ -6121,6 +6807,34 @@ export declare interface GroundingSupport {
     /** Indices into the `rendered_parts` field of the `GroundingMetadata` message. These indices specify which rendered parts are associated with this support message. */
     renderedParts?: number[];
 }
+
+declare type GroundingToolCount$ = GroundingToolCount;
+
+/**
+ * The number of grounding tool counts.
+ */
+declare type GroundingToolCount = {
+    /**
+     * The number of grounding tool counts.
+     */
+    count?: number | undefined;
+    /**
+     * The grounding tool type associated with the count.
+     */
+    type?: GroundingToolCountType | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The grounding tool type associated with the count.
+ */
+declare type GroundingToolCountType = "google_search" | "google_maps" | "retrieval" | (string & {});
 
 /** The method for blocking content. If not specified, the default behavior is to use the probability score. This enum is not supported in Gemini API. */
 export declare enum HarmBlockMethod {
@@ -6165,6 +6879,8 @@ export declare enum HarmBlockThreshold {
      */
     OFF = "OFF"
 }
+
+declare type HarmCategory$ = HarmCategory_2;
 
 /** The harm category to be blocked. */
 export declare enum HarmCategory {
@@ -6214,6 +6930,15 @@ export declare enum HarmCategory {
     HARM_CATEGORY_JAILBREAK = "HARM_CATEGORY_JAILBREAK"
 }
 
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type HarmCategory_2 = "hate_speech" | "dangerous_content" | "harassment" | "sexually_explicit" | "civic_integrity" | "image_hate" | "image_dangerous_content" | "image_harassment" | "image_sexually_explicit" | "jailbreak" | (string & {});
+
 /** Output only. The probability of harm for this category. */
 export declare enum HarmProbability {
     /**
@@ -6262,14 +6987,15 @@ export declare enum HarmSeverity {
     HARM_SEVERITY_HIGH = "HARM_SEVERITY_HIGH"
 }
 
-declare type HeadersLike = Headers | readonly HeaderValue[][] | Record<string, HeaderValue | readonly HeaderValue[]> | undefined | null | NullableHeaders;
-
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-declare type HeaderValue = string | undefined | null;
+/** Configuration for history exchange between client and server. */
+export declare interface HistoryConfig {
+    /** If true, after sending `setup_complete`, the server will wait
+     and at first process `client_content` messages until `turn_complete` is
+     `true`. This initial history will not trigger a model call and
+     may end with model content. After `turn_complete` is `true`, the client
+     can start the realtime conversation via `realtime_input`. */
+    initialHistoryInClientContent?: boolean;
+}
 
 /** The location of the API key. This enum is not supported in Gemini API. */
 export declare enum HttpElementLocation {
@@ -6295,8 +7021,6 @@ export declare enum HttpElementLocation {
      */
     HTTP_IN_COOKIE = "HTTP_IN_COOKIE"
 }
-
-declare type HTTPMethod = 'get' | 'post' | 'put' | 'patch' | 'delete';
 
 /** HTTP options to be used in each of the requests. */
 export declare interface HttpOptions {
@@ -6385,7 +7109,40 @@ export declare interface HttpRetryOptions {
     /** Maximum number of attempts, including the original request.
      If 0 or 1, it means no retries. If not specified, default to 5. */
     attempts?: number;
+    /** Initial delay before the first retry, in fractions of a second. If not specified, default to 1.0 second. */
+    initialDelay?: number;
+    /** Maximum delay between retries, in fractions of a second. If not specified, default to 60.0 seconds. */
+    maxDelay?: number;
+    /** Multiplier by which the delay increases after each attempt. If not specified, default to 2.0. */
+    expBase?: number;
+    /** Randomness factor for the delay. If not specified, default to 1.0. */
+    jitter?: number;
+    /** List of HTTP status codes that should trigger a retry.
+     If not specified, a default set of retryable codes (408, 429, and 5xx) may be used. */
+    httpStatusCodes?: number[];
 }
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Config for Hybrid Search.
+ */
+declare type HybridSearch = {
+    /**
+     * Optional. Alpha value controls the weight between dense and sparse vector search
+     *
+     * @remarks
+     * results.
+     */
+    alpha?: number | undefined;
+};
+
+declare type Image$ = ImageDelta;
 
 /** An image. */
 declare interface Image_2 {
@@ -6401,6 +7158,8 @@ declare interface Image_2 {
 }
 export { Image_2 as Image }
 
+declare type ImageConfig$ = ImageConfig_2;
+
 /** The image generation configuration to be used in GenerateContentConfig. */
 export declare interface ImageConfig {
     /** Aspect ratio of the generated images. Supported values are
@@ -6413,8 +7172,6 @@ export declare interface ImageConfig {
     /** Controls the generation of people. Supported values are:
      ALLOW_ALL, ALLOW_ADULT, ALLOW_NONE. */
     personGeneration?: string;
-    /** Optional. Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This field is not supported in Gemini API. */
-    prominentPeople?: ProminentPeople;
     /** MIME type of the generated image. This field is not
      supported in Gemini API. */
     outputMimeType?: string;
@@ -6423,15 +7180,28 @@ export declare interface ImageConfig {
     outputCompressionQuality?: number;
     /** Optional. The image output format for generated images. This field is not supported in Gemini API. */
     imageOutputOptions?: ImageConfigImageOutputOptions;
+    /** Optional. Controls whether prominent people (celebrities) generation is allowed. If used with personGeneration, personGeneration enum would take precedence. For instance, if ALLOW_NONE is set, all person generation would be blocked. If this field is unspecified, the default behavior is to allow prominent people. This field is not supported in Gemini API. */
+    prominentPeople?: ProminentPeople;
 }
 
 /**
  * The configuration for image interaction.
+ *
+ * @deprecated class: This will be removed in a future release, please migrate away from it as soon as possible.
  */
-declare interface ImageConfig_2 {
-    aspect_ratio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '4:5' | '5:4' | '9:16' | '16:9' | '21:9' | '1:8' | '8:1' | '1:4' | '4:1';
-    image_size?: '1K' | '2K' | '4K' | '512';
-}
+declare type ImageConfig_2 = {
+    aspect_ratio?: ImageConfigAspectRatio | undefined;
+    image_size?: ImageConfigImageSize | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ImageConfigAspectRatio = "1:1" | "2:3" | "3:2" | "3:4" | "4:3" | "4:5" | "5:4" | "9:16" | "16:9" | "21:9" | "1:8" | "8:1" | "1:4" | "4:1" | (string & {});
 
 /** The image output format for generated images. This data type is not supported in Gemini API. */
 export declare interface ImageConfigImageOutputOptions {
@@ -6441,28 +7211,44 @@ export declare interface ImageConfigImageOutputOptions {
     mimeType?: string;
 }
 
+declare type ImageConfigImageSize = "1K" | "2K" | "4K" | "512" | (string & {});
+
+declare type ImageContent$ = ImageContent;
+
 /**
  * An image content block.
  */
-declare interface ImageContent {
-    type: 'image';
+declare type ImageContent = {
     /**
      * The image content.
      */
-    data?: string;
+    data?: string | undefined;
     /**
      * The mime type of the image.
      */
-    mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif' | 'image/gif' | 'image/bmp' | 'image/tiff';
-    /**
-     * The resolution of the media.
-     */
-    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
+    mime_type?: ImageContentMimeType | undefined;
+    resolution?: MediaResolution_2 | undefined;
+    type: "image";
     /**
      * The URI of the image.
      */
-    uri?: string;
-}
+    uri?: string | undefined;
+};
+
+/**
+ * The mime type of the image.
+ */
+declare type ImageContentMimeType = "image/png" | "image/jpeg" | "image/webp" | "image/heic" | "image/heif" | "image/gif" | "image/bmp" | "image/tiff" | (string & {});
+
+declare type ImageDelta = {
+    data?: string | undefined;
+    mime_type?: ImageDeltaMimeType | undefined;
+    resolution?: MediaResolution_2 | undefined;
+    type: "image";
+    uri?: string | undefined;
+};
+
+declare type ImageDeltaMimeType = "image/png" | "image/jpeg" | "image/webp" | "image/heic" | "image/heif" | "image/gif" | "image/bmp" | "image/tiff" | (string & {});
 
 /** Enum that specifies the language of the text in the prompt. */
 export declare enum ImagePromptLanguage {
@@ -6514,31 +7300,96 @@ export declare enum ImageResizeMode {
     PAD = "PAD"
 }
 
+declare type ImageResponseFormat$ = ImageResponseFormat_2;
+
+/** Configuration for image-specific output formatting. */
+export declare class ImageResponseFormat {
+    /** Optional. The aspect ratio for the image output. */
+    aspectRatio?: AspectRatio;
+    /** Optional. Delivery mode for the generated content. */
+    delivery?: Delivery;
+    /** Optional. The size of the image output. */
+    imageSize?: ImageSize;
+    /** Optional. The MIME type of the image output. */
+    mimeType?: string;
+}
+
 /**
  * Configuration for image output format.
  */
-declare interface ImageResponseFormat {
-    type: 'image';
+declare type ImageResponseFormat_2 = {
     /**
      * The aspect ratio for the image output.
      */
-    aspect_ratio?: '1:1' | '2:3' | '3:2' | '3:4' | '4:3' | '4:5' | '5:4' | '9:16' | '16:9' | '21:9' | '1:8' | '8:1' | '1:4' | '4:1';
+    aspect_ratio?: ImageResponseFormatAspectRatio | undefined;
     /**
      * The delivery mode for the image output.
      */
-    delivery?: 'inline' | 'uri';
+    delivery?: ImageResponseFormatDelivery | undefined;
     /**
      * The size of the image output.
      */
-    image_size?: '512' | '1K' | '2K' | '4K';
+    image_size?: ImageResponseFormatImageSize | undefined;
     /**
      * The MIME type of the image output.
      */
-    mime_type?: 'image/jpeg';
-}
+    mime_type?: ImageResponseFormatMimeType | undefined;
+    type: "image";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The aspect ratio for the image output.
+ */
+declare type ImageResponseFormatAspectRatio = "1:1" | "2:3" | "3:2" | "3:4" | "4:3" | "4:5" | "5:4" | "9:16" | "16:9" | "21:9" | "1:8" | "8:1" | "1:4" | "4:1" | (string & {});
+
+/**
+ * The delivery mode for the image output.
+ */
+declare type ImageResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
+ * The size of the image output.
+ */
+declare type ImageResponseFormatImageSize = "512" | "1K" | "2K" | "4K" | (string & {});
+
+/**
+ * The MIME type of the image output.
+ */
+declare type ImageResponseFormatMimeType = "image/jpeg";
 
 /** Image search for grounding and related configurations. */
 export declare interface ImageSearch {
+}
+
+/** The size of the image output. */
+export declare enum ImageSize {
+    /**
+     * Default value. This value is unused.
+     */
+    IMAGE_SIZE_UNSPECIFIED = "IMAGE_SIZE_UNSPECIFIED",
+    /**
+     * 512px image size.
+     */
+    IMAGE_SIZE_FIVE_TWELVE = "IMAGE_SIZE_FIVE_TWELVE",
+    /**
+     * 1K image size.
+     */
+    IMAGE_SIZE_ONE_K = "IMAGE_SIZE_ONE_K",
+    /**
+     * 2K image size.
+     */
+    IMAGE_SIZE_TWO_K = "IMAGE_SIZE_TWO_K",
+    /**
+     * 4K image size.
+     */
+    IMAGE_SIZE_FOUR_K = "IMAGE_SIZE_FOUR_K"
 }
 
 /** Optional parameters for importing a file. */
@@ -6635,364 +7486,767 @@ export declare class InlinedResponse {
     error?: JobError;
 }
 
+declare type InputTokensByModality$ = ModalityTokens;
+
+declare type Interaction$ = Interaction;
+
 /**
  * The Interaction resource.
  */
-declare interface Interaction {
+declare type Interaction = {
+    /**
+     * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+     */
+    model?: Model_2 | undefined;
+    /**
+     * The agent to interact with.
+     */
+    agent?: AgentOption | undefined;
     /**
      * Required. Output only. A unique identifier for the interaction completion.
      */
     id: string;
     /**
-     * Required. Output only. The time at which the response was created in ISO 8601
-     * format (YYYY-MM-DDThh:mm:ssZ).
-     */
-    created: string;
-    /**
      * Required. Output only. The status of the interaction.
      */
-    status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete' | 'budget_exceeded';
+    status: InteractionStatus;
     /**
-     * Required. Output only. The steps that make up the interaction.
+     * Output only. The time at which the response was created in ISO 8601 format
+     *
+     * @remarks
+     * (YYYY-MM-DDThh:mm:ssZ).
      */
-    steps: Array<Step>;
+    created?: string | undefined;
     /**
-     * Required. Output only. The time at which the response was last updated in ISO
-     * 8601 format (YYYY-MM-DDThh:mm:ssZ).
+     * Output only. The time at which the response was last updated in ISO 8601 format
+     *
+     * @remarks
+     * (YYYY-MM-DDThh:mm:ssZ).
      */
-    updated: string;
-    /**
-     * The name of the `Agent` used for generating the interaction.
-     */
-    agent?: 'deep-research-pro-preview-12-2025' | 'deep-research-preview-04-2026' | 'deep-research-max-preview-04-2026' | (string & {});
-    /**
-     * Configuration parameters for the agent interaction.
-     */
-    agent_config?: DynamicAgentConfig | DeepResearchAgentConfig;
-    /**
-     * The environment configuration for the interaction. Can be an object specifying
-     * remote environment sources or a string referencing an existing environment ID.
-     */
-    environment?: string | Environment_2;
-    /**
-     * Output only. The environment ID for the interaction. Only populated if
-     * environment config is set in the request.
-     */
-    environment_id?: string;
-    /**
-     * The input for the interaction.
-     */
-    input?: string | Array<Step> | Array<Content_2> | TextContent | ImageContent | AudioContent | DocumentContent | VideoContent;
-    /**
-     * The name of the `Model` used for generating the interaction.
-     */
-    model?: Model_2;
-    /**
-     * The ID of the previous interaction, if any.
-     */
-    previous_interaction_id?: string;
-    /**
-     * Enforces that the generated response is a JSON object that complies with the
-     * JSON schema specified in this field.
-     */
-    response_format?: Array<AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown> | AudioResponseFormat | TextResponseFormat | ImageResponseFormat | unknown;
-    /**
-     * @deprecated The mime type of the response. This is required if response_format
-     * is set.
-     */
-    response_mime_type?: string;
-    /**
-     * The requested modalities of the response (TEXT, IMAGE, AUDIO).
-     */
-    response_modalities?: Array<'text' | 'image' | 'audio' | 'video' | 'document'>;
-    /**
-     * @deprecated Output only. The role of the interaction.
-     */
-    role?: string;
-    /**
-     * The service tier for the interaction.
-     */
-    service_tier?: 'flex' | 'standard' | 'priority';
+    updated?: string | undefined;
     /**
      * System instruction for the interaction.
      */
-    system_instruction?: string;
+    system_instruction?: string | undefined;
     /**
      * A list of tool declarations the model may call during interaction.
      */
-    tools?: Array<Tool_2>;
+    tools?: Array<Tool_2> | undefined;
     /**
-     * Output only. Statistics on the interaction request's token usage.
+     * Statistics on the interaction request's token usage.
      */
-    usage?: Usage;
+    usage?: Usage | undefined;
     /**
-     * Optional. Webhook configuration for receiving notifications when the interaction
-     * completes.
+     * The requested modalities of the response (TEXT, IMAGE, AUDIO).
      */
-    webhook_config?: WebhookConfig_2;
+    response_modalities?: Array<ResponseModality> | undefined;
+    /**
+     * The mime type of the response. This is required if response_format is set.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    response_mime_type?: string | undefined;
+    /**
+     * The ID of the previous interaction, if any.
+     */
+    previous_interaction_id?: string | undefined;
+    /**
+     * Output only. The environment ID for the interaction. Only populated if environment
+     *
+     * @remarks
+     * config is set in the request.
+     */
+    environment_id?: string | undefined;
+    service_tier?: ServiceTier_2 | undefined;
+    /**
+     * Message for configuring webhook events for a request.
+     */
+    webhook_config?: WebhookConfig_2 | undefined;
+    /**
+     * Output only. The steps that make up the interaction, when included in the response.
+     */
+    steps?: Array<Step> | undefined;
+    /**
+     * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+     */
+    response_format?: Array<ResponseFormat_2> | ResponseFormat_2 | undefined;
+    /**
+     * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+     */
+    environment?: Environment_2 | string | undefined;
+    /**
+     * Configuration parameters for model interactions.
+     */
+    generation_config?: GenerationConfig_2 | undefined;
+    /**
+     * Configuration parameters for the agent interaction.
+     */
+    agent_config?: DynamicAgentConfig | DeepResearchAgentConfig | CodeMenderAgentConfig | AntigravityAgentConfig | undefined;
+    /**
+     * Safety settings for the interaction.
+     */
+    safety_settings?: Array<SafetySetting_2> | undefined;
+    /**
+     * The labels with user-defined metadata for the request.
+     */
+    labels?: {
+        [k: string]: string;
+    } | undefined;
+    /**
+     * The input for the interaction.
+     */
+    input?: InteractionsInput | undefined;
     /**
      * Concatenated text from the last model output in response to the current request.
      *
-     * Note: this is added by the SDK.
-     */
-    output_text?: string;
-    /**
-     * The last image generated by the model in response to the current request.
+     * @remarks
      *
      * Note: this is added by the SDK.
      */
-    output_image?: ImageContent;
+    output_text?: string | undefined;
     /**
-     * The last audio generated by the model in response to the current request.
+     * An image content block.
+     */
+    output_image?: ImageContent | undefined;
+    /**
+     * An audio content block.
+     */
+    output_audio?: AudioContent | undefined;
+    /**
+     * A video content block.
+     */
+    output_video?: VideoContent | undefined;
+};
+
+/**
+ * Required. The interaction request template to be executed.
+ */
+declare type Interaction_2 = interactions.CreateAgentInteraction | interactions.CreateModelInteraction;
+
+/**
+ * Configuration parameters for the agent interaction.
+ */
+declare type InteractionAgentConfig = DynamicAgentConfig | DeepResearchAgentConfig | CodeMenderAgentConfig | AntigravityAgentConfig;
+
+declare type InteractionCancelParams$ = CancelInteractionByIdParams;
+
+declare type InteractionCompletedEvent$ = InteractionCompletedEvent;
+
+declare type InteractionCompletedEvent = {
+    event_type: "interaction.completed";
+    /**
+     * The event_id token to be used to resume the interaction stream, from
      *
-     * Note: this is added by the SDK.
+     * @remarks
+     * this event.
      */
-    output_audio?: AudioContent;
+    event_id?: string | undefined;
+    metadata?: StreamMetadata | undefined;
     /**
-     * The last video generated by the model in response to the current request.
+     * Partial interaction resource emitted by interaction lifecycle SSE events.
      *
-     * Note: this is added by the SDK.
+     * @remarks
+     * Streaming lifecycle payloads may omit fields that are only available on
+     * full non-streaming Interaction responses.
      */
-    output_video?: VideoContent;
-}
+    interaction: InteractionSseEventInteraction;
+};
 
-declare interface InteractionCancelParams {
-    /**
-     * Which version of the API to use.
-     */
-    api_version?: string;
-}
+declare type InteractionCreatedEvent$ = InteractionCreatedEvent;
 
-declare interface InteractionCompletedEvent {
-    event_type: 'interaction.completed';
+declare type InteractionCreatedEvent = {
+    event_type: "interaction.created";
     /**
-     * Required. The completed interaction with empty outputs to reduce the payload
-     * size. Use the preceding ContentDelta events for the actual output.
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
      */
-    interaction: Interaction;
+    event_id?: string | undefined;
+    metadata?: StreamMetadata | undefined;
     /**
-     * The event_id token to be used to resume the interaction stream, from this event.
+     * Partial interaction resource emitted by interaction lifecycle SSE events.
+     *
+     * @remarks
+     * Streaming lifecycle payloads may omit fields that are only available on
+     * full non-streaming Interaction responses.
      */
-    event_id?: string;
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    metadata?: InteractionCompletedEvent.Metadata;
-}
+    interaction: InteractionSseEventInteraction;
+};
 
-declare namespace InteractionCompletedEvent {
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
+declare type InteractionCreateParams$ = CreateInteractionParams;
 
-declare interface InteractionCreatedEvent {
-    event_type: 'interaction.created';
-    /**
-     * The Interaction resource.
-     */
-    interaction: Interaction;
-    /**
-     * The event_id token to be used to resume the interaction stream, from this event.
-     */
-    event_id?: string;
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    metadata?: InteractionCreatedEvent.Metadata;
-}
+declare type InteractionCreateParams = CreateInteractionParams;
 
-declare namespace InteractionCreatedEvent {
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
+declare type InteractionCreateParamsNonStreaming = CreateInteractionParamsNonStreaming;
 
-declare type InteractionCreateParams = CreateModelInteractionParamsNonStreaming | CreateModelInteractionParamsStreaming | CreateAgentInteractionParamsNonStreaming | CreateAgentInteractionParamsStreaming;
+declare type InteractionCreateParamsStreaming = CreateInteractionParamsStreaming;
 
-declare interface InteractionDeleteParams {
-    /**
-     * Which version of the API to use.
-     */
-    api_version?: string;
-}
+declare type InteractionDeleteParams$ = DeleteInteractionParams;
 
-declare type InteractionDeleteResponse = unknown;
+declare type InteractionDeleteResponse$ = Empty;
 
-declare type InteractionGetParams = InteractionGetParamsNonStreaming | InteractionGetParamsStreaming;
+/**
+ * The environment configuration for the interaction. Can be an object specifying remote environment sources or a string referencing an existing environment ID.
+ */
+declare type InteractionEnvironment = Environment_2 | string;
 
-declare namespace InteractionGetParams {
-    type InteractionGetParamsNonStreaming = InteractionsAPI.InteractionGetParamsNonStreaming;
-    type InteractionGetParamsStreaming = InteractionsAPI.InteractionGetParamsStreaming;
-}
+declare type InteractionGetParams$ = GetInteractionByIdParams;
 
-declare interface InteractionGetParamsBase {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Query param: If set to true, includes the input in the response.
-     */
-    include_input?: boolean;
-    /**
-     * Query param: Optional. If set, resumes the interaction stream from the next
-     * chunk after the event marked by the event id. Can only be used if `stream` is
-     * true.
-     */
-    last_event_id?: string;
-    /**
-     * Query param: If set to true, the generated content will be streamed
-     * incrementally.
-     */
-    stream?: boolean;
-}
+declare type InteractionGetParams = GetInteractionByIdParams;
 
-declare interface InteractionGetParamsNonStreaming extends InteractionGetParamsBase {
-    /**
-     * Query param: If set to true, the generated content will be streamed
-     * incrementally.
-     */
-    stream?: false;
-}
+declare type InteractionGetParamsNonStreaming$ = GetInteractionByIdParamsNonStreaming;
 
-declare interface InteractionGetParamsStreaming extends InteractionGetParamsBase {
-    /**
-     * Query param: If set to true, the generated content will be streamed
-     * incrementally.
-     */
-    stream: true;
-}
+declare type InteractionGetParamsNonStreaming$2 = GetInteractionByIdParamsNonStreaming;
 
-export declare class Interactions extends BaseInteractions {
-}
+declare type InteractionGetParamsNonStreaming = GetInteractionByIdParamsNonStreaming;
+
+declare type InteractionGetParamsStreaming$ = GetInteractionByIdParamsStreaming;
+
+declare type InteractionGetParamsStreaming$2 = GetInteractionByIdParamsStreaming;
+
+declare type InteractionGetParamsStreaming = GetInteractionByIdParamsStreaming;
+
+/**
+ * Enforces that the generated response is a JSON object that complies with the JSON schema specified in this field.
+ */
+declare type InteractionResponseFormat = Array<ResponseFormat_2> | ResponseFormat_2;
 
 export declare namespace Interactions {
-    export { type AllowedTools as AllowedTools, type Annotation as Annotation, type AudioContent as AudioContent, type AudioResponseFormat as AudioResponseFormat, type CodeExecutionCallArguments as CodeExecutionCallArguments, type CodeExecutionCallStep as CodeExecutionCallStep, type CodeExecutionResultStep as CodeExecutionResultStep, type Content_2 as Content, type DeepResearchAgentConfig as DeepResearchAgentConfig, type DocumentContent as DocumentContent, type DynamicAgentConfig as DynamicAgentConfig, type Environment_2 as Environment, type ErrorEvent_2 as ErrorEvent, type FileCitation as FileCitation, type FileSearchCallStep as FileSearchCallStep, type FileSearchResultStep as FileSearchResultStep, type Function_2 as Function, type FunctionCallStep as FunctionCallStep, type FunctionResultStep as FunctionResultStep, type GenerationConfig_2 as GenerationConfig, type GoogleMapsCallArguments as GoogleMapsCallArguments, type GoogleMapsCallStep as GoogleMapsCallStep, type GoogleMapsResult as GoogleMapsResult, type GoogleMapsResultStep as GoogleMapsResultStep, type GoogleSearchCallArguments as GoogleSearchCallArguments, type GoogleSearchCallStep as GoogleSearchCallStep, type GoogleSearchResult as GoogleSearchResult, type GoogleSearchResultStep as GoogleSearchResultStep, type ImageConfig_2 as ImageConfig, type ImageContent as ImageContent, type ImageResponseFormat as ImageResponseFormat, type Interaction as Interaction, type InteractionCompletedEvent as InteractionCompletedEvent, type InteractionCreatedEvent as InteractionCreatedEvent, type InteractionSSEEvent as InteractionSSEEvent, type InteractionStatusUpdate as InteractionStatusUpdate, type MCPServerToolCallStep as MCPServerToolCallStep, type MCPServerToolResultStep as MCPServerToolResultStep, type Model_2 as Model, type ModelOutputStep as ModelOutputStep, type PlaceCitation as PlaceCitation, type SpeechConfig_2 as SpeechConfig, type Step as Step, type StepDelta as StepDelta, type StepStart as StepStart, type StepStop as StepStop, type TextContent as TextContent, type TextResponseFormat as TextResponseFormat, type ThinkingLevel_2 as ThinkingLevel, type ThoughtStep as ThoughtStep, type Tool_2 as Tool, type ToolChoiceConfig as ToolChoiceConfig, type ToolChoiceType as ToolChoiceType, type URLCitation as URLCitation, type URLContextCallArguments as URLContextCallArguments, type URLContextCallStep as URLContextCallStep, type URLContextResult as URLContextResult, type URLContextResultStep as URLContextResultStep, type Usage as Usage, type UserInputStep as UserInputStep, type VideoContent as VideoContent, type WebhookConfig_2 as WebhookConfig, type InteractionDeleteResponse as InteractionDeleteResponse, type InteractionCreateParams as InteractionCreateParams, type CreateModelInteractionParamsNonStreaming as CreateModelInteractionParamsNonStreaming, type CreateModelInteractionParamsStreaming as CreateModelInteractionParamsStreaming, type CreateAgentInteractionParamsNonStreaming as CreateAgentInteractionParamsNonStreaming, type CreateAgentInteractionParamsStreaming as CreateAgentInteractionParamsStreaming, type InteractionDeleteParams as InteractionDeleteParams, type InteractionCancelParams as InteractionCancelParams, type InteractionGetParams as InteractionGetParams, type InteractionGetParamsNonStreaming as InteractionGetParamsNonStreaming, type InteractionGetParamsStreaming as InteractionGetParamsStreaming, };
+    export type AllowedTools = AllowedTools$;
+    export type Annotation = Annotation$;
+    export type AntigravityAgentConfig = AntigravityAgentConfig$;
+    export type AudioContent = AudioContent$;
+    export type AudioResponseFormat = AudioResponseFormat$;
+    export type CodeExecutionCallArguments = CodeExecutionCallArguments$;
+    export interface CodeExecutionCallStep extends CodeExecutionCallStep$ {
+    }
+    export type CodeExecutionResultStep = CodeExecutionResultStep$;
+    export interface CodeMenderAgentConfig extends CodeMenderAgentConfig$ {
+    }
+    export type Content = Content$;
+    export type CreateAgentInteractionParamsNonStreaming = CreateAgentInteractionParamsNonStreaming$;
+    export type CreateAgentInteractionParamsStreaming = CreateAgentInteractionParamsStreaming$;
+    export type CreateModelInteractionParamsNonStreaming = CreateModelInteractionParamsNonStreaming$;
+    export type CreateModelInteractionParamsStreaming = CreateModelInteractionParamsStreaming$;
+    export type DeepResearchAgentConfig = DeepResearchAgentConfig$;
+    export type DocumentContent = DocumentContent$;
+    export type DynamicAgentConfig = DynamicAgentConfig$;
+    export interface Environment extends Environment$2 {
+    }
+    export interface ErrorEvent extends ErrorEvent$ {
+    }
+    export type FileCitation = FileCitation$;
+    export type FileSearchCallStep = FileSearchCallStep$;
+    export type FileSearchResultStep = FileSearchResultStep$;
+    export type Function = Function$;
+    export type FunctionCallStep = FunctionCallStep$;
+    export type FunctionResultStep = FunctionResultStep$;
+    export type GenerationConfig = GenerationConfig$;
+    export type GoogleMapsCallArguments = GoogleMapsCallArguments$;
+    export interface GoogleMapsCallStep extends GoogleMapsCallStep$ {
+    }
+    export interface GoogleMapsResult extends GoogleMapsResult$ {
+    }
+    export interface GoogleMapsResultStep extends GoogleMapsResultStep$ {
+    }
+    export type GoogleSearchCallArguments = GoogleSearchCallArguments$;
+    export interface GoogleSearchCallStep extends GoogleSearchCallStep$ {
+    }
+    export type GoogleSearchResult = GoogleSearchResult$;
+    export interface GoogleSearchResultStep extends GoogleSearchResultStep$ {
+    }
+    export type HarmCategory = HarmCategory$;
+    export type ImageConfig = ImageConfig$;
+    export type ImageContent = ImageContent$;
+    export type ImageResponseFormat = ImageResponseFormat$;
+    export type Interaction = Interaction$;
+    export type InteractionCancelParams = InteractionCancelParams$;
+    export interface InteractionCompletedEvent extends InteractionCompletedEvent$ {
+    }
+    export interface InteractionCreatedEvent extends InteractionCreatedEvent$ {
+    }
+    export type InteractionCreateParams = InteractionCreateParams$;
+    export type InteractionDeleteParams = InteractionDeleteParams$;
+    export type InteractionDeleteResponse = InteractionDeleteResponse$;
+    export type InteractionGetParams = InteractionGetParams$;
+    export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$;
+    export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$;
+    export type InteractionSSEEvent = InteractionSSEEvent$;
+    export interface InteractionStatusUpdate extends InteractionStatusUpdate$ {
+    }
+    export type MCPServerToolCallStep = MCPServerToolCallStep$;
+    export type MCPServerToolResultStep = MCPServerToolResultStep$;
+    export type Model = Model$;
+    export interface ModelOutputStep extends ModelOutputStep$ {
+    }
+    export interface PlaceCitation extends PlaceCitation$ {
+    }
+    export type RetrievalCallArguments = RetrievalCallArguments$;
+    export interface RetrievalCallDelta extends RetrievalCallDelta$ {
+    }
+    export type RetrievalResultDelta = RetrievalResultDelta$;
+    export type SafetySetting = SafetySetting$;
+    export type SpeechConfig = SpeechConfig$;
+    export type Step = Step$;
+    export interface StepDelta extends StepDelta$ {
+    }
+    export interface StepStart extends StepStart$ {
+    }
+    export interface StepStop extends StepStop$ {
+    }
+    export type TextContent = TextContent$;
+    export type TextResponseFormat = TextResponseFormat$;
+    export type ThinkingLevel = ThinkingLevel$;
+    export type ThoughtStep = ThoughtStep$;
+    export type Tool = Tool$;
+    export type ToolChoiceConfig = ToolChoiceConfig$;
+    export type ToolChoiceType = ToolChoiceType$;
+    export type TranscriptionConfig = TranscriptionConfig$;
+    export type URLCitation = URLCitation$;
+    export type URLContextCallArguments = URLContextCallArguments$;
+    export interface URLContextCallStep extends URLContextCallStep$ {
+    }
+    export type URLContextResult = URLContextResult$;
+    export interface URLContextResultStep extends URLContextResultStep$ {
+    }
+    export interface Usage extends Usage$ {
+    }
+    export type UserInputStep = UserInputStep$;
+    export type VideoConfig = VideoConfig$;
+    export type VideoContent = VideoContent$;
+    export type VideoResponseFormat = VideoResponseFormat$;
+    export type WebhookConfig = WebhookConfig$;
+    export type WordInfo = WordInfo$;
+    export namespace CodeExecutionCallStep {
+        export type Arguments = Arguments$;
+    }
+    export namespace CodeMenderAgentConfig {
+        export interface FindRequest extends FindRequest$ {
+        }
+        export interface FixRequest extends FixRequest$ {
+        }
+        export type SessionConfig = SessionConfig$;
+        export namespace FindRequest {
+            export type SourceFile = SourceFile$;
+        }
+        export namespace FixRequest {
+            export type SourceFile = SourceFile$2;
+        }
+    }
+    export namespace Environment {
+        export type Allowlist = Allowlist$3;
+        export type Source = Source$;
+    }
+    export namespace ErrorEvent {
+        export type Error = Error$;
+        export type Metadata = Metadata$;
+    }
+    export namespace GoogleMapsCallStep {
+        export type Arguments = Arguments$2;
+    }
+    export namespace GoogleMapsResult {
+        export interface Place extends Place$ {
+        }
+        export namespace Place {
+            export type ReviewSnippet = ReviewSnippet$;
+        }
+    }
+    export namespace GoogleMapsResultStep {
+        export interface Result extends Result$ {
+        }
+        export namespace Result {
+            export interface Place extends Place$2 {
+            }
+            export namespace Place {
+                export type ReviewSnippet = ReviewSnippet$2;
+            }
+        }
+    }
+    export namespace GoogleSearchCallStep {
+        export type Arguments = Arguments$3;
+    }
+    export namespace GoogleSearchResultStep {
+        export type Result = Result$2;
+    }
+    export namespace InteractionCompletedEvent {
+        export type Metadata = Metadata$2;
+    }
+    export namespace InteractionCreatedEvent {
+        export type Metadata = Metadata$3;
+    }
+    export namespace InteractionGetParams {
+        export type InteractionGetParamsNonStreaming = InteractionGetParamsNonStreaming$2;
+        export type InteractionGetParamsStreaming = InteractionGetParamsStreaming$2;
+    }
+    export namespace InteractionStatusUpdate {
+        export type Metadata = Metadata$4;
+    }
+    export namespace ModelOutputStep {
+        export type Error = Error$2;
+    }
+    export namespace PlaceCitation {
+        export type ReviewSnippet = ReviewSnippet$3;
+    }
+    export namespace RetrievalCallDelta {
+        export type Arguments = Arguments$4;
+    }
+    export namespace StepDelta {
+        export type ArgumentsDelta = ArgumentsDelta$;
+        export type Audio = Audio$;
+        export type CodeExecutionCall = CodeExecutionCall$;
+        export type CodeExecutionResult = CodeExecutionResult$;
+        export type Document = Document$;
+        export type FileSearchCall = FileSearchCall$;
+        export type FileSearchResult = FileSearchResult$;
+        export type FunctionResult = FunctionResult$;
+        export type GoogleMapsCall = GoogleMapsCall$;
+        export type GoogleMapsResult = GoogleMapsResult$2;
+        export type GoogleSearchCall = GoogleSearchCall$;
+        export type GoogleSearchResult = GoogleSearchResult$2;
+        export type Image = Image$;
+        export type MCPServerToolCall = MCPServerToolCall$;
+        export type MCPServerToolResult = MCPServerToolResult$;
+        export type Metadata = Metadata$5;
+        export type Text = Text$;
+        export type TextAnnotationDelta = TextAnnotationDelta$;
+        export type ThoughtSignature = ThoughtSignature$;
+        export type ThoughtSummary = ThoughtSummary$;
+        export type URLContextCall = URLContextCall$;
+        export type URLContextResult = URLContextResult$2;
+        export type Video = Video$;
+    }
+    export namespace StepStart {
+        export type Metadata = Metadata$6;
+    }
+    export namespace StepStop {
+        export type Metadata = Metadata$7;
+    }
+    export namespace Tool {
+        export type CodeExecution = CodeExecution$;
+        export type ComputerUse = ComputerUse$;
+        export type FileSearch = FileSearch$;
+        export type GoogleMaps = GoogleMaps$;
+        export type GoogleSearch = GoogleSearch$;
+        export type MCPServer = MCPServer$;
+        export interface Retrieval extends Retrieval$ {
+        }
+        export type URLContext = URLContext$;
+        export namespace Retrieval {
+            export type VertexAISearchConfig = VertexAISearchConfig$;
+        }
+    }
+    export namespace URLContextCallStep {
+        export type Arguments = Arguments$5;
+    }
+    export namespace URLContextResultStep {
+        export type Result = Result$3;
+    }
+    export namespace Usage {
+        export type CachedTokensByModality = CachedTokensByModality$;
+        export type GroundingToolCount = GroundingToolCount$;
+        export type InputTokensByModality = InputTokensByModality$;
+        export type OutputTokensByModality = OutputTokensByModality$;
+        export type ToolUseTokensByModality = ToolUseTokensByModality$;
+    }
 }
 
-declare namespace InteractionsAPI {
+declare namespace interactions {
     export {
-        BaseInteractions,
-        Interactions,
+        AgentOption,
         AllowedTools,
+        Transform,
+        AllowlistEntry,
         Annotation,
+        AntigravityAgentConfig,
+        ArgumentsDelta,
+        AudioContentMimeType,
         AudioContent,
-        AudioResponseFormat,
+        AudioDeltaMimeType,
+        AudioDelta,
+        AudioResponseFormatDelivery,
+        AudioResponseFormatMimeType,
+        AudioResponseFormat_2 as AudioResponseFormat,
+        Language_2 as Language,
         CodeExecutionCallArguments,
+        CodeExecutionCallDelta,
         CodeExecutionCallStep,
+        CodeExecutionResultDelta,
         CodeExecutionResultStep,
+        CodeExecution,
+        CodeMenderAgentConfig,
+        DisabledSafetyPolicy,
+        EnvironmentEnum,
+        ComputerUse_2 as ComputerUse,
         Content_2 as Content,
+        CreateAgentInteractionResponseFormat,
+        CreateAgentInteractionEnvironment,
+        CreateAgentInteractionAgentConfig,
+        CreateAgentInteraction,
+        CreateModelInteractionResponseFormat,
+        CreateModelInteractionEnvironment,
+        CreateModelInteraction,
+        Visualization,
         DeepResearchAgentConfig,
+        DocumentContentMimeType,
         DocumentContent,
+        DocumentDeltaMimeType,
+        DocumentDelta,
         DynamicAgentConfig,
+        Empty,
+        Disabled,
+        Allowlist,
+        EnvironmentNetworkEgressAllowlist,
+        NetworkEnum,
+        Network,
         Environment_2 as Environment,
         ErrorEvent_2 as ErrorEvent,
+        ErrorT,
+        ExaAISearchConfig,
         FileCitation,
+        FileContent,
+        FileSearchCallDelta,
         FileSearchCallStep,
+        FileSearchResultDelta,
         FileSearchResultStep,
-        Function_2 as Function,
+        FileSearchResult,
+        FileSearch_2 as FileSearch,
+        Filter,
+        Mode,
+        FindRequest,
+        FixRequest,
         FunctionCallStep,
+        FunctionResultDeltaResult,
+        FunctionResultDeltaResultUnion,
+        FunctionResultDelta,
+        FunctionResultStepResult,
+        FunctionResultStepResultUnion,
         FunctionResultStep,
+        FunctionResultSubcontent,
+        FunctionT,
+        ToolChoice,
         GenerationConfig_2 as GenerationConfig,
         GoogleMapsCallArguments,
+        GoogleMapsCallDelta,
         GoogleMapsCallStep,
-        GoogleMapsResult,
+        GoogleMapsResultDelta,
+        GoogleMapsResultPlaces,
         GoogleMapsResultStep,
+        GoogleMapsResult,
+        GoogleMaps_2 as GoogleMaps,
         GoogleSearchCallArguments,
+        GoogleSearchCallDelta,
+        GoogleSearchCallStepSearchType,
         GoogleSearchCallStep,
-        GoogleSearchResult,
+        GoogleSearchResultDelta,
         GoogleSearchResultStep,
+        GoogleSearchResult,
+        GoogleSearchSearchType,
+        GoogleSearch_2 as GoogleSearch,
+        GroundingToolCountType,
+        GroundingToolCount,
+        HarmCategory_2 as HarmCategory,
+        HybridSearch,
+        ImageConfigAspectRatio,
+        ImageConfigImageSize,
         ImageConfig_2 as ImageConfig,
+        ImageContentMimeType,
         ImageContent,
-        ImageResponseFormat,
-        Interaction,
+        ImageDeltaMimeType,
+        ImageDelta,
+        ImageResponseFormatAspectRatio,
+        ImageResponseFormatDelivery,
+        ImageResponseFormatImageSize,
+        ImageResponseFormatMimeType,
+        ImageResponseFormat_2 as ImageResponseFormat,
         InteractionCompletedEvent,
         InteractionCreatedEvent,
+        InteractionSseEventInteractionStatus,
+        InteractionSseEventInteraction,
         InteractionSSEEvent,
+        InteractionSSEStreamEvent,
+        InteractionStatusUpdateStatus,
         InteractionStatusUpdate,
+        InteractionStatus,
+        InteractionResponseFormat,
+        InteractionEnvironment,
+        InteractionAgentConfig,
+        Interaction,
+        InteractionsInput,
+        MCPServerToolCallDelta,
         MCPServerToolCallStep,
+        MCPServerToolResultDeltaResult,
+        MCPServerToolResultDeltaResultUnion,
+        MCPServerToolResultDelta,
+        MCPServerToolResultStepResult,
+        MCPServerToolResultStepResultUnion,
         MCPServerToolResultStep,
-        Model_2 as Model,
+        MCPServer,
+        MediaResolution_2 as MediaResolution,
+        ModalityTokens,
         ModelOutputStep,
+        Model_2 as Model,
+        ParallelAISearchConfig,
         PlaceCitation,
+        RagResource,
+        RagRetrievalConfig_2 as RagRetrievalConfig,
+        RagStoreConfig,
+        Ranking,
+        ResponseFormat_2 as ResponseFormat,
+        ResponseModality,
+        RetrievalCallArguments,
+        RetrievalCallDeltaRetrievalType,
+        RetrievalCallDelta,
+        RetrievalResultDelta,
+        RetrievalRetrievalType,
+        Retrieval_2 as Retrieval,
+        ReviewSnippet,
+        Method,
+        Threshold,
+        SafetySetting_2 as SafetySetting,
+        ServiceTier_2 as ServiceTier,
+        SessionConfig,
+        SourceType,
+        Source,
         SpeechConfig_2 as SpeechConfig,
-        Step,
+        Status,
+        StepDeltaData,
+        StepDeltaMetadata,
         StepDelta,
         StepStart,
         StepStop,
+        Step,
+        StreamMetadata,
+        TextAnnotationDelta,
         TextContent,
-        TextResponseFormat,
+        TextDelta,
+        TextResponseFormatMimeType,
+        TextResponseFormat_2 as TextResponseFormat,
         ThinkingLevel_2 as ThinkingLevel,
+        ThinkingSummaries,
+        ThoughtSignatureDelta,
         ThoughtStep,
-        Tool_2 as Tool,
+        ThoughtSummaryContent,
+        ThoughtSummaryDelta,
         ToolChoiceConfig,
         ToolChoiceType,
+        Tool_2 as Tool,
+        TranscriptionConfig,
+        TurnContent,
+        Turn,
         URLCitation,
         URLContextCallArguments,
+        URLContextCallDelta,
         URLContextCallStep,
-        URLContextResult,
+        URLContextResultDelta,
         URLContextResultStep,
+        URLContextResultStatus,
+        URLContextResult,
+        URLContext,
         Usage,
         UserInputStep,
+        VertexAISearchConfig,
+        Task,
+        VideoConfig,
+        VideoContentMimeType,
         VideoContent,
+        VideoDeltaMimeType,
+        VideoDelta,
+        VideoResponseFormatAspectRatio,
+        VideoResponseFormatDelivery,
+        VideoResponseFormat_2 as VideoResponseFormat,
         WebhookConfig_2 as WebhookConfig,
-        InteractionDeleteResponse,
-        InteractionCreateParams,
-        BaseCreateModelInteractionParams,
-        BaseCreateAgentInteractionParams,
-        CreateModelInteractionParamsNonStreaming,
-        CreateModelInteractionParamsStreaming,
-        CreateAgentInteractionParamsNonStreaming,
-        CreateAgentInteractionParamsStreaming,
-        InteractionDeleteParams,
-        InteractionCancelParams,
-        InteractionGetParams,
-        InteractionGetParamsBase,
-        InteractionGetParamsNonStreaming,
-        InteractionGetParamsStreaming
+        WordInfo_2 as WordInfo
     }
 }
+
+/**
+ * The input for the interaction.
+ */
+declare type InteractionsInput = string | Array<Step> | Array<Content_2> | Array<Turn> | Content_2;
+
+declare type InteractionSSEEvent$ = InteractionSSEEvent;
 
 declare type InteractionSSEEvent = InteractionCreatedEvent | InteractionCompletedEvent | InteractionStatusUpdate | ErrorEvent_2 | StepStart | StepDelta | StepStop;
 
-declare interface InteractionStatusUpdate {
-    event_type: 'interaction.status_update';
-    interaction_id: string;
-    status: 'in_progress' | 'requires_action' | 'completed' | 'failed' | 'cancelled' | 'incomplete' | 'budget_exceeded';
+/**
+ * Partial interaction resource emitted by interaction lifecycle SSE events.
+ *
+ * @remarks
+ * Streaming lifecycle payloads may omit fields that are only available on
+ * full non-streaming Interaction responses.
+ */
+declare type InteractionSseEventInteraction = {
     /**
-     * The event_id token to be used to resume the interaction stream, from this event.
+     * Required. Output only. A unique identifier for the interaction completion.
      */
-    event_id?: string;
+    id: string;
     /**
-     * Optional metadata accompanying ANY streamed event.
+     * Output only. The resource type.
      */
-    metadata?: InteractionStatusUpdate.Metadata;
-}
+    object?: string | undefined;
+    /**
+     * The model that will complete your prompt.
+     */
+    model?: string | undefined;
+    /**
+     * The agent to interact with.
+     */
+    agent?: string | undefined;
+    /**
+     * Required. Output only. The status of the interaction.
+     */
+    status: InteractionSseEventInteractionStatus;
+    /**
+     * Output only. The time at which the response was created in ISO 8601 format.
+     */
+    created?: string | undefined;
+    /**
+     * Output only. The time at which the response was last updated in ISO 8601 format.
+     */
+    updated?: string | undefined;
+    service_tier?: ServiceTier_2 | undefined;
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    usage?: Usage | undefined;
+    /**
+     * Output only. The steps that make up the interaction, if included in this event.
+     */
+    steps?: Array<Step> | undefined;
+};
 
-declare namespace InteractionStatusUpdate {
+/**
+ * Required. Output only. The status of the interaction.
+ */
+declare type InteractionSseEventInteractionStatus = "in_progress" | "requires_action" | "completed" | "failed" | "cancelled" | "incomplete" | (string & {});
+
+declare type InteractionSSEStreamEvent = {
+    data: InteractionSSEEvent;
+};
+
+/**
+ * Required. Output only. The status of the interaction.
+ */
+declare type InteractionStatus = "in_progress" | "requires_action" | "completed" | "failed" | "cancelled" | "incomplete" | "budget_exceeded" | "queued" | (string & {});
+
+declare type InteractionStatusUpdate$ = InteractionStatusUpdate;
+
+declare type InteractionStatusUpdate = {
     /**
-     * Optional metadata accompanying ANY streamed event.
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
      */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
+    event_id?: string | undefined;
+    event_type: "interaction.status_update";
+    interaction_id: string;
+    metadata?: StreamMetadata | undefined;
+    status: InteractionStatusUpdateStatus;
+};
+
+declare type InteractionStatusUpdateStatus = "in_progress" | "requires_action" | "completed" | "failed" | "cancelled" | "incomplete" | "budget_exceeded" | "queued" | (string & {});
 
 /** Parameters for the private _Register method. */
 export declare interface InternalRegisterFilesParameters {
@@ -7000,9 +8254,6 @@ export declare interface InternalRegisterFilesParameters {
     uris: string[];
     /** Used to override the default configuration. */
     config?: RegisterFilesConfig;
-}
-
-declare class InternalServerError extends APIError<number, Headers> {
 }
 
 /** Represents a time interval, encoded as a Timestamp start (inclusive) and a Timestamp end (exclusive). The start must be less than or equal to the end. When the start equals the end, the interval is empty (matches no time). When both start and end are unspecified, the interval matches any time. */
@@ -7087,6 +8338,28 @@ export declare enum Language {
     PYTHON = "PYTHON"
 }
 
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Programming language of the `code`.
+ */
+declare type Language_2 = "python";
+
+/** Deprecated: Language auto-detection is now the default when language_codes is omitted. */
+export declare interface LanguageAuto {
+}
+
+/** Deprecated: Use AudioTranscriptionConfig.language_codes instead. */
+export declare interface LanguageHints {
+    /** Deprecated. BCP-47 language codes. */
+    languageCodes?: string[];
+}
+
 /** An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges. */
 export declare interface LatLng {
     /** The latitude in degrees. It must be in the range [-90.0, +90.0]. */
@@ -7094,6 +8367,25 @@ export declare interface LatLng {
     /** The longitude in degrees. It must be in the range [-180.0, +180.0]. */
     longitude?: number;
 }
+
+declare type ListAgentsParams = ListAgentsRequest;
+
+declare type ListAgentsParams_2 = {
+    api_version?: string;
+    pageSize?: number;
+    pageToken?: string;
+    parent?: string;
+};
+
+declare type ListAgentsRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    page_size?: number | undefined;
+    page_token?: string | undefined;
+    parent?: string | undefined;
+};
 
 /** Config for optional parameters. */
 export declare interface ListBatchJobsConfig {
@@ -7187,6 +8479,26 @@ export declare class ListDocumentsResponse {
     documents?: Document_2[];
 }
 
+declare type ListEnvironmentsParams = {
+    api_version?: string;
+    page_size?: number;
+    page_token?: string;
+};
+
+/**
+ * Response for `ListEnvironments`.
+ */
+declare type ListEnvironmentsResponse = {
+    /**
+     * Environments belonging to the provided project.
+     */
+    environments?: Array<Environment_3> | undefined;
+    /**
+     * Pagination token.
+     */
+    next_page_token?: string | undefined;
+};
+
 export declare interface ListFilesConfig {
     /** Used to override HTTP request options. */
     httpOptions?: HttpOptions;
@@ -7276,6 +8588,99 @@ export declare class ListModelsResponse {
     models?: Model[];
 }
 
+declare type ListTriggerExecutionsParams = Omit<ListTriggerExecutionsRequest, "trigger_id">;
+
+declare type ListTriggerExecutionsParams_2 = {
+    api_version?: string;
+    pageSize?: number;
+    pageToken?: string;
+};
+
+declare type ListTriggerExecutionsRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Resource name of the trigger.
+     */
+    trigger_id: string;
+    /**
+     * Optional. The maximum number of executions to return per page.
+     */
+    page_size?: number | undefined;
+    /**
+     * Optional. A page token from a previous ListTriggerExecutions call.
+     */
+    page_token?: string | undefined;
+};
+
+declare type ListTriggerExecutionsResponse$ = ListTriggerExecutionsResponse;
+
+/**
+ * Response message for TriggerService.ListTriggerExecutions.
+ */
+declare type ListTriggerExecutionsResponse = {
+    /**
+     * A page token, received from a previous `ListTriggerExecutions` call.
+     *
+     * @remarks
+     * Provide this to retrieve the subsequent page.
+     */
+    next_page_token?: string | undefined;
+    /**
+     * The list of trigger executions.
+     */
+    trigger_executions?: Array<TriggerExecution> | undefined;
+};
+
+declare type ListTriggersParams = ListTriggersRequest;
+
+declare type ListTriggersParams_2 = {
+    api_version?: string;
+    filter?: string;
+    pageSize?: number;
+    pageToken?: string;
+};
+
+declare type ListTriggersRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Optional. Filter expression (e.g., by state).
+     */
+    filter?: string | undefined;
+    /**
+     * Optional. The maximum number of triggers to return per page.
+     */
+    page_size?: number | undefined;
+    /**
+     * Optional. A page token from a previous ListTriggers call.
+     */
+    page_token?: string | undefined;
+};
+
+declare type ListTriggersResponse$ = ListTriggersResponse;
+
+/**
+ * Response message for TriggerService.ListTriggers.
+ */
+declare type ListTriggersResponse = {
+    /**
+     * A page token, received from a previous `ListTriggers` call.
+     *
+     * @remarks
+     * Provide this to retrieve the subsequent page.
+     */
+    next_page_token?: string | undefined;
+    /**
+     * The list of triggers.
+     */
+    triggers?: Array<Trigger> | undefined;
+};
+
 /** Configuration for the list tuning jobs method. */
 export declare interface ListTuningJobsConfig {
     /** Used to override HTTP request options. */
@@ -7306,6 +8711,30 @@ export declare class ListTuningJobsResponse {
     /** The tuning jobs that match the request. */
     tuningJobs?: TuningJob[];
 }
+
+declare type ListWebhooksParams = ListWebhooksRequest;
+
+declare type ListWebhooksRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Optional. The maximum number of webhooks to return. The service may return fewer than
+     *
+     * @remarks
+     * this value. If unspecified, at most 50 webhooks will be returned.
+     * The maximum value is 1000.
+     */
+    page_size?: number | undefined;
+    /**
+     * Optional. A page token, received from a previous `ListWebhooks` call.
+     *
+     * @remarks
+     * Provide this to retrieve the subsequent page.
+     */
+    page_token?: string | undefined;
+};
 
 /**
  Live class encapsulates the configuration for live interaction with the
@@ -7497,6 +8926,8 @@ export declare interface LiveClientSetup {
     /** Configures the proactivity of the model. This allows the model to respond proactively to
      the input and to ignore irrelevant input. */
     proactivity?: ProactivityConfig;
+    /** Configures the exchange of history between the client and the server. */
+    historyConfig?: HistoryConfig;
     /** Configures the explicit VAD signal. If enabled, the client will send
      vad_signal to indicate the start and end of speech. This allows the server
      to process the audio more efficiently. */
@@ -7994,6 +9425,8 @@ export declare interface LiveServerContent {
      turn which means it doesn’t imply any ordering between transcription and
      model turn. */
     inputTranscription?: Transcription;
+    /** Low latency transcription updated while the user is speaking. */
+    interimInputTranscription?: Transcription;
     /** Output transcription. The transcription is independent to the model
      turn which means it doesn’t imply any ordering between transcription and
      model turn.
@@ -8064,9 +9497,9 @@ export declare interface LiveServerSessionResumptionUpdate {
     resumable?: boolean;
     /** Index of last message sent by client that is included in state represented by this SessionResumptionToken. Only sent when `SessionResumptionConfig.transparent` is set.
 
-     Presence of this index allows users to transparently reconnect and avoid issue of losing some part of realtime audio input/video. If client wishes to temporarily disconnect (for example as result of receiving GoAway) they can do it without losing state by buffering messages sent since last `SessionResmumptionTokenUpdate`. This field will enable them to limit buffering (avoid keeping all requests in RAM).
+     Presence of this index allows users to transparently reconnect and avoid issue of losing some part of realtime audio input/video. If client wishes to temporarily disconnect (for example as result of receiving GoAway) they can do it without losing state by buffering messages sent since last `SessionResumptionTokenUpdate`. This field will enable them to limit buffering (avoid keeping all requests in RAM).
 
-     Note: This should not be used for when resuming a session at some time later -- in those cases partial audio and video frames arelikely not needed. */
+     Note: This should not be used for when resuming a session at some time later -- in those cases partial audio and video frames are likely not needed. */
     lastConsumedClientMessageIndex?: string;
 }
 
@@ -8074,6 +9507,11 @@ export declare interface LiveServerSessionResumptionUpdate {
 export declare interface LiveServerSetupComplete {
     /** The session id of the live session. */
     sessionId?: string;
+    /** Signature of the verified consent audio. This is populated when the
+     request has a ReplicatedVoiceConfig with consent_audio set, if the consent
+     verification was successful. This may be used in a subsequent request
+     instead of the consent_audio to verify the same consent. */
+    voiceConsentSignature?: VoiceConsentSignature;
 }
 
 /** Request for the client to execute the `function_calls` and return the responses with the matching `id`s. */
@@ -8091,17 +9529,6 @@ export declare interface LiveServerToolCallCancellation {
     /** The ids of the tool calls to be cancelled. */
     ids?: string[];
 }
-
-declare type LogFn = (message: string, ...rest: unknown[]) => void;
-
-declare type Logger = {
-    error: LogFn;
-    warn: LogFn;
-    info: LogFn;
-    debug: LogFn;
-};
-
-declare type LogLevel = 'off' | 'error' | 'warn' | 'info' | 'debug';
 
 /** The log probabilities of the tokens generated by the model. This is useful for understanding the model's confidence in its predictions and for debugging. For example, you can use log probabilities to identify when the model is making a less confident prediction or to explore alternative responses that the model considered. A low log probability can also indicate that the model is "hallucinating" or generating factually incorrect information. */
 export declare interface LogprobsResult {
@@ -8173,25 +9600,55 @@ export declare enum MaskReferenceMode {
     MASK_MODE_SEMANTIC = "MASK_MODE_SEMANTIC"
 }
 
-/** Match operation to use for evaluation. */
+/** Match operation to use for evaluating rewards. This enum is not supported in Gemini API. */
 export declare enum MatchOperation {
     /**
-     * Default value. This value is unused.
+     * Default value. A user error will be returned if not set.
      */
     MATCH_OPERATION_UNSPECIFIED = "MATCH_OPERATION_UNSPECIFIED",
     /**
-     * Equivalent to GoogleSQL `REGEX_CONTAINS(target, expression)`.
+     * Equivalent to [GoogleSQL](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_contains) `REGEX_CONTAINS(target, expression)`.
      */
     REGEX_CONTAINS = "REGEX_CONTAINS",
     /**
-     * `expression` is a substring of target.
+     * The match operation returns `true` if expression is a substring of the target.
      */
     PARTIAL_MATCH = "PARTIAL_MATCH",
     /**
-     * `expression` is an exact match of target.
+     * The match operation returns `true` expression is an exact match of the target.
      */
     EXACT_MATCH = "EXACT_MATCH"
 }
+
+declare type MCPServer$ = MCPServer;
+
+/**
+ * A MCPServer is a server that can be called by the model to perform actions.
+ */
+declare type MCPServer = {
+    /**
+     * The allowed tools.
+     */
+    allowed_tools?: Array<AllowedTools> | undefined;
+    /**
+     * Optional: Fields for authentication headers, timeouts, etc., if needed.
+     */
+    headers?: {
+        [k: string]: string;
+    } | undefined;
+    /**
+     * The name of the MCPServer.
+     */
+    name?: string | undefined;
+    type: "mcp_server";
+    /**
+     * The full URL for the MCPServer endpoint.
+     *
+     * @remarks
+     * Example: "https://api.example.com/mcp"
+     */
+    url?: string | undefined;
+};
 
 /** A MCPServer is a server that can be called by the model to perform actions. It is a server that implements the MCP protocol. Next ID: 6. This data type is not supported in Vertex AI. */
 export declare interface McpServer {
@@ -8201,20 +9658,47 @@ export declare interface McpServer {
     streamableHttpTransport?: StreamableHttpTransport;
 }
 
+declare type MCPServerToolCall$ = MCPServerToolCallDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type MCPServerToolCallDelta = {
+    arguments: {
+        [k: string]: any;
+    };
+    name: string;
+    server_name: string;
+    type: "mcp_server_tool_call";
+};
+
+declare type MCPServerToolCallStep$ = MCPServerToolCallStep;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * MCPServer tool call step.
  */
-declare interface MCPServerToolCallStep {
-    /**
-     * Required. A unique ID for this specific tool call.
-     */
-    id: string;
+declare type MCPServerToolCallStep = {
     /**
      * Required. The JSON object of arguments for the function.
      */
     arguments: {
-        [key: string]: unknown;
+        [k: string]: any;
     };
+    /**
+     * Required. A unique ID for this specific tool call.
+     */
+    id: string;
     /**
      * Required. The name of the tool which was called.
      */
@@ -8223,39 +9707,53 @@ declare interface MCPServerToolCallStep {
      * Required. The name of the used MCP server.
      */
     server_name: string;
-    type: 'mcp_server_tool_call';
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-}
+    type: "mcp_server_tool_call";
+};
+
+declare type MCPServerToolResult$ = MCPServerToolResultDelta;
+
+declare type MCPServerToolResultDelta = {
+    name?: string | undefined;
+    result: MCPServerToolResultDeltaResult | Array<FunctionResultSubcontent> | string;
+    server_name?: string | undefined;
+    type: "mcp_server_tool_result";
+};
+
+declare type MCPServerToolResultDeltaResult = {};
+
+declare type MCPServerToolResultDeltaResultUnion = MCPServerToolResultDeltaResult | Array<FunctionResultSubcontent> | string;
+
+declare type MCPServerToolResultStep$ = MCPServerToolResultStep;
 
 /**
  * MCPServer tool result step.
  */
-declare interface MCPServerToolResultStep {
+declare type MCPServerToolResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
     /**
-     * The output from the MCP server call. Can be simple text or rich content.
-     */
-    result: unknown | string | Array<TextContent | ImageContent>;
-    type: 'mcp_server_tool_result';
-    /**
      * Name of the tool which is called for this specific tool call.
      */
-    name?: string;
+    name?: string | undefined;
+    /**
+     * Required. The output from the MCP server call. Can be simple text or rich content.
+     */
+    result: MCPServerToolResultStepResult | string | Array<FunctionResultSubcontent>;
     /**
      * The name of the used MCP server.
      */
-    server_name?: string;
-    /**
-     * A signature hash for backend validation.
-     */
-    signature?: string;
-}
+    server_name?: string | undefined;
+    type: "mcp_server_tool_result";
+};
+
+declare type MCPServerToolResultStepResult = {};
+
+/**
+ * Required. The output from the MCP server call. Can be simple text or rich content.
+ */
+declare type MCPServerToolResultStepResultUnion = MCPServerToolResultStepResult | string | Array<FunctionResultSubcontent>;
 
 /**
  * Creates a McpCallableTool from MCP clients and an optional config.
@@ -8269,30 +9767,30 @@ declare interface MCPServerToolResultStep {
  */
 export declare function mcpToTool(...args: [...Client[], CallableToolConfig | Client]): CallableTool;
 
-/** Server content modalities. */
+/** The modality that this token count applies to. */
 export declare enum MediaModality {
     /**
-     * The modality is unspecified.
+     * When a modality is not specified, it is treated as `TEXT`.
      */
     MODALITY_UNSPECIFIED = "MODALITY_UNSPECIFIED",
     /**
-     * Plain text.
+     * The `Part` contains plain text.
      */
     TEXT = "TEXT",
     /**
-     * Images.
+     * The `Part` contains an image.
      */
     IMAGE = "IMAGE",
     /**
-     * Video.
+     * The `Part` contains a video.
      */
     VIDEO = "VIDEO",
     /**
-     * Audio.
+     * The `Part` contains audio.
      */
     AUDIO = "AUDIO",
     /**
-     * Document, e.g. PDF.
+     * The `Part` contains a document, such as a PDF.
      */
     DOCUMENT = "DOCUMENT"
 }
@@ -8318,12 +9816,35 @@ export declare enum MediaResolution {
 }
 
 /**
- * This type contains `RequestInit` options that may be available on the current runtime,
- * including per-platform extensions like `dispatcher`, `agent`, `client`, etc.
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
  */
-declare type MergedRequestInit = RequestInits & 
-/** We don't include these in the types as they'll be overridden for every request. */
-Partial<Record<'body' | 'headers' | 'method' | 'signal', never>>;
+declare type MediaResolution_2 = "low" | "medium" | "high" | "ultra_high" | (string & {});
+
+declare type Metadata$ = StreamMetadata;
+
+declare type Metadata$2 = StreamMetadata;
+
+declare type Metadata$3 = StreamMetadata;
+
+declare type Metadata$4 = StreamMetadata;
+
+declare type Metadata$5 = StepDeltaMetadata;
+
+declare type Metadata$6 = StreamMetadata;
+
+declare type Metadata$7 = StreamMetadata;
+
+/**
+ * Optional. The method for blocking content. If not specified, the default
+ *
+ * @remarks
+ * behavior is to use the probability score.
+ */
+declare type Method = "severity" | "probability" | (string & {});
 
 /** Server content modalities. */
 export declare enum Modality {
@@ -8349,13 +9870,31 @@ export declare enum Modality {
     VIDEO = "VIDEO"
 }
 
-/** Represents token counting info for a single modality. */
+/** Represents a breakdown of token usage by modality. This message is used in CountTokensResponse and GenerateContentResponse.UsageMetadata to provide a detailed view of how many tokens are used by each modality (e.g., text, image, video) in a request. This is particularly useful for multimodal models, allowing you to track and manage token consumption for billing and quota purposes. */
 export declare interface ModalityTokenCount {
-    /** The modality associated with this token count. */
+    /** The modality that this token count applies to. */
     modality?: MediaModality;
     /** The number of tokens counted for this modality. */
     tokenCount?: number;
 }
+
+/**
+ * The token count for a single response modality.
+ */
+declare type ModalityTokens = {
+    modality?: ResponseModality | undefined;
+    /**
+     * Number of tokens for the modality.
+     */
+    tokens?: number | undefined;
+};
+
+/**
+ * The mode of the find session.
+ */
+declare type Mode = "scan" | "verify" | (string & {});
+
+declare type Model$ = Model_2;
 
 /** A trained machine learning model. */
 export declare interface Model {
@@ -8413,10 +9952,16 @@ export declare interface Model {
 }
 
 /**
- * The model that will complete your prompt.\n\nSee
- * [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
  */
-declare type Model_2 = 'gemini-2.5-computer-use-preview-10-2025' | 'gemini-2.5-flash' | 'gemini-2.5-flash-image' | 'gemini-2.5-flash-lite' | 'gemini-2.5-flash-lite-preview-09-2025' | 'gemini-2.5-flash-native-audio-preview-12-2025' | 'gemini-2.5-flash-preview-09-2025' | 'gemini-2.5-flash-preview-tts' | 'gemini-2.5-pro' | 'gemini-2.5-pro-preview-tts' | 'gemini-3-flash-preview' | 'gemini-3-pro-image-preview' | 'gemini-3-pro-preview' | 'gemini-3.1-pro-preview' | 'gemini-3.1-flash-image-preview' | 'gemini-3.1-flash-lite' | 'gemini-3.1-flash-lite-preview' | 'gemini-3.1-flash-tts-preview' | 'lyria-3-clip-preview' | 'lyria-3-pro-preview' | 'gemini-3.5-flash' | (string & {});
+/**
+ * The model that will complete your prompt.\n\nSee [models](https://ai.google.dev/gemini-api/docs/models) for additional details.
+ */
+declare type Model_2 = "gemini-2.5-flash" | "gemini-2.5-pro" | "gemma-4-26b-a4b-it" | "gemma-4-31b-it" | "gemini-flash-latest" | "gemini-flash-lite-latest" | "gemini-pro-latest" | "gemini-2.5-flash-lite" | "gemini-2.5-flash-image" | "gemini-3-flash-preview" | "gemini-3.1-pro-preview" | "gemini-3.1-pro-preview-customtools" | "gemini-3.1-flash-lite" | "gemini-3-pro-image" | "nano-banana-pro-preview" | "gemini-3.1-flash-image" | "gemini-3.5-flash" | "gemini-3.6-flash" | "lyria-3-clip-preview" | "lyria-3-pro-preview" | "gemini-robotics-er-1.6-preview" | (string & {});
 
 /** Configuration for Model Armor. Model Armor is a Google Cloud service that provides safety and security filtering for prompts and responses. It helps protect your AI applications from risks such as harmful content, sensitive data leakage, and prompt injection attacks. This data type is not supported in Gemini API. */
 export declare interface ModelArmorConfig {
@@ -8426,17 +9971,34 @@ export declare interface ModelArmorConfig {
     responseTemplateName?: string;
 }
 
+declare type ModelOutputStep$ = ModelOutputStep;
+
 /**
  * Output generated by the model.
  */
-declare interface ModelOutputStep {
-    type: 'model_output';
-    content?: Array<Content_2>;
-}
+declare type ModelOutputStep = {
+    content?: Array<Content_2> | undefined;
+    /**
+     * The `Status` type defines a logical error model that is suitable for
+     *
+     * @remarks
+     * different programming environments, including REST APIs and RPC APIs. It is
+     * used by [gRPC](https://github.com/grpc). Each `Status` message contains
+     * three pieces of data: error code, error message, and error details.
+     *
+     * You can find out more about this error model and how to work with it in the
+     * [API Design Guide](https://cloud.google.com/apis/design/errors).
+     */
+    error?: Status | undefined;
+    type: "model_output";
+};
 
 export declare class Models extends BaseModule {
     private readonly apiClient;
     constructor(apiClient: ApiClient);
+    private static loggedGenerateImagesWarning;
+    private static loggedEditImageWarning;
+    private static loggedGenerateVideosWarning;
     /**
      * Calculates embeddings for the given contents.
      *
@@ -8505,7 +10067,7 @@ export declare class Models extends BaseModule {
      * To maintain backward compatibility, we move the data that was treated as
      * JSON schema from the responseSchema field to the responseJsonSchema field.
      */
-    private maybeMoveToResponseJsonSchem;
+    private maybeMoveToResponseJsonSchema;
     /**
      * Makes an API request to generate content with a given model and yields the
      * response in chunks.
@@ -8892,46 +10454,11 @@ export declare enum MusicGenerationMode {
 }
 
 /**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
+ * Network configuration for the environment.
  */
-/// <reference types="node" />
-/**
- * Shims for types that we can't always rely on being available globally.
- *
- * Note: these only exist at the type-level, there is no corresponding runtime
- * version for any of these symbols.
- */
-declare type NeverToAny<T> = T extends never ? any : T;
+declare type Network = EnvironmentNetworkEgressAllowlist | NetworkEnum;
 
-/** @ts-ignore For users with node-fetch@2 */
-declare type NodeFetch2RequestInit = NotAny<import('../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../../node_modules/@types/node-fetch/index.d.ts').RequestInit>;
-
-/** @ts-ignore For users with node-fetch@3, doesn't need file extension because types are at ./@types/index.d.ts */
-declare type NodeFetch3RequestInit = NotAny<import('../node_modules/node-fetch').RequestInit> | NotAny<import('../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../../../../../node_modules/node-fetch').RequestInit> | NotAny<import('../../../../../../../../../../node_modules/node-fetch').RequestInit>;
-
-/** @ts-ignore */
-declare type _NodeReadableStream<R = any> = ReadableStream_2<R>;
-
-declare type NotAny<T> = [0] extends [1 & T] ? never : T;
-
-declare class NotFoundError extends APIError<404, Headers> {
-}
-
-/**
- * @internal
- * Users can pass explicit nulls to unset default headers. When we parse them
- * into a standard headers type we need to preserve that information.
- */
-declare type NullableHeaders = {
-    /** Brand check, prevent users from creating a NullableHeaders. */
-    [brand_privateNullableHeaders]: true;
-    /** Parsed headers. */
-    values: Headers;
-    /** Set of lowercase header names explicitly set to null. */
-    nulls: Set<string>;
-};
+declare type NetworkEnum = "disabled";
 
 /** A long-running operation. */
 export declare interface Operation<T> {
@@ -9014,22 +10541,7 @@ export declare interface OutputInfo {
     gcsOutputDirectory?: string;
 }
 
-/**
- * Some environments overload the global fetch function, and Parameters<T> only gets the last signature.
- */
-declare type OverloadedParameters<T> = T extends ({
-    (...args: infer A): unknown;
-    (...args: infer B): unknown;
-    (...args: infer C): unknown;
-    (...args: infer D): unknown;
-}) ? A | B | C | D : T extends ({
-    (...args: infer A): unknown;
-    (...args: infer B): unknown;
-    (...args: infer C): unknown;
-}) ? A | B | C : T extends ({
-    (...args: infer A): unknown;
-    (...args: infer B): unknown;
-}) ? A | B : T extends (...args: infer A) => unknown ? A : never;
+declare type OutputTokensByModality$ = ModalityTokens;
 
 export declare enum PagedItem {
     PAGED_ITEM_BATCH_JOBS = "batchJobs",
@@ -9193,6 +10705,29 @@ export declare interface PairwiseMetricResult {
     pairwiseChoice?: PairwiseChoice;
 }
 
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Used to specify configuration for ParallelAISearch.
+ */
+declare type ParallelAISearchConfig = {
+    /**
+     * Optional. The API key for ParallelAiSearch.
+     */
+    api_key?: string | undefined;
+    /**
+     * Optional. Custom configs for ParallelAiSearch.
+     */
+    custom_config?: {
+        [k: string]: any;
+    } | undefined;
+};
+
 /** A datatype containing media content.
 
  Exactly one field within a Part should be set, representing the specific type
@@ -9202,6 +10737,12 @@ export declare interface Part {
     /** Media resolution for the input media.
      */
     mediaResolution?: PartMediaResolution;
+    /** Server-side tool call. This field is populated when the model predicts a tool invocation that should be executed on the server. The client is expected to echo this message back to the API. */
+    toolCall?: ToolCall;
+    /** The output from a server-side ToolCall execution. This field is populated by the client with the results of executing the corresponding ToolCall. */
+    toolResponse?: ToolResponse;
+    /** Output only. The transcription of the audio part. */
+    audioTranscription?: Transcription;
     /** Optional. The result of executing the ExecutableCode. */
     codeExecutionResult?: CodeExecutionResult;
     /** Optional. Code generated by the model that is intended to be executed. */
@@ -9223,10 +10764,6 @@ export declare interface Part {
     thoughtSignature?: string;
     /** Optional. Video metadata. The metadata should only be specified while the video data is presented in inline_data or file_data. */
     videoMetadata?: VideoMetadata;
-    /** Server-side tool call. This field is populated when the model predicts a tool invocation that should be executed on the server. The client is expected to echo this message back to the API. */
-    toolCall?: ToolCall;
-    /** The output from a server-side ToolCall execution. This field is populated by the client with the results of executing the corresponding ToolCall. */
-    toolResponse?: ToolResponse;
     /** Custom metadata associated with the Part. Agents using genai.Part as content representation may need to keep track of the additional information. For example it can be name of a file/source from which the Part originates or a way to multiplex multiple Part streams. This field is not supported in Vertex AI. */
     partMetadata?: Record<string, unknown>;
 }
@@ -9295,9 +10832,6 @@ export declare interface PartnerModelTuningSpec {
 
 export declare type PartUnion = Part | string;
 
-declare class PermissionDeniedError extends APIError<403, Headers> {
-}
-
 /** Enum that controls the generation of people. */
 export declare enum PersonGeneration {
     /**
@@ -9346,60 +10880,63 @@ export declare enum PhishBlockThreshold {
     BLOCK_ONLY_EXTREMELY_HIGH = "BLOCK_ONLY_EXTREMELY_HIGH"
 }
 
+declare type PingWebhookRequest$ = PingWebhookRequest;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Request message for WebhookService.PingWebhook.
+ */
+declare type PingWebhookRequest = {};
+
+declare type Place$ = GoogleMapsResultPlaces;
+
+declare type Place$2 = GoogleMapsResultPlaces;
+
+declare type PlaceCitation$ = PlaceCitation;
+
 /**
  * A place citation annotation.
  */
-declare interface PlaceCitation {
-    type: 'place_citation';
+declare type PlaceCitation = {
     /**
      * End of the attributed segment, exclusive.
      */
-    end_index?: number;
+    end_index?: number | undefined;
     /**
      * Title of the place.
      */
-    name?: string;
+    name?: string | undefined;
     /**
      * The ID of the place, in `places/{place_id}` format.
      */
-    place_id?: string;
+    place_id?: string | undefined;
     /**
-     * Snippets of reviews that are used to generate answers about the features of a
-     * given place in Google Maps.
+     * Snippets of reviews that are used to generate answers about the
+     *
+     * @remarks
+     * features of a given place in Google Maps.
      */
-    review_snippets?: Array<PlaceCitation.ReviewSnippet>;
+    review_snippets?: Array<ReviewSnippet> | undefined;
     /**
      * Start of segment of the response that is attributed to this source.
      *
+     * @remarks
+     *
      * Index indicates the start of the segment, measured in bytes.
      */
-    start_index?: number;
+    start_index?: number | undefined;
+    type: "place_citation";
     /**
      * URI reference of the place.
      */
-    url?: string;
-}
-
-declare namespace PlaceCitation {
-    /**
-     * Encapsulates a snippet of a user review that answers a question about the
-     * features of a specific place in Google Maps.
-     */
-    interface ReviewSnippet {
-        /**
-         * The ID of the review snippet.
-         */
-        review_id?: string;
-        /**
-         * Title of the review.
-         */
-        title?: string;
-        /**
-         * A link that corresponds to the user review on Google Maps.
-         */
-        url?: string;
-    }
-}
+    url?: string | undefined;
+};
 
 /** Spec for pointwise metric result. This data type is not supported in Gemini API. */
 export declare interface PointwiseMetricResult {
@@ -9505,23 +11042,16 @@ export declare enum ProminentPeople {
     BLOCK_PROMINENT_PEOPLE = "BLOCK_PROMINENT_PEOPLE"
 }
 
-/**
- * @license
- * Copyright 2025 Google LLC
- * SPDX-License-Identifier: Apache-2.0
- */
-declare type PromiseOrValue<T> = T | Promise<T>;
-
 /** A RagChunk includes the content of a chunk of a RagFile, and associated metadata. This data type is not supported in Gemini API. */
 export declare interface RagChunk {
-    /** If populated, represents where the chunk starts and ends in the document. */
-    pageSpan?: RagChunkPageSpan;
-    /** The content of the chunk. */
-    text?: string;
     /** The ID of the chunk. */
     chunkId?: string;
     /** The ID of the file that the chunk belongs to. */
     fileId?: string;
+    /** If populated, represents where the chunk starts and ends in the document. */
+    pageSpan?: RagChunkPageSpan;
+    /** The content of the chunk. */
+    text?: string;
 }
 
 /** Represents where the chunk starts and ends in the document. This data type is not supported in Gemini API. */
@@ -9531,6 +11061,30 @@ export declare interface RagChunkPageSpan {
     /** Page where chunk ends in the document. Inclusive. 1-indexed. */
     lastPage?: number;
 }
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The definition of the Rag resource.
+ */
+declare type RagResource = {
+    /**
+     * Optional. RagCorpora resource name.
+     */
+    rag_corpus?: string | undefined;
+    /**
+     * Optional. rag_file_id. The files should be in the same rag_corpus set in
+     *
+     * @remarks
+     * rag_corpus field.
+     */
+    rag_file_ids?: Array<string> | undefined;
+};
 
 /** Specifies the context retrieval config. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfig {
@@ -9543,6 +11097,28 @@ export declare interface RagRetrievalConfig {
     /** Optional. The number of contexts to retrieve. */
     topK?: number;
 }
+
+/**
+ * Specifies the context retrieval config.
+ */
+declare type RagRetrievalConfig_2 = {
+    /**
+     * Config for filters.
+     */
+    filter?: Filter | undefined;
+    /**
+     * Config for Hybrid Search.
+     */
+    hybrid_search?: HybridSearch | undefined;
+    /**
+     * Config for Rank Service.
+     */
+    ranking?: Ranking | undefined;
+    /**
+     * Optional. The number of contexts to retrieve.
+     */
+    top_k?: number | undefined;
+};
 
 /** Config for filters. This data type is not supported in Gemini API. */
 export declare interface RagRetrievalConfigFilter {
@@ -9580,8 +11156,49 @@ export declare interface RagRetrievalConfigRankingRankService {
     modelName?: string;
 }
 
-declare class RateLimitError extends APIError<429, Headers> {
-}
+/**
+ * Use to specify configuration for RAG Store.
+ */
+declare type RagStoreConfig = {
+    /**
+     * Optional. The representation of the rag source.
+     */
+    rag_resources?: Array<RagResource> | undefined;
+    /**
+     * Specifies the context retrieval config.
+     */
+    rag_retrieval_config?: RagRetrievalConfig_2 | undefined;
+    /**
+     * Optional. Number of top k results to return from the selected corpora.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    similarity_top_k?: number | undefined;
+    /**
+     * Optional. Only return results with vector distance smaller than the threshold.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    vector_distance_threshold?: number | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Config for Rank Service.
+ */
+declare type Ranking = {
+    /**
+     * Optional. The model name of the rank service.
+     */
+    model_name?: string | undefined;
+    ranking_config: "rank_service";
+};
 
 /** Raw output. This data type is not supported in Gemini API. */
 export declare interface RawOutput {
@@ -9604,8 +11221,6 @@ export declare class RawReferenceImage {
     /** Internal method to convert to ReferenceImageAPIInternal. */
     toReferenceImageAPI(): ReferenceImageAPIInternal;
 }
-
-declare type _ReadableStream_2<R = any> = NeverToAny<([0] extends [1 & _DOMReadableStream<R>] ? never : _DOMReadableStream<R>) | ([0] extends [1 & _ConditionalNodeReadableStream<R>] ? never : _ConditionalNodeReadableStream<R>)>;
 
 /** Marks the end of user activity.
 
@@ -9746,79 +11361,81 @@ export declare class RegisterFilesResponse {
 export declare interface ReinforcementTuningAutoraterScorer {
     /** Autorater config for evaluation. */
     autoraterConfig?: AutoraterConfig;
-    /** Allows substituting `prompt`, `response`, `system_instruction` and `references.reference` (each wrapped in double curly braces) into the autorater prompt. */
+    /** The prompt for an autorater to scorer the parsed sample response. This field supports the following placeholders that will be replaced before scoring: - {{prompt}} - {{response}} - {{system_instruction}} - {{references.key}}  */
     autoraterPrompt?: string;
-    /** Parses autorater returned response. */
+    /** Parses autorater returned response for scoring. For example, if the autorater response has reward stored in the `2.0` block, defining a parsing response config using regex `".*(.*?)"` will return a score `"2.0"`. */
     autoraterResponseParseConfig?: ReinforcementTuningParseResponseConfig;
-    /** Scores autorater responses by directly converting parsed autorater response to float reward. */
-    parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
-    /** Scores autorater responses by using exact string match reward scorer. */
+    /** Scores autorater responses by using string match reward scorer. */
     exactMatchScorer?: ReinforcementTuningAutoraterScorerExactMatchScorer;
+    /** Scores autorater responses by directly converting parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. */
+    parsedResponseConversionScorer?: ReinforcementTuningAutoraterScorerParsedResponseConversionScorer;
 }
 
-/** Scores autorater responses by using exact string match reward scorer. */
+/** Scores autorater responses by using exact string match reward scorer. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningAutoraterScorerExactMatchScorer {
-    /** Assigns this reward score if parsed response string equals the expression. */
+    /** Assigns this reward score if the parsed response string equals the expression. */
     correctAnswerReward?: number;
-    /** Assigns this reward score if parsed reward value does not equal the expression. */
-    wrongAnswerReward?: number;
-    /** The string expression to match against. Supports substitution in the format of `references.reference` (wrapped in double curly braces) before matching. No regex support. */
+    /** The string expression to match against for scoring. This field supports placeholders in the format of {{references.key}} that will be replaced before matching. Regex is not supported for this expression. For example, users can define an ExactMatchScorer as follows: { "correctAnswerReward": 1.0, "wrongAnswerReward": -1.0, "expression": "{{references.concise_answer}}" } When evaluating the reward for each parsed autorater response, if the prompt references in the training/validation dataset has the following fields: ``` { "example": ..., "references": { "concise_ansser": "Yes", "verbose_answer": "The answer is Yes" } } ``` The above ExactMatchScorer will be replaced as follows for scoring: ``` { "correctAnswerReward": 1.0, "wrongAnswerReward": -1.0, "expression": "Yes" } ``` If the *parsed* autorater response is equal to the string `"Yes"`, then the reward is `1.0`, otherwise the reward is `-1.0`. */
     expression?: string;
+    /** Assigns this reward score if the parsed reward value does not equal the expression. */
+    wrongAnswerReward?: number;
 }
 
-/** Scores responses by directly converting parsed autorater response to float reward (reward is clipped to be within [-1, 1]). */
+/** Scores responses by directly converting the parsed autorater response to a float reward. Note: Reward is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
 export declare class ReinforcementTuningAutoraterScorerParsedResponseConversionScorer {
 }
 
-/** Scores parsed responses by calling a Cloud Run service. */
+/** ReinforcementTuningCloudRunRewardScorer allows users to implement a reward function through GCP Cloud Run. Comparing with ReinforcementTuningCodeExecutionRewardScorer that runs in a Sandbox and has no internet access, Cloud Run reward scorer is fully controlled by users. The Cloud Run service should implement the following HTTP API: HTTP method: `POST` HTTP request body: ``` { "example": ReinforcementTuningExample, "response": Content, "metadata": { "step": int "tuning_job_id": int64 } } ``` * `example` is a ReinforcementTuningExample in ProtoJSON format, (i.e., the format is the same as as one line in the training/validation dataset except that the keys must be in camel case). System instructions (i.e., `example.get("systemInstruction")`) and references (i.e., `example.get("references")`) are also included in the `example` provided that they are set in the training/validation dataset. * `response` is a Content in ProtoJSON format (i.e., keys must be in camel case), which is the same as the Online Prediction response for Gemini models. HTTP response body: { "reward": float, "user_requested_aux_info": str // Optional } where the field "user_requested_aux_info" is any (optional) string provided by users for assisting debugging. It's in snake case. This field is mostly useful when calling the GenAiTuningService.ValidateReinforcementTuningReward API, where the proto field (not Cloud Run HTTP response body) userRequestedAuxInfo will be populated if the Cloud Run reward function sets this field in the HTTP response. The following are examples for the HTTP request and response body. Example HTTP request body: ``` { "example": { "contents": [ { "role": "user", "parts": [ { "text": "What is the capital of France?" } ] } ], "references": { "answer": "Paris" } }, "response": { "parts": [ { "text": "London" } ] }, "metadata": { "step": 1, "tuning_job_id": 123456789 } } ``` Example HTTP response body: ``` { "reward": -1.0 } ``` Note: Reward output by Cloud Run reward function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningCloudRunRewardScorer {
-    /** URI of the Cloud Run service that will be used to compute the reward. The Vertex AI Secure Fine Tuning Service Agent (`service-PROJECT_NUMBER@gcp-sa-vertex-tune.iam.gserviceaccount.com`, where `PROJECT_NUMBER` is the numeric project number) must be granted the permission (e.g. by granting `roles/run.invoker` in IAM) to invoke the Cloud Run service. */
+    /** URI of the Cloud Run service that will be used to compute the reward. The [Vertex AI Secure Fine Tuning Service Agent](https://docs.cloud.google.com/iam/docs/service-agents#vertex-ai-secure-fine-tuning-service-agent) (`service-@gcp-sa-vertex-tune.iam.gserviceaccount.com`) must be granted the permission (e.g. by granting `roles/run.invoker` in IAM) to invoke the Cloud Run service. */
     cloudRunUri?: string;
 }
 
-/** Scores parsed responses for code execution use cases. */
+/** ReinforcementTuningCodeExecutionRewardScorer allows users to implement a function to evaluate rewards for the sample response. The function signature is as follows: ``` def evaluate(example: dict[str, Any], response: dict[str, Any]) -> float: ... ``` `example` is a ReinforcementTuningExample in ProtoJSON format, (i.e., the format is the same as as one line in the training/validation dataset except that the keys must be in camel case). System instructions (i.e., `example.get("systemInstruction")`) and references (i.e., `example.get("references")`) are also included in the `example` provided that they are set in the training/validation dataset. `response` is a Content in ProtoJSON format (i.e., keys must be in camel case), which is the same as the Online Prediction response for Gemini models. Note: Reward output by the `evaluate` function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningCodeExecutionRewardScorer {
-    /** Example python code snippet which assigns reward of 1 to answer matching user provided reference answer in per prompt references map. */
+    /** The python code snippet as a string for evaluating rewards. The following is an example python code snippet that returns a reward `1.0` for a parsed response matching the user-provided reference answer in per prompt references map. ``` def evaluate(example, response) -> float: response_str = response.get("parts", [])0 references = example.get("references", {}) if response_str == references.get("concise_answer"): return 1.0 return -1.0 ``` Note: Reward output by the evaluate function is clipped to be within `[-1, 1]`, i.e., `reward = max(min(reward, 1.0), -1.0)`. */
     pythonCodeSnippet?: string;
 }
 
 /** User-facing format for Gemini Reinforcement Tuning examples on Vertex. */
 export declare interface ReinforcementTuningExample {
-    /** Multi-turn contents that represents the Prompt. */
-    contents?: Content[];
     /** References for the given prompt. The key is the name of the reference, and the value is the reference itself. */
     references?: Record<string, string>;
-    /** Corresponds to `system_instruction` in user-facing GenerateContentRequest. */
+    /** Multi-turn contents that represents the Prompt. */
+    contents?: Content[];
+    /** Corresponds to system_instruction in user-facing GenerateContentRequest. */
     systemInstruction?: Content;
 }
 
 /** Hyperparameters for Reinforcement Tuning. */
 export declare interface ReinforcementTuningHyperParameters {
-    /** Number of training epochs for the tuning job. */
-    epochCount?: string;
     /** Learning rate multiplier for Reinforcement Learning. */
     learningRateMultiplier?: number;
-    /** Adapter size for Reinforcement Tuning. */
+    /** Optional. Adapter size for Reinforcement Tuning. */
     adapterSize?: AdapterSize;
-    /** Number of different responses to generate per prompt during tuning. */
-    samplesPerPrompt?: number;
-    /** Batch size for the tuning job. How many prompts to process at a train step. If not set, the batch size will be determined automatically. */
+    /** Optional. Batch size for the tuning job. How many prompts to process at a train step. If not set, the batch size will be determined automatically. */
     batchSize?: number;
-    /** How often (in steps) to evaluate the tuning job during training. If not set, evaluation will run per epoch. */
-    evaluateInterval?: number;
-    /** How often (in steps) to save checkpoints during training. If not set, one checkpoint per epoch will be saved. */
+    /** Optional. How often at steps to save checkpoints during training. If not set, one checkpoint per epoch will be set. ```total_steps = epoch_count * samples_per_prompt / total_prompts_in_dataset``` */
     checkpointInterval?: number;
-    /** The maximum number of tokens to generate per prompt. If not set, defaults to 32768. */
+    /** Optional. Number of training epoches for the tuning job. */
+    epochCount?: string;
+    /** Optional. How often at steps to evaluate the tuning job during training. If not set, evel will be run per epoch. `total_steps = epoch_count * samples_per_prompt / total_prompts_in_dataset` */
+    evaluateInterval?: number;
+    /** Optional. The maximum number of tokens to generate per prompt. Default to 32768. */
     maxOutputTokens?: number;
-    /** Indicates the maximum thinking depth. Use with earlier models shall result in error. */
+    /** Optional. Number of different responses to generate per prompt during tuning. */
+    samplesPerPrompt?: number;
+    /** Optional. The thinking budget for the tuning job to optimize for (Gemini 2.5 only). * -1 means dynamic thinking * 0 means no thinking * > 0 means thinking budget in tokens If not set, default to -1 (dynamic thinking). */
+    thinkingBudget?: number;
+    /** Indicates the maximum thinking depth during tuning. Starting from Gemini 3.5 models, the old thinking_budget will no longer be supported and will result in a user error if set. Instead, users should use the thinking_level parameter to control the maximum thinking depth. */
     thinkingLevel?: ReinforcementTuningThinkingLevel;
 }
 
-/** Defines how to parse sample response for reinforcement tuning. */
+/** Defines how to parse sample response config for reinforcement tuning. The parsed response (i.e., substring) will be passed to the reward functions. For example, the input prompt might be: > "Perform step-by-step thoughts first to problem A, finally output answer in the <ans> </ans> block." The sample response from the model under tuning might look like: > "<ans>Yes</ans>" Here, users can define the following parse config: ``` { "parseType": "REGEX_EXTRACT", "regexExtractExpression": ".*(.*?)" } ``` The resulting parsed response would be `"Yes"` and will be passed to the reward functions for evaluating rewards. This data type is not supported in Gemini API. */
 export declare class ReinforcementTuningParseResponseConfig {
-    /** Defines how to parse sample response. */
+    /** Defines the type for parsing sample response. */
     parseType?: ResponseParseType;
-    /** Defines the regex to extract the important part of sample response. This field is only used when `parse_type` is `REGEX_EXTRACT`. */
+    /** Defines the regex for extracting the important part of sample response. This field is only used when parse_type is ResponseParseType.REGEX_EXTRACT. */
     regexExtractExpression?: string;
 }
 
@@ -9826,49 +11443,50 @@ export declare class ReinforcementTuningParseResponseConfig {
 export declare interface ReinforcementTuningRewardInfo {
     /** Output only. The calculated reward for the reward function. */
     reward?: number;
-    /** Output only. The user-requested auxiliary info for the reward function. */
+    /** Output only. The user-requested auxiliary info for the reward function. This field is set only if the Cloud Run reward function configured by user returns a "user_requested_aux_info". Refer to ReinforcementTuningCloudRunRewardScorer for more details. */
     userRequestedAuxInfo?: string;
 }
 
 /** Reinforcement tuning spec for tuning. */
 export declare interface ReinforcementTuningSpec {
+    /** Composite reward function configuration for reinforcement tuning. */
     compositeRewardConfig?: CompositeReinforcementTuningRewardConfig;
-    /** Cloud Storage path to file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
-    trainingDatasetUri?: string;
-    /** Cloud Storage path to file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. If no validation dataset is provided, by default the API splits 25% of the training dataset or 50 examples, whichever is larger, as the validation dataset. */
-    validationDatasetUri?: string;
-    /** Additional hyper-parameters to use during tuning. */
-    hyperParameters?: ReinforcementTuningHyperParameters;
     /** Single reward function configuration for reinforcement tuning. */
     singleRewardConfig?: SingleReinforcementTuningRewardConfig;
+    /** Additional hyper-parameters to use during tuning. */
+    hyperParameters?: ReinforcementTuningHyperParameters;
+    /** Cloud Storage path to the file containing training dataset for tuning. The dataset must be formatted as a JSONL file. */
+    trainingDatasetUri?: string;
+    /** Cloud Storage path to the file containing validation dataset for tuning. The dataset must be formatted as a JSONL file. */
+    validationDatasetUri?: string;
 }
 
-/** Scores parsed responses for string matching use cases. */
+/** ReinforcementTuningStringMatchRewardScorer is used to score parsed responses for string matching use cases. For example, for math problems, users can use string match scorer to check if the correct exact answer is generated. Note: Reward returned by the string match reward function is clipped to be within `[-1, 1]` if wrongAnswerReward or correctAnswerReward are beyond the range, i.e., `reward = max(min(reward, 1.0), -1.0)`. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningStringMatchRewardScorer {
-    /** Wrong answer reward is returned if evaluator evaluates to `false`. All wrong answers get the same reward. */
-    wrongAnswerReward?: number;
-    /** Correct answer reward is returned if evaluator evaluates to `true`. All correct answers get the same reward. */
+    /** Correct answer rewawrd is returned if the parsed response is evaluated as `true`. All correct answers get the same reward. */
     correctAnswerReward?: number;
-    /** Uses string match expression to evaluate parsed response. */
-    stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
     /** Uses json match expression to evaluate parsed response. */
     jsonMatchExpression?: ReinforcementTuningStringMatchRewardScorerJsonMatchExpression;
+    /** Uses string match expression to evaluate parsed response. */
+    stringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
+    /** Wrong answer reward is returned if the parsed response is evaluated as `false`. All wrong answers get the same reward. */
+    wrongAnswerReward?: number;
 }
 
-/** Converts parsed responses to JSON format, finds the first-level matching key, then performs StringMatchExpression on the value. */
+/** JsonMatchExpression supports converting the parsed responses to JSON format, finding the value in the JSON response that matches the key_name in the first level, and performing StringMatchExpression operation on the matched JSON value. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningStringMatchRewardScorerJsonMatchExpression {
-    /** Json key name to find the value to match against. */
+    /** The key name to find the value in the parsed response that's in JSON format. Only first-level key matching is supported. */
     keyName?: string;
-    /** String match expression to match against the value of json key. */
+    /** String match expression to match against the extracted value from the JSON representation of the parsed response. */
     valueStringMatchExpression?: ReinforcementTuningStringMatchRewardScorerStringMatchExpression;
 }
 
-/** Evaluates parsed response using match type against expression. */
+/** Evaluates parsed response using match type against the expression. Returns `true` if `MatchOperation(target, expression)` evaluates to `true`, and `false` otherwise. This data type is not supported in Gemini API. */
 export declare interface ReinforcementTuningStringMatchRewardScorerStringMatchExpression {
-    /** Match operation to use for evaluation. */
-    matchOperation?: MatchOperation;
-    /** String or regular expression to match against. Customer can also provide a references map (key/value pairs) whose value will be substituted into the expression by referencing `references.key_name` (wrapped in double curly braces). */
+    /** A string or a regular expression to match against for evaluating rewards. Users can also provide a references map of `{key: value}` whose `value` will be used to replace the placeholder {{references.key}} in the expression. For example, if the following `references` are defined in the training / validation dataset: ``` { "systemInstruction": ..., "contents": ..., "references": { "concise_answer": "Yes", "verbose_answer": "The answer is Yes" } } ``` and if users define the following StringMatchExpression: { "matchOperation": "REGEX_CONTAINS", "expression": ".*{{references.concise_answer}}.*" } On evaluating the reward for each sample response, this StringMatchExpression will be substituted as: ``` { "matchOperation": "REGEX_CONTAINS", "expression": ".*Yes.*" } ``` */
     expression?: string;
+    /** Match operation to use for evaluating rewards. */
+    matchOperation?: MatchOperation;
 }
 
 /** Represents how much to think for the tuning job. */
@@ -9885,6 +11503,12 @@ export declare enum ReinforcementTuningThinkingLevel {
      * High thinking level.
      */
     HIGH = "HIGH"
+}
+
+/** Sample reinforcement tuning user data in the training dataset. The contents are truncated for better UI showing. This data type is not supported in Gemini API. */
+export declare interface ReinforcementTuningUserDatasetExamples {
+    /** List of user datasset examples showing to user. */
+    userDatasetExamples?: ReinforcementTuningExample[];
 }
 
 /** Represents a recorded session. */
@@ -9926,83 +11550,60 @@ export declare interface ReplicatedVoiceConfig {
 
      * @remarks Encoded as base64 string. */
     voiceSampleAudio?: string;
+    /** Recorded consent verifying ownership of the voice. This
+     represents 16-bit signed little-endian wav data, with a 24kHz sampling
+     rate.
+     * @remarks Encoded as base64 string. */
+    consentAudio?: string;
+    /** Signature of a previously verified consent audio. This should be
+     populated with a signature generated by the server for a previous
+     request containing the consent_audio field. When provided, the
+     signature is verified instead of the consent_audio field to reduce
+     latency. Requests will fail if the signature is invalid or expired. */
+    voiceConsentSignature?: VoiceConsentSignature;
 }
-
-/**
- * The type for the first argument to `fetch`.
- *
- * https://developer.mozilla.org/docs/Web/API/Window/fetch#resource
- */
-declare type _RequestInfo = Request | URL | string;
-
-/**
- * An alias to the builtin `RequestInit` type so we can
- * easily alias it in import statements if there are name clashes.
- *
- * https://developer.mozilla.org/docs/Web/API/RequestInit
- */
-declare type _RequestInit = RequestInit;
-
-declare type RequestInits = NotAny<UndiciTypesRequestInit> | NotAny<UndiciRequestInit> | NotAny<BunRequestInit> | NotAny<NodeFetch2RequestInit> | NotAny<NodeFetch3RequestInit> | NotAny<RequestInit> | NotAny<FetchRequestInit>;
 
 declare type RequestOptions = {
     /**
-     * The HTTP method for the request (e.g., 'get', 'post', 'put', 'delete').
+     * Sets a timeout, in milliseconds, on HTTP requests made by an SDK method. If
+     * `fetchOptions.signal` is set then it will take precedence over this option.
      */
-    method?: HTTPMethod;
+    timeout_ms?: number;
     /**
-     * The URL path for the request.
+     * Set or override a retry policy on HTTP calls.
+     */
+    retries?: RetryConfig;
+    /**
+     * Specifies the status codes which should be retried using the given retry policy.
+     */
+    retry_codes?: string[];
+    /**
+     * Overrides the base server URL that will be used by an operation.
+     */
+    server_url?: string | URL;
+    /**
+     * @deprecated `fetchOptions` has been flattened into `RequestOptions`.
      *
-     * @example "/v1/foo"
-     */
-    path?: string;
-    /**
-     * Query parameters to include in the request URL.
-     */
-    query?: object | undefined | null;
-    /**
-     * The request body. Can be a string, JSON object, FormData, or other supported types.
-     */
-    body?: unknown;
-    /**
-     * HTTP headers to include with the request. Can be a Headers object, plain object, or array of tuples.
-     */
-    headers?: HeadersLike;
-    /**
-     * The maximum number of times that the client will retry a request in case of a
-     * temporary failure, like a network error or a 5XX error from the server.
+     * Sets various request options on the `fetch` call made by an SDK method.
      *
-     * @default 2
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options|Request}
      */
-    maxRetries?: number;
-    stream?: boolean | undefined;
+    fetch_options?: Omit<RequestInit, "method" | "body">;
     /**
-     * The maximum amount of time (in milliseconds) that the client should wait for a response
-     * from the server before timing out a single request.
-     *
-     * @unit milliseconds
+     * Additional query parameters to set on the request URL. Entries replace
+     * any query parameters of the same name produced by the operation. Entries
+     * with null or undefined values are skipped, array values are encoded as
+     * repeated keys and plain object values are JSON-encoded.
      */
-    timeout?: number;
+    extra_query?: Record<string, unknown>;
     /**
-     * Additional `RequestInit` options to be passed to the underlying `fetch` call.
-     * These options will be merged with the client's default fetch options.
+     * Additional fields to merge into the JSON object request body. Entries
+     * replace any fields of the same name produced by the operation. Entries
+     * with undefined values are skipped. Setting this option on an operation
+     * whose request body is not a JSON object results in an error.
      */
-    fetchOptions?: MergedRequestInit;
-    /**
-     * An AbortSignal that can be used to cancel the request.
-     */
-    signal?: AbortSignal | undefined | null;
-    /**
-     * A unique key for this request to enable idempotency.
-     */
-    idempotencyKey?: string;
-    /**
-     * Override the default base URL for this specific request.
-     */
-    defaultBaseURL?: string | undefined;
-    __binaryResponse?: boolean | undefined;
-    __streamClass?: typeof Stream;
-};
+    extra_body?: Record<string, unknown>;
+} & Omit<RequestInit, "method" | "body">;
 
 /** Resource scope. */
 export declare enum ResourceScope {
@@ -10016,21 +11617,54 @@ export declare enum ResourceScope {
     COLLECTION = "COLLECTION"
 }
 
-/** Defines how to parse sample response. */
+/** Configuration for the model to configure output formatting and delivery. This data type is not supported in Gemini API. */
+export declare class ResponseFormat {
+    /** Audio output format. */
+    audio?: AudioResponseFormat;
+    /** Image output format. */
+    image?: ImageResponseFormat;
+    /** Text output format. */
+    text?: TextResponseFormat;
+    /** Video output format. */
+    video?: VideoResponseFormat;
+}
+
+declare type ResponseFormat_2 = AudioResponseFormat_2 | ImageResponseFormat_2 | TextResponseFormat_2 | VideoResponseFormat_2 | {
+    [k: string]: any;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ResponseModality = "text" | "image" | "audio" | "video" | "document" | (string & {});
+
+/** Defines the type for parsing sample response. This enum is not supported in Gemini API. */
 export declare enum ResponseParseType {
     /**
-     * Default value. This value is unused.
+     * Default value. Fallback to IDENTITY
      */
     RESPONSE_PARSE_TYPE_UNSPECIFIED = "RESPONSE_PARSE_TYPE_UNSPECIFIED",
     /**
-     * Use the sample response as is.
+     * Returns the sample response as is.
      */
     IDENTITY = "IDENTITY",
     /**
-     * Use regex to extract the important part of sample response.
+     * Uses regex to extract the important part of sample response. Similar to [GoogleSQL](https://cloud.google.com/bigquery/docs/reference/standard-sql/string_functions#regexp_extract) `REGEX_EXTRACT(response, regex_extract_expression)`, but different in that if there are multiple matches, the last match will be returned.
      */
     REGEX_EXTRACT = "REGEX_EXTRACT"
 }
+
+declare type Result$ = GoogleMapsResult;
+
+declare type Result$2 = GoogleSearchResult;
+
+declare type Result$3 = URLContextResult;
+
+declare type Retrieval$ = Retrieval_2;
 
 /** Defines a retrieval tool that model can call to access external knowledge. This data type is not supported in Gemini API. */
 export declare interface Retrieval {
@@ -10044,12 +11678,87 @@ export declare interface Retrieval {
     vertexRagStore?: VertexRagStore;
 }
 
+/**
+ * A tool that can be used by the model to retrieve files.
+ */
+declare type Retrieval_2 = {
+    /**
+     * Used to specify configuration for ExaAISearch.
+     */
+    exa_ai_search_config?: ExaAISearchConfig | undefined;
+    /**
+     * Used to specify configuration for ParallelAISearch.
+     */
+    parallel_ai_search_config?: ParallelAISearchConfig | undefined;
+    /**
+     * Use to specify configuration for RAG Store.
+     */
+    rag_store_config?: RagStoreConfig | undefined;
+    /**
+     * The types of file retrieval to enable.
+     */
+    retrieval_types?: Array<RetrievalRetrievalType> | undefined;
+    type: "retrieval";
+    /**
+     * Used to specify configuration for VertexAISearch.
+     */
+    vertex_ai_search_config?: VertexAISearchConfig | undefined;
+};
+
+declare type RetrievalCallArguments$ = RetrievalCallArguments;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The arguments to pass to Retrieval tools.
+ */
+declare type RetrievalCallArguments = {
+    /**
+     * Queries for Retrieval information.
+     */
+    queries?: Array<string> | undefined;
+};
+
+declare type RetrievalCallDelta$ = RetrievalCallDelta;
+
+/**
+ * Used by Vertex Retrieval tools such as Parallel AI, Exa AI, Vertex AI Search,
+ *
+ * @remarks
+ * etc. RetrievalType decides which tool is used.
+ */
+declare type RetrievalCallDelta = {
+    /**
+     * The arguments to pass to Retrieval tools.
+     */
+    arguments: RetrievalCallArguments;
+    /**
+     * The type of retrieval tools.
+     */
+    retrieval_type?: RetrievalCallDeltaRetrievalType | undefined;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "retrieval_call";
+};
+
+/**
+ * The type of retrieval tools.
+ */
+declare type RetrievalCallDeltaRetrievalType = "vertex_ai_search" | "rag_store" | "exa_ai_search" | "parallel_ai_search" | (string & {});
+
 /** Retrieval config. */
 export declare interface RetrievalConfig {
-    /** The location of the user. */
-    latLng?: LatLng;
     /** The language code of the user. */
     languageCode?: string;
+    /** The location of the user. */
+    latLng?: LatLng;
 }
 
 /** Metadata returned to client when grounding is enabled. */
@@ -10063,11 +11772,125 @@ export declare interface RetrievalMetadata {
     googleSearchDynamicRetrievalScore?: number;
 }
 
+declare type RetrievalResultDelta$ = RetrievalResultDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Used by Vertex Retrieval tools such as Parallel AI, Exa AI, Vertex AI Search,
+ *
+ * @remarks
+ * etc.
+ * ToolResultDelta.type
+ */
+declare type RetrievalResultDelta = {
+    /**
+     * Whether the retrieval resulted in an error.
+     */
+    is_error?: boolean | undefined;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "retrieval_result";
+};
+
+declare type RetrievalRetrievalType = "vertex_ai_search" | "rag_store" | "exa_ai_search" | "parallel_ai_search" | (string & {});
+
+declare type RetryConfig = {
+    strategy: "none";
+} | {
+    strategy: "backoff";
+    backoff?: BackoffStrategy;
+    retryConnectionErrors?: boolean;
+} | {
+    strategy: "attempt-count-backoff";
+    maxRetries: number;
+    backoff?: Partial<BackoffStrategy>;
+    retryConnectionErrors?: boolean;
+};
+
+declare type ReviewSnippet$ = ReviewSnippet;
+
+declare type ReviewSnippet$2 = ReviewSnippet;
+
+declare type ReviewSnippet$3 = ReviewSnippet;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Encapsulates a snippet of a user review that answers a question about
+ *
+ * @remarks
+ * the features of a specific place in Google Maps.
+ */
+declare type ReviewSnippet = {
+    /**
+     * The ID of the review snippet.
+     */
+    review_id?: string | undefined;
+    /**
+     * Title of the review.
+     */
+    title?: string | undefined;
+    /**
+     * A link that corresponds to the user review on Google Maps.
+     */
+    url?: string | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Optional. The revocation behavior for previous signing secrets.
+ */
+declare type RevocationBehavior = "revoke_previous_secrets_after_h24" | "revoke_previous_secrets_immediately";
+
+declare type RotateSigningSecretRequest$ = RotateSigningSecretRequest;
+
+/**
+ * Request message for WebhookService.RotateSigningSecret.
+ */
+declare type RotateSigningSecretRequest = {
+    /**
+     * Optional. The revocation behavior for previous signing secrets.
+     */
+    revocation_behavior?: RevocationBehavior | undefined;
+};
+
 /** Rouge metric value for an instance. This data type is not supported in Gemini API. */
 export declare interface RougeMetricValue {
     /** Output only. Rouge score. */
     score?: number;
 }
+
+declare type RunTriggerParams = Omit<RunTriggerRequest, "trigger_id">;
+
+declare type RunTriggerRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Resource name of the trigger.
+     */
+    trigger_id: string;
+};
 
 /** Safety attributes of a GeneratedImage or the user-provided prompt. */
 export declare interface SafetyAttributes {
@@ -10085,6 +11908,42 @@ export declare enum SafetyFilterLevel {
     BLOCK_MEDIUM_AND_ABOVE = "BLOCK_MEDIUM_AND_ABOVE",
     BLOCK_ONLY_HIGH = "BLOCK_ONLY_HIGH",
     BLOCK_NONE = "BLOCK_NONE"
+}
+
+/** SafetyPolicy */
+export declare enum SafetyPolicy {
+    /**
+     * Unspecified safety policy.
+     */
+    SAFETY_POLICY_UNSPECIFIED = "SAFETY_POLICY_UNSPECIFIED",
+    /**
+     * Safety policy for financial transactions.
+     */
+    FINANCIAL_TRANSACTIONS = "FINANCIAL_TRANSACTIONS",
+    /**
+     * Safety policy for sensitive data modification.
+     */
+    SENSITIVE_DATA_MODIFICATION = "SENSITIVE_DATA_MODIFICATION",
+    /**
+     * Safety policy for communication tools (e.g. Gmail, Chat, Meet).
+     */
+    COMMUNICATION_TOOL = "COMMUNICATION_TOOL",
+    /**
+     * Safety policy for account creation.
+     */
+    ACCOUNT_CREATION = "ACCOUNT_CREATION",
+    /**
+     * Safety policy for data modification.
+     */
+    DATA_MODIFICATION = "DATA_MODIFICATION",
+    /**
+     * Safety policy for user consent management.
+     */
+    USER_CONSENT_MANAGEMENT = "USER_CONSENT_MANAGEMENT",
+    /**
+     * Safety policy for legal terms and agreements.
+     */
+    LEGAL_TERMS_AND_AGREEMENTS = "LEGAL_TERMS_AND_AGREEMENTS"
 }
 
 /** A safety rating for a piece of content. The safety rating contains the harm category and the harm probability level. */
@@ -10105,6 +11964,8 @@ export declare interface SafetyRating {
     severityScore?: number;
 }
 
+declare type SafetySetting$ = SafetySetting_2;
+
 /** A safety setting that affects the safety-blocking behavior. A SafetySetting consists of a harm category and a threshold for that category. */
 export declare interface SafetySetting {
     /** Required. The harm category to be blocked. */
@@ -10114,6 +11975,34 @@ export declare interface SafetySetting {
     /** Required. The threshold for blocking content. If the harm probability exceeds this threshold, the content will be blocked. */
     threshold?: HarmBlockThreshold;
 }
+
+/**
+ * A safety setting that affects the safety-blocking behavior.
+ *
+ * @remarks
+ *
+ * A SafetySetting consists of a
+ * harm category and a
+ * threshold for that
+ * category.
+ */
+declare type SafetySetting_2 = {
+    /**
+     * Optional. The method for blocking content. If not specified, the default
+     *
+     * @remarks
+     * behavior is to use the probability score.
+     */
+    method?: Method | undefined;
+    /**
+     * Required. The threshold for blocking content. If the harm probability
+     *
+     * @remarks
+     * exceeds this threshold, the content will be blocked.
+     */
+    threshold: Threshold;
+    type: HarmCategory_2;
+};
 
 /** Scale of the generated music. */
 export declare enum Scale {
@@ -10243,10 +12132,10 @@ export declare interface SearchEntryPoint {
 
 /** Different types of search that can be enabled on the GoogleSearch tool. */
 export declare interface SearchTypes {
-    /** Optional. Setting this field enables web search. Only text results are returned. */
-    webSearch?: WebSearch;
     /** Optional. Setting this field enables image search. Image bytes are returned. */
     imageSearch?: ImageSearch;
+    /** Optional. Setting this field enables web search. Only text results are returned. */
+    webSearch?: WebSearch;
 }
 
 /** Segment of the content this support belongs to. */
@@ -10379,6 +12268,15 @@ export declare enum ServiceTier {
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ServiceTier_2 = "flex" | "standard" | "priority" | (string & {});
+
+/**
  Represents a connection to the API.
 
  @experimental
@@ -10386,6 +12284,7 @@ export declare enum ServiceTier {
 export declare class Session {
     readonly conn: WebSocket_2;
     private readonly apiClient;
+    setupComplete?: types.LiveServerSetupComplete;
     constructor(conn: WebSocket_2, apiClient: ApiClient);
     private tLiveClientContent;
     private tLiveClienttToolResponse;
@@ -10503,6 +12402,28 @@ export declare class Session {
     close(): void;
 }
 
+declare type SessionConfig$ = SessionConfig;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The configuration of CodeMender sessions.
+ */
+declare type SessionConfig = {
+    /**
+     * The maximum number of interaction rounds the agent is allowed to perform
+     *
+     * @remarks
+     * before reaching a timeout.
+     */
+    max_rounds?: number | undefined;
+};
+
 /** Configuration of session resumption mechanism.
 
  Included in `LiveConnectConfig.session_resumption`. If included server
@@ -10538,19 +12459,28 @@ export declare interface SessionResumptionConfig {
  */
 export declare function setDefaultBaseUrls(baseUrlParams: BaseUrlParameters): void;
 
+declare type SigningSecret$ = SigningSecret;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * Represents a signing secret used to verify webhook payloads.
  */
-declare interface SigningSecret {
+declare type SigningSecret = {
     /**
      * Output only. The expiration date of the signing secret.
      */
-    expire_time?: string;
+    expire_time?: string | undefined;
     /**
      * Output only. The truncated version of the signing secret.
      */
-    truncated_secret?: string;
-}
+    truncated_secret?: string | undefined;
+};
 
 /** Config for `response` parameter. */
 export declare class SingleEmbedContentResponse {
@@ -10566,16 +12496,16 @@ export declare class SingleEmbedContentResponse {
 export declare interface SingleReinforcementTuningRewardConfig {
     /** Scores parsed responses for autorater use cases by using a model to compute the reward. */
     autoraterScorer?: ReinforcementTuningAutoraterScorer;
-    /** A unique reward name used to identify each single reinforcement tuning reward. */
-    rewardName?: string;
-    /** Defines how to parse sample response. */
-    parseResponseConfig?: ReinforcementTuningParseResponseConfig;
-    /** Scores parsed responses for code execution use cases. */
-    codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
-    /** Scores parsed responses for simple string matching use cases against reference answer without writing python code. */
-    stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
-    /** Scores parsed responses by calling a Cloud Run service. */
+    /** ReinforcementTuningCloudRunRewardScorer is used to score parsed responses by calling a Cloud Run service. */
     cloudRunRewardScorer?: ReinforcementTuningCloudRunRewardScorer;
+    /** ReinforcementTuningCodeExecutionRewardScorer is used to score parsed responses for code execution use cases. */
+    codeExecutionRewardScorer?: ReinforcementTuningCodeExecutionRewardScorer;
+    /** Defines how to parse sample response. For example, given a sample response for evaluating the reward, users might want to extract the text only between `` and `` in the sample response, and keeps only the last one in case there are multiple such tags. To achieve such a purpose, they can define a regex `".*(.*?)"` using the ReinforcementTuningParseResponseConfig.ResponseParseType.REGEX_EXTRACT parse type. */
+    parseResponseConfig?: ReinforcementTuningParseResponseConfig;
+    /** A unique reward name for identifying each single reinforcement tuning reward. */
+    rewardName?: string;
+    /** ReinforcementTuningStringMatchRewardScorer is used to score parsed responses for simple string matching use cases against reference answers. */
+    stringMatchRewardScorer?: ReinforcementTuningStringMatchRewardScorer;
 }
 
 /** Context window will be truncated by keeping only suffix of it.
@@ -10589,6 +12519,48 @@ export declare interface SlidingWindow {
     targetTokens?: string;
 }
 
+declare type Source$ = Source;
+
+/**
+ * A source to be mounted into the environment.
+ */
+declare type Source = {
+    /**
+     * The inline content if `type` is `INLINE`.
+     */
+    content?: string | undefined;
+    /**
+     * Optional encoding for inline content (e.g. `base64`).
+     */
+    encoding?: string | undefined;
+    /**
+     * The source of the environment.
+     *
+     * @remarks
+     * For GCS, this is the GCS path.
+     * For GitHub, this is the GitHub path.
+     */
+    source?: string | undefined;
+    /**
+     * Where the source should appear in the environment.
+     */
+    target?: string | undefined;
+    type?: SourceType | undefined;
+};
+
+declare type SourceFile$ = FileContent;
+
+declare type SourceFile$2 = FileContent;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type SourceType = "gcs" | "inline" | "repository" | "skill_registry" | (string & {});
+
 /** Configuration for a single speaker in a multi-speaker setup. */
 export declare interface SpeakerVoiceConfig {
     /** Required. The name of the speaker. This should be the same as the speaker name used in the prompt. */
@@ -10596,6 +12568,8 @@ export declare interface SpeakerVoiceConfig {
     /** Required. The configuration for the voice of this speaker. */
     voiceConfig?: VoiceConfig;
 }
+
+declare type SpeechConfig$ = SpeechConfig_2;
 
 /** Config for speech generation and transcription. */
 export declare interface SpeechConfig {
@@ -10608,29 +12582,43 @@ export declare interface SpeechConfig {
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * The configuration for speech interaction.
  */
-declare interface SpeechConfig_2 {
+declare type SpeechConfig_2 = {
     /**
      * The language of the speech.
      */
-    language?: string;
+    language?: string | undefined;
     /**
      * The speaker's name, it should match the speaker name given in the prompt.
      */
-    speaker?: string;
+    speaker?: string | undefined;
     /**
      * The voice of the speaker.
      */
-    voice?: string;
-}
+    voice?: string | undefined;
+};
 
 export declare type SpeechConfigUnion = SpeechConfig | string;
+
+export declare type SseMessage<T> = {
+    data?: T | undefined;
+    event?: string | null | undefined;
+    id?: string | null | undefined;
+    retry?: number | null | undefined;
+};
 
 /** Start of speech sensitivity. */
 export declare enum StartSensitivity {
     /**
-     * The default is START_SENSITIVITY_LOW.
+     * The default is START_SENSITIVITY_LOW for Gemini Enterprise Agent Platform and START_SENSITIVITY_HIGH for Gemini Live.
      */
     START_SENSITIVITY_UNSPECIFIED = "START_SENSITIVITY_UNSPECIFIED",
     /**
@@ -10644,315 +12632,138 @@ export declare enum StartSensitivity {
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The `Status` type defines a logical error model that is suitable for
+ *
+ * @remarks
+ * different programming environments, including REST APIs and RPC APIs. It is
+ * used by [gRPC](https://github.com/grpc). Each `Status` message contains
+ * three pieces of data: error code, error message, and error details.
+ *
+ * You can find out more about this error model and how to work with it in the
+ * [API Design Guide](https://cloud.google.com/apis/design/errors).
+ */
+declare type Status = {
+    /**
+     * The status code, which should be an enum value of google.rpc.Code.
+     */
+    code?: number | undefined;
+    /**
+     * A list of messages that carry the error details.  There is a common set of
+     *
+     * @remarks
+     * message types for APIs to use.
+     */
+    details?: Array<{
+        [k: string]: any;
+    }> | undefined;
+    /**
+     * A developer-facing error message, which should be in English. Any
+     *
+     * @remarks
+     * user-facing error message should be localized and sent in the
+     * google.rpc.Status.details field, or localized by the client.
+     */
+    message?: string | undefined;
+};
+
+/**
+ * Output only. The status of the environment container.
+ */
+declare type Status_2 = "active" | "expired" | (string & {});
+
+declare type Step$ = Step;
+
+/**
  * A step in the interaction.
  */
 declare type Step = UserInputStep | ModelOutputStep | ThoughtStep | FunctionCallStep | CodeExecutionCallStep | URLContextCallStep | MCPServerToolCallStep | GoogleSearchCallStep | FileSearchCallStep | GoogleMapsCallStep | FunctionResultStep | CodeExecutionResultStep | URLContextResultStep | GoogleSearchResultStep | MCPServerToolResultStep | FileSearchResultStep | GoogleMapsResultStep;
 
-declare interface StepDelta {
-    delta: StepDelta.Text | StepDelta.Image | StepDelta.Audio | StepDelta.Document | StepDelta.Video | StepDelta.ThoughtSummary | StepDelta.ThoughtSignature | StepDelta.TextAnnotationDelta | StepDelta.ArgumentsDelta | StepDelta.CodeExecutionCall | StepDelta.URLContextCall | StepDelta.GoogleSearchCall | StepDelta.MCPServerToolCall | StepDelta.FileSearchCall | StepDelta.GoogleMapsCall | StepDelta.CodeExecutionResult | StepDelta.URLContextResult | StepDelta.GoogleSearchResult | StepDelta.MCPServerToolResult | StepDelta.FileSearchResult | StepDelta.GoogleMapsResult | StepDelta.FunctionResult;
-    event_type: 'step.delta';
-    index: number;
+declare type StepDelta$ = StepDelta;
+
+declare type StepDelta = {
+    delta: StepDeltaData;
     /**
-     * The event_id token to be used to resume the interaction stream, from this event.
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
      */
-    event_id?: string;
+    event_id?: string | undefined;
+    event_type: "step.delta";
+    index: number;
     /**
      * Optional metadata accompanying ANY streamed event.
      */
-    metadata?: StepDelta.Metadata;
-}
+    metadata?: StepDeltaMetadata | undefined;
+};
 
-declare namespace StepDelta {
-    interface Text {
-        text: string;
-        type: 'text';
-    }
-    interface Image {
-        type: 'image';
-        data?: string;
-        mime_type?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/heic' | 'image/heif' | 'image/gif' | 'image/bmp' | 'image/tiff';
-        /**
-         * The resolution of the media.
-         */
-        resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
-        uri?: string;
-    }
-    interface Audio {
-        type: 'audio';
-        /**
-         * The number of audio channels.
-         */
-        channels?: number;
-        data?: string;
-        mime_type?: 'audio/wav' | 'audio/mp3' | 'audio/aiff' | 'audio/aac' | 'audio/ogg' | 'audio/flac' | 'audio/mpeg' | 'audio/m4a' | 'audio/l16' | 'audio/opus' | 'audio/alaw' | 'audio/mulaw';
-        /**
-         * @deprecated Deprecated. Use sample_rate instead. The value is ignored.
-         */
-        rate?: number;
-        /**
-         * The sample rate of the audio.
-         */
-        sample_rate?: number;
-        uri?: string;
-    }
-    interface Document {
-        type: 'document';
-        data?: string;
-        mime_type?: 'application/pdf' | 'text/csv';
-        uri?: string;
-    }
-    interface Video {
-        type: 'video';
-        data?: string;
-        mime_type?: 'video/mp4' | 'video/mpeg' | 'video/mpg' | 'video/mov' | 'video/avi' | 'video/x-flv' | 'video/webm' | 'video/wmv' | 'video/3gpp';
-        /**
-         * The resolution of the media.
-         */
-        resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
-        uri?: string;
-    }
-    interface ThoughtSummary {
-        type: 'thought_summary';
-        /**
-         * A new summary item to be added to the thought.
-         */
-        content?: InteractionsAPI.TextContent | InteractionsAPI.ImageContent;
-    }
-    interface ThoughtSignature {
-        type: 'thought_signature';
-        /**
-         * Signature to match the backend source to be part of the generation.
-         */
-        signature?: string;
-    }
-    interface TextAnnotationDelta {
-        type: 'text_annotation_delta';
-        /**
-         * Citation information for model-generated content.
-         */
-        annotations?: Array<InteractionsAPI.Annotation>;
-    }
-    interface ArgumentsDelta {
-        type: 'arguments_delta';
-        arguments?: string;
-    }
-    interface CodeExecutionCall {
-        /**
-         * The arguments to pass to the code execution.
-         */
-        arguments: InteractionsAPI.CodeExecutionCallArguments;
-        type: 'code_execution_call';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface URLContextCall {
-        /**
-         * The arguments to pass to the URL context.
-         */
-        arguments: InteractionsAPI.URLContextCallArguments;
-        type: 'url_context_call';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface GoogleSearchCall {
-        /**
-         * The arguments to pass to Google Search.
-         */
-        arguments: InteractionsAPI.GoogleSearchCallArguments;
-        type: 'google_search_call';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface MCPServerToolCall {
-        arguments: {
-            [key: string]: unknown;
-        };
-        name: string;
-        server_name: string;
-        type: 'mcp_server_tool_call';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface FileSearchCall {
-        type: 'file_search_call';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface GoogleMapsCall {
-        type: 'google_maps_call';
-        /**
-         * The arguments to pass to the Google Maps tool.
-         */
-        arguments?: InteractionsAPI.GoogleMapsCallArguments;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface CodeExecutionResult {
-        result: string;
-        type: 'code_execution_result';
-        is_error?: boolean;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface URLContextResult {
-        result: Array<InteractionsAPI.URLContextResult>;
-        type: 'url_context_result';
-        is_error?: boolean;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface GoogleSearchResult {
-        result: Array<InteractionsAPI.GoogleSearchResult>;
-        type: 'google_search_result';
-        is_error?: boolean;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface MCPServerToolResult {
-        result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-        type: 'mcp_server_tool_result';
-        name?: string;
-        server_name?: string;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface FileSearchResult {
-        result: Array<unknown>;
-        type: 'file_search_result';
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface GoogleMapsResult {
-        type: 'google_maps_result';
-        /**
-         * The results of the Google Maps.
-         */
-        result?: Array<InteractionsAPI.GoogleMapsResult>;
-        /**
-         * A signature hash for backend validation.
-         */
-        signature?: string;
-    }
-    interface FunctionResult {
-        /**
-         * Required. ID to match the ID from the function call block.
-         */
-        call_id: string;
-        result: unknown | Array<InteractionsAPI.TextContent | InteractionsAPI.ImageContent> | string;
-        type: 'function_result';
-        is_error?: boolean;
-        name?: string;
-    }
+declare type StepDeltaData = ArgumentsDelta | AudioDelta | CodeExecutionCallDelta | CodeExecutionResultDelta | DocumentDelta | FileSearchCallDelta | FileSearchResultDelta | FunctionResultDelta | GoogleMapsCallDelta | GoogleMapsResultDelta | GoogleSearchCallDelta | GoogleSearchResultDelta | ImageDelta | MCPServerToolCallDelta | MCPServerToolResultDelta | RetrievalCallDelta | RetrievalResultDelta | TextAnnotationDelta | TextDelta | ThoughtSignatureDelta | ThoughtSummaryDelta | URLContextCallDelta | URLContextResultDelta | VideoDelta;
+
+/**
+ * Optional metadata accompanying ANY streamed event.
+ */
+declare type StepDeltaMetadata = {
     /**
-     * Optional metadata accompanying ANY streamed event.
+     * Statistics on the interaction request's token usage.
      */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
+    total_usage?: Usage | undefined;
+};
 
-declare interface StepStart {
-    event_type: 'step.start';
+declare type StepStart$ = StepStart;
+
+declare type StepStart = {
+    /**
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
+     */
+    event_id?: string | undefined;
+    event_type: "step.start";
     index: number;
+    metadata?: StreamMetadata | undefined;
     /**
      * A step in the interaction.
      */
     step: Step;
-    /**
-     * The event_id token to be used to resume the interaction stream, from this event.
-     */
-    event_id?: string;
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    metadata?: StepStart.Metadata;
-}
+};
 
-declare namespace StepStart {
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
+declare type StepStop$ = StepStop;
 
-declare interface StepStop {
-    event_type: 'step.stop';
+declare type StepStop = {
+    /**
+     * The event_id token to be used to resume the interaction stream, from
+     *
+     * @remarks
+     * this event.
+     */
+    event_id?: string | undefined;
+    event_type: "step.stop";
     index: number;
+    metadata?: StreamMetadata | undefined;
     /**
-     * The event_id token to be used to resume the interaction stream, from this event.
+     * Statistics on the interaction request's token usage.
      */
-    event_id?: string;
+    step_usage?: Usage | undefined;
     /**
-     * Optional metadata accompanying ANY streamed event.
+     * Statistics on the interaction request's token usage.
      */
-    metadata?: StepStop.Metadata;
-}
+    usage?: Usage | undefined;
+};
 
-declare namespace StepStop {
-    /**
-     * Optional metadata accompanying ANY streamed event.
-     */
-    interface Metadata {
-        /**
-         * Statistics on the interaction request's token usage.
-         */
-        usage?: InteractionsAPI.Usage;
-    }
-}
-
-declare class Stream<Item> implements AsyncIterable<Item> {
-    private iterator;
-    controller: AbortController;
-    private client;
-    constructor(iterator: () => AsyncIterator<Item>, controller: AbortController, client?: BaseGeminiNextGenAPIClient);
-    static fromSSEResponse<Item>(response: Response, controller: AbortController, client?: BaseGeminiNextGenAPIClient): Stream<Item>;
-    /**
-     * Generates a Stream from a newline-separated ReadableStream
-     * where each item is a JSON value.
-     */
-    static fromReadableStream<Item>(readableStream: _ReadableStream_2, controller: AbortController, client?: BaseGeminiNextGenAPIClient): Stream<Item>;
-    [Symbol.asyncIterator](): AsyncIterator<Item>;
-    /**
-     * Splits the stream into two streams which can be
-     * independently read from at different speeds.
-     */
-    tee(): [Stream<Item>, Stream<Item>];
-    /**
-     * Converts this stream to a newline-separated ReadableStream of
-     * JSON stringified values in the stream
-     * which can be turned back into a Stream with `Stream.fromReadableStream()`.
-     */
-    toReadableStream(): _ReadableStream_2;
+export declare class Stream<T> extends ReadableStream<T> {
+    constructor(responseBody: ReadableStream<Uint8Array>, parse: (x: SseMessage<string>) => IteratorResult<T, undefined>, opts?: {
+        dataRequired?: boolean;
+    });
+    [Symbol.asyncIterator](options?: unknown): StreamAsyncIterator<T>;
+    values(options?: unknown): StreamAsyncIterator<T>;
 }
 
 /** A transport that can stream HTTP requests and responses. Next ID: 6. This data type is not supported in Vertex AI. */
@@ -10968,6 +12779,31 @@ export declare interface StreamableHttpTransport {
     /** The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp". */
     url?: string;
 }
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type StreamAsyncIterator<T> = {
+    next(): Promise<IteratorResult<T, undefined>>;
+    throw?(e?: unknown): Promise<IteratorResult<T, undefined>>;
+    return?(): Promise<IteratorResult<T, undefined>>;
+    [Symbol.asyncIterator](): StreamAsyncIterator<T>;
+} & {
+    [K in typeof Symbol extends {
+        readonly asyncDispose: infer SymbolType extends symbol;
+    } ? SymbolType : never]: () => PromiseLike<void>;
+};
+
+declare type StreamMetadata = {
+    /**
+     * Statistics on the interaction request's token usage.
+     */
+    total_usage?: Usage | undefined;
+};
 
 /** User provided string values assigned to a single metadata key. This data type is not supported in Vertex AI. */
 export declare interface StringList {
@@ -11124,6 +12960,22 @@ export declare interface SupervisedTuningSpec {
     validationDatasetUri?: string;
 }
 
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Optional task mode for video generation. If not specified, the model
+ *
+ * @remarks
+ * automatically determines the appropriate mode based on the provided text
+ * prompt and input media.
+ */
+declare type Task = "text_to_video" | "image_to_video" | "reference_to_video" | "edit" | (string & {});
+
 export declare interface TestTableFile {
     comment?: string;
     testMethod?: string;
@@ -11150,38 +13002,88 @@ export declare interface TestTableItem {
     ignoreKeys?: string[];
 }
 
+declare type Text$ = TextDelta;
+
+declare type TextAnnotationDelta$ = TextAnnotationDelta;
+
+declare type TextAnnotationDelta = {
+    /**
+     * Citation information for model-generated content.
+     */
+    annotations?: Array<Annotation> | undefined;
+    type: "text_annotation_delta";
+};
+
+declare type TextContent$ = TextContent;
+
 /**
  * A text content block.
  */
-declare interface TextContent {
+declare type TextContent = {
+    /**
+     * Citation information for model-generated content.
+     */
+    annotations?: Array<Annotation> | undefined;
     /**
      * Required. The text content.
      */
     text: string;
-    type: 'text';
-    /**
-     * Citation information for model-generated content.
-     */
-    annotations?: Array<Annotation>;
+    type: "text";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type TextDelta = {
+    text: string;
+    type: "text";
+};
+
+declare type TextResponseFormat$ = TextResponseFormat_2;
+
+/** Configuration for text-specific output formatting. */
+export declare class TextResponseFormat {
+    /** Optional. The IANA standard MIME type of the response. */
+    mimeType?: string;
+    /** Optional. The JSON schema that the output should conform to. Only applicable when mime_type is APPLICATION_JSON. */
+    schema?: unknown;
 }
 
 /**
  * Configuration for text output format.
  */
-declare interface TextResponseFormat {
-    type: 'text';
+declare type TextResponseFormat_2 = {
     /**
      * The MIME type of the text output.
      */
-    mime_type?: 'application/json' | 'text/plain';
+    mime_type?: TextResponseFormatMimeType | undefined;
     /**
      * The JSON schema that the output should conform to. Only applicable when
+     *
+     * @remarks
      * mime_type is application/json.
      */
     schema?: {
-        [key: string]: unknown;
-    };
-}
+        [k: string]: any;
+    } | undefined;
+    type: "text";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The MIME type of the text output.
+ */
+declare type TextResponseFormatMimeType = "application/json" | "text/plain" | (string & {});
 
 /** The thinking features configuration. */
 export declare interface ThinkingConfig {
@@ -11194,6 +13096,8 @@ export declare interface ThinkingConfig {
     /** Optional. The number of thoughts tokens that the model should generate. */
     thinkingLevel?: ThinkingLevel;
 }
+
+declare type ThinkingLevel$ = ThinkingLevel_2;
 
 /** The number of thoughts tokens that the model should generate. */
 export declare enum ThinkingLevel {
@@ -11219,22 +13123,77 @@ export declare enum ThinkingLevel {
     HIGH = "HIGH"
 }
 
-declare type ThinkingLevel_2 = 'minimal' | 'low' | 'medium' | 'high';
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ThinkingLevel_2 = "minimal" | "low" | "medium" | "high" | (string & {});
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ThinkingSummaries = "auto" | "none" | (string & {});
+
+declare type ThoughtSignature$ = ThoughtSignatureDelta;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ThoughtSignatureDelta = {
+    /**
+     * Signature to match the backend source to be part of the generation.
+     */
+    signature?: string | undefined;
+    type: "thought_signature";
+};
+
+declare type ThoughtStep$ = ThoughtStep;
 
 /**
  * A thought step.
  */
-declare interface ThoughtStep {
-    type: 'thought';
+declare type ThoughtStep = {
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
+    signature?: string | undefined;
     /**
      * A summary of the thought.
      */
-    summary?: Array<TextContent | ImageContent>;
-}
+    summary?: Array<ThoughtSummaryContent> | undefined;
+    type: "thought";
+};
+
+declare type ThoughtSummary$ = ThoughtSummaryDelta;
+
+declare type ThoughtSummaryContent = ImageContent | TextContent;
+
+declare type ThoughtSummaryDelta = {
+    /**
+     * The content of the response.
+     */
+    content?: Content_2 | undefined;
+    type: "thought_summary";
+};
+
+/**
+ * Required. The threshold for blocking content. If the harm probability
+ *
+ * @remarks
+ * exceeds this threshold, the content will be blocked.
+ */
+declare type Threshold = "block_low_and_above" | "block_medium_and_above" | "block_only_high" | "block_none" | "off" | (string & {});
 
 export declare class Tokens extends BaseModule {
     private readonly apiClient;
@@ -11336,170 +13295,43 @@ export declare interface TokensInfo {
     tokens?: string[];
 }
 
+declare type Tool$ = Tool_2;
+
 /** Tool details of a tool that the model may use to generate a response. */
 export declare interface Tool {
     /** Optional. Retrieval tool type. System will always execute the provided retrieval tool(s) to get external knowledge to answer the prompt. Retrieval results are presented to the model for generation. This field is not supported in Gemini API. */
     retrieval?: Retrieval;
-    /** Optional. Tool to support the model interacting directly with the
-     computer. If enabled, it automatically populates computer-use specific
-     Function Declarations. */
-    computerUse?: ComputerUse;
-    /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
-    fileSearch?: FileSearch;
-    /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
-    googleSearch?: GoogleSearch;
     /** Optional. Tool that allows grounding the model's response with
      geospatial context related to the user's query. */
     googleMaps?: GoogleMaps;
+    /** Optional. MCP Servers to connect to. This field is not supported in Vertex AI. */
+    mcpServers?: McpServer[];
     /** Optional. CodeExecution tool type. Enables the model to execute code as part of generation. */
     codeExecution?: ToolCodeExecution;
+    /** Optional. Tool to support the model interacting directly with the computer. If enabled, it automatically populates computer-use specific Function Declarations. */
+    computerUse?: ComputerUse;
     /** Optional. Tool to support searching public web data, powered by Vertex AI Search and Sec4 compliance. This field is not supported in Gemini API. */
     enterpriseWebSearch?: EnterpriseWebSearch;
+    /** Optional. Uses Exa.ai to search for information to answer user queries. The search results will be grounded on Exa.ai and presented to the model for response generation. This field is not supported in Gemini API. */
+    exaAiSearch?: ToolExaAiSearch;
     /** Optional. Function tool type. One or more function declarations to be passed to the model along with the current user query. Model may decide to call a subset of these functions by populating FunctionCall in the response. User should provide a FunctionResponse for each function call in the next turn. Based on the function responses, Model will generate the final response back to the user. Maximum 512 function declarations can be provided. */
     functionDeclarations?: FunctionDeclaration[];
+    /** Optional. GoogleSearch tool type. Tool to support Google Search in Model. Powered by Google. */
+    googleSearch?: GoogleSearch;
     /** Optional. Specialized retrieval tool that is powered by Google Search. */
     googleSearchRetrieval?: GoogleSearchRetrieval;
     /** Optional. If specified, Vertex AI will use Parallel.ai to search for information to answer user queries. The search results will be grounded on Parallel.ai and presented to the model for response generation. This field is not supported in Gemini API. */
     parallelAiSearch?: ToolParallelAiSearch;
     /** Optional. Tool to support URL context retrieval. */
     urlContext?: UrlContext;
-    /** Optional. MCP Servers to connect to. This field is not supported in Vertex AI. */
-    mcpServers?: McpServer[];
+    /** Optional. FileSearch tool type. Tool to retrieve knowledge from Semantic Retrieval corpora. This field is not supported in Vertex AI. */
+    fileSearch?: FileSearch;
 }
 
 /**
  * A tool that can be used by the model.
  */
-declare type Tool_2 = Function_2 | Tool_2.CodeExecution | Tool_2.URLContext | Tool_2.ComputerUse | Tool_2.MCPServer | Tool_2.GoogleSearch | Tool_2.FileSearch | Tool_2.GoogleMaps | Tool_2.Retrieval;
-
-declare namespace Tool_2 {
-    /**
-     * A tool that can be used by the model to execute code.
-     */
-    interface CodeExecution {
-        type: 'code_execution';
-    }
-    /**
-     * A tool that can be used by the model to fetch URL context.
-     */
-    interface URLContext {
-        type: 'url_context';
-    }
-    /**
-     * A tool that can be used by the model to interact with the computer.
-     */
-    interface ComputerUse {
-        type: 'computer_use';
-        /**
-         * The environment being operated.
-         */
-        environment?: 'browser';
-        /**
-         * The list of predefined functions that are excluded from the model call.
-         */
-        excluded_predefined_functions?: Array<string>;
-    }
-    /**
-     * A MCPServer is a server that can be called by the model to perform actions.
-     */
-    interface MCPServer {
-        type: 'mcp_server';
-        /**
-         * The allowed tools.
-         */
-        allowed_tools?: Array<InteractionsAPI.AllowedTools>;
-        /**
-         * Optional: Fields for authentication headers, timeouts, etc., if needed.
-         */
-        headers?: {
-            [key: string]: string;
-        };
-        /**
-         * The name of the MCPServer.
-         */
-        name?: string;
-        /**
-         * The full URL for the MCPServer endpoint. Example: "https://api.example.com/mcp"
-         */
-        url?: string;
-    }
-    /**
-     * A tool that can be used by the model to search Google.
-     */
-    interface GoogleSearch {
-        type: 'google_search';
-        /**
-         * The types of search grounding to enable.
-         */
-        search_types?: Array<'web_search' | 'image_search' | 'enterprise_web_search'>;
-    }
-    /**
-     * A tool that can be used by the model to search files.
-     */
-    interface FileSearch {
-        type: 'file_search';
-        /**
-         * The file search store names to search.
-         */
-        file_search_store_names?: Array<string>;
-        /**
-         * Metadata filter to apply to the semantic retrieval documents and chunks.
-         */
-        metadata_filter?: string;
-        /**
-         * The number of semantic retrieval chunks to retrieve.
-         */
-        top_k?: number;
-    }
-    /**
-     * A tool that can be used by the model to call Google Maps.
-     */
-    interface GoogleMaps {
-        type: 'google_maps';
-        /**
-         * Whether to return a widget context token in the tool call result of the
-         * response.
-         */
-        enable_widget?: boolean;
-        /**
-         * The latitude of the user's location.
-         */
-        latitude?: number;
-        /**
-         * The longitude of the user's location.
-         */
-        longitude?: number;
-    }
-    /**
-     * A tool that can be used by the model to retrieve files.
-     */
-    interface Retrieval {
-        type: 'retrieval';
-        /**
-         * The types of file retrieval to enable.
-         */
-        retrieval_types?: Array<'vertex_ai_search'>;
-        /**
-         * Used to specify configuration for VertexAISearch.
-         */
-        vertex_ai_search_config?: Retrieval.VertexAISearchConfig;
-    }
-    namespace Retrieval {
-        /**
-         * Used to specify configuration for VertexAISearch.
-         */
-        interface VertexAISearchConfig {
-            /**
-             * Optional. Used to specify Vertex AI Search datastores.
-             */
-            datastores?: Array<string>;
-            /**
-             * Optional. Used to specify Vertex AI Search engine.
-             */
-            engine?: string;
-        }
-    }
-}
+declare type Tool_2 = CodeExecution | ComputerUse_2 | FileSearch_2 | FunctionT | GoogleMaps_2 | GoogleSearch_2 | MCPServer | Retrieval_2 | URLContext;
 
 /** A predicted server-side `ToolCall` returned from the model.
 
@@ -11517,16 +13349,32 @@ export declare interface ToolCall {
 }
 
 /**
+ * The tool choice configuration.
+ */
+declare type ToolChoice = ToolChoiceConfig | ToolChoiceType;
+
+declare type ToolChoiceConfig$ = ToolChoiceConfig;
+
+/**
  * The tool choice configuration containing allowed tools.
  */
-declare interface ToolChoiceConfig {
+declare type ToolChoiceConfig = {
     /**
-     * The allowed tools.
+     * The configuration for allowed tools.
      */
-    allowed_tools?: AllowedTools;
-}
+    allowed_tools?: AllowedTools | undefined;
+};
 
-declare type ToolChoiceType = 'auto' | 'any' | 'none' | 'validated';
+declare type ToolChoiceType$ = ToolChoiceType;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+declare type ToolChoiceType = "auto" | "any" | "none" | "validated" | (string & {});
 
 /** Tool that executes code generated by the model, and automatically returns the result to the model. See also ExecutableCode and CodeExecutionResult, which are input and output to this tool. This data type is not supported in Gemini API. */
 export declare interface ToolCodeExecution {
@@ -11534,12 +13382,20 @@ export declare interface ToolCodeExecution {
 
 /** Tool config. This config is shared for all tools provided in the request. */
 export declare interface ToolConfig {
-    /** Optional. Retrieval config. */
-    retrievalConfig?: RetrievalConfig;
     /** Optional. Function calling config. */
     functionCallingConfig?: FunctionCallingConfig;
+    /** Optional. Retrieval config. */
+    retrievalConfig?: RetrievalConfig;
     /** Optional. If true, the API response will include the server-side tool calls and responses within the `Content` message. This allows clients to observe the server's tool interactions. This field is not supported in Vertex AI. */
     includeServerSideToolInvocations?: boolean;
+}
+
+/** ExaAiSearch tool type. A tool that uses the Exa.ai search engine for grounding. This data type is not supported in Gemini API. */
+export declare interface ToolExaAiSearch {
+    /** Required. The API key for ExaAiSearch. */
+    apiKey?: string;
+    /** Optional. This field can be used to pass any parameter from the Exa.ai Search API. */
+    customConfigs?: Record<string, unknown>;
 }
 
 export declare type ToolListUnion = ToolUnion[];
@@ -11597,6 +13453,8 @@ export declare enum ToolType {
 
 export declare type ToolUnion = Tool | CallableTool;
 
+declare type ToolUseTokensByModality$ = ModalityTokens;
+
 /** Output only. The traffic type for this request. This enum is not supported in Gemini API. */
 export declare enum TrafficType {
     /**
@@ -11621,7 +13479,7 @@ export declare enum TrafficType {
     PROVISIONED_THROUGHPUT = "PROVISIONED_THROUGHPUT"
 }
 
-/** Audio transcription in Server Conent. */
+/** Audio transcription in Server Content. */
 export declare interface Transcription {
     /** Optional. Transcription text. */
     text?: string;
@@ -11629,18 +13487,344 @@ export declare interface Transcription {
     finished?: boolean;
     /** The BCP-47 language code of the transcription. */
     languageCode?: string;
+    /** A label identifying the speaker of this audio segment (e.g. "spk_1", "spk_2").
+     */
+    speakerLabel?: string;
+    /** Detailed word-level transcriptions and timing details.
+     */
+    words?: WordInfo[];
 }
+
+declare type TranscriptionConfig$ = TranscriptionConfig;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Configuration for speech recognition (transcription).
+ */
+declare type TranscriptionConfig = {
+    /**
+     * Optional. A list of phrases to bias the ASR model towards.
+     *
+     * @deprecated field: This will be removed in a future release, please migrate away from it as soon as possible.
+     */
+    adaptation_phrases?: Array<string> | undefined;
+    /**
+     * Optional. A list of custom vocabulary phrases to bias the speech recognition model
+     *
+     * @remarks
+     * toward recognizing specific terms.
+     */
+    custom_vocabulary?: Array<string> | undefined;
+    /**
+     * Optional. Configures speaker diarization. Supported values: "speaker".
+     */
+    diarization_mode?: string | undefined;
+    /**
+     * Optional. BCP-47 language codes providing hints about the languages present in the
+     *
+     * @remarks
+     * audio. If omitted or empty, defaults to automatic language detection.
+     */
+    language_codes?: Array<string> | undefined;
+    /**
+     * Optional. The granularity of timestamps to include in the transcription output.
+     *
+     * @remarks
+     * Supported values: "word". If empty, no timestamps are generated.
+     */
+    timestamp_granularities?: Array<string> | undefined;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Headers to inject on all outbound requests matching this domain. Accepts a single dict or a list of dicts. The egress proxy injects these automatically.
+ */
+declare type Transform = {
+    [k: string]: string;
+} | Array<{
+    [k: string]: string;
+}>;
 
 /** Config for stream translation. */
 export declare interface TranslationConfig {
-    /** If true, the model will generate audio when the target language is
-     spoken, essentially it will parrot the input. If false, we will not produce
-     audio for the target language. */
+    /** Optional. If true, the model will generate audio when the target language is spoken, essentially it will parrot the input. If false, we will not produce audio for the target language. */
     echoTargetLanguage?: boolean;
-    /** The target language for translation. Supported values are BCP-47
-     language codes (e.g. "en", "es", "fr"). */
+    /** Required. The target language for translation. Supported values are BCP-47 language codes (e.g. "en", "es", "fr"). */
     targetLanguageCode?: string;
 }
+
+declare type Trigger$ = Trigger;
+
+/**
+ * A trigger configuration that is scheduled to run an agent.
+ */
+declare type Trigger = {
+    /**
+     * Output only. The number of consecutive failures that have occurred
+     *
+     * @remarks
+     * since the last successful execution.
+     */
+    consecutive_failure_count?: number | undefined;
+    /**
+     * Output only. The time when the trigger was created.
+     */
+    create_time?: string | undefined;
+    /**
+     * Optional. The display name of the trigger.
+     */
+    display_name?: string | undefined;
+    /**
+     * Optional. The environment ID for the trigger execution.
+     */
+    environment_id?: string | undefined;
+    /**
+     * Optional. The execution timeout for the triggered interaction.
+     */
+    execution_timeout_seconds?: number | undefined;
+    /**
+     * Required. Output only. Identifier. The ID of the trigger.
+     */
+    id: string;
+    /**
+     * The Interaction resource.
+     */
+    interaction: interactions.Interaction;
+    /**
+     * Output only. The time when the trigger was last paused.
+     */
+    last_pause_time?: string | undefined;
+    /**
+     * Output only. The time when the trigger was last resumed.
+     */
+    last_resume_time?: string | undefined;
+    /**
+     * Output only. The time when the trigger was last run.
+     */
+    last_run_time?: string | undefined;
+    /**
+     * Optional. The maximum number of consecutive failures allowed before
+     *
+     * @remarks
+     * the trigger is automatically paused (status becomes ERROR).
+     */
+    max_consecutive_failures?: number | undefined;
+    /**
+     * Output only. The time when the trigger is scheduled to run next.
+     */
+    next_run_time?: string | undefined;
+    /**
+     * Output only. The ID of the last interaction created by this trigger.
+     */
+    previous_interaction_id?: string | undefined;
+    /**
+     * Required. The cron schedule on which the trigger should run.
+     *
+     * @remarks
+     * Standard cron format.
+     */
+    schedule: string;
+    /**
+     * Output only. The current status of the trigger.
+     */
+    status?: TriggerStatus | undefined;
+    /**
+     * Required. Time zone in which the schedule should be interpreted.
+     */
+    time_zone: string;
+    /**
+     * Output only. The time when the trigger was last updated.
+     */
+    update_time?: string | undefined;
+};
+
+declare type TriggerCreateParams$ = TriggerCreateParams;
+
+/**
+ * Parameters for creating a trigger.
+ */
+declare type TriggerCreateParams = {
+    /**
+     * Required. The cron schedule on which the trigger should run. Standard cron format.
+     */
+    schedule: string;
+    /**
+     * Required. Time zone in which the schedule should be interpreted.
+     */
+    time_zone: string;
+    /**
+     * Optional. The display name of the trigger.
+     */
+    display_name?: string | undefined;
+    /**
+     * Optional. The environment ID for the trigger execution.
+     */
+    environment_id?: string | undefined;
+    /**
+     * Optional. The maximum number of consecutive failures allowed before the trigger is automatically paused (status becomes ERROR).
+     */
+    max_consecutive_failures?: number | undefined;
+    /**
+     * Optional. The execution timeout for the triggered interaction.
+     */
+    execution_timeout_seconds?: number | undefined;
+    /**
+     * Required. The interaction request template to be executed.
+     */
+    interaction: interactions.CreateAgentInteraction | interactions.CreateModelInteraction;
+};
+
+declare type TriggerDeleteParams$ = DeleteTriggerParams;
+
+declare type TriggerDeleteResponse$ = Empty;
+
+declare type TriggerExecution$ = TriggerExecution;
+
+/**
+ * An execution instance of a trigger.
+ */
+declare type TriggerExecution = {
+    /**
+     * Output only. The time when the execution finished.
+     */
+    end_time?: string | undefined;
+    /**
+     * Output only. The environment ID used for the execution.
+     */
+    environment_id?: string | undefined;
+    /**
+     * Output only. The error message if the execution failed.
+     */
+    error?: string | undefined;
+    /**
+     * Required. Output only. Identifier. The ID of the trigger execution.
+     */
+    id: string;
+    /**
+     * Output only. The ID of the interaction created by this execution, if any.
+     */
+    interaction_id?: string | undefined;
+    /**
+     * Output only. The time when the execution was scheduled to run.
+     */
+    scheduled_time?: string | undefined;
+    /**
+     * Output only. The time when the execution started.
+     */
+    start_time?: string | undefined;
+    /**
+     * Output only. The status of the execution.
+     */
+    status?: TriggerExecutionStatus | undefined;
+    /**
+     * Required. Output only. Identifier. The ID of the trigger that created this execution.
+     */
+    trigger_id: string;
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Output only. The status of the execution.
+ */
+declare type TriggerExecutionStatus = "in_progress" | "completed" | "failed" | "skipped" | "timed_out" | (string & {});
+
+declare type TriggerGetParams$ = GetTriggerParams;
+
+declare type TriggerListExecutionsParams$ = ListTriggerExecutionsParams;
+
+declare type TriggerListExecutionsResponse$ = ListTriggerExecutionsResponse;
+
+declare type TriggerListParams$ = ListTriggersParams;
+
+declare type TriggerListResponse$ = ListTriggersResponse;
+
+declare type TriggerRunParams$ = RunTriggerParams;
+
+export declare namespace Triggers {
+    export type ListTriggerExecutionsResponse = ListTriggerExecutionsResponse$;
+    export type ListTriggersResponse = ListTriggersResponse$;
+    export type Trigger = Trigger$;
+    export type TriggerCreateParams = TriggerCreateParams$;
+    export type TriggerDeleteParams = TriggerDeleteParams$;
+    export type TriggerDeleteResponse = TriggerDeleteResponse$;
+    export type TriggerExecution = TriggerExecution$;
+    export type TriggerGetParams = TriggerGetParams$;
+    export type TriggerListExecutionsParams = TriggerListExecutionsParams$;
+    export type TriggerListExecutionsResponse = TriggerListExecutionsResponse$;
+    export type TriggerListParams = TriggerListParams$;
+    export type TriggerListResponse = TriggerListResponse$;
+    export type TriggerRunParams = TriggerRunParams$;
+    export type TriggerUpdate = TriggerUpdate$;
+    export type TriggerUpdateParams = TriggerUpdateParams$;
+}
+
+declare namespace triggers {
+    export {
+        ListTriggerExecutionsResponse,
+        ListTriggersResponse,
+        Interaction_2 as Interaction,
+        TriggerCreateParams,
+        TriggerExecutionStatus,
+        TriggerExecution,
+        TriggerUpdateStatus,
+        TriggerUpdate,
+        TriggerStatus,
+        Trigger
+    }
+}
+
+/**
+ * Output only. The current status of the trigger.
+ */
+declare type TriggerStatus = "active" | "paused" | "error" | (string & {});
+
+declare type TriggerUpdate$ = TriggerUpdate;
+
+/**
+ * Represents the fields of a Trigger that can be updated.
+ */
+declare type TriggerUpdate = {
+    /**
+     * Optional. The display name of the trigger.
+     */
+    display_name?: string | undefined;
+    /**
+     * Optional. The status of the trigger.
+     */
+    status?: TriggerUpdateStatus | undefined;
+};
+
+declare type TriggerUpdateParams$ = UpdateTriggerParams;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Optional. The status of the trigger.
+ */
+declare type TriggerUpdateStatus = "active" | "paused" | "error";
 
 /** TunedModel for the Tuned Model of a Tuning Job. */
 export declare interface TunedModel {
@@ -11704,6 +13888,8 @@ export declare interface TuningDataStats {
     distillationDataStats?: DistillationDataStats;
     /** Output only. Statistics for preference optimization. */
     preferenceOptimizationDataStats?: PreferenceOptimizationDataStats;
+    /** Output only. Statistics for reinforcement tuning. */
+    reinforcementTuningDataStats?: DatasetStats;
     /** The SFT Tuning data stats. */
     supervisedTuningDataStats?: SupervisedTuningDataStats;
 }
@@ -11746,8 +13932,10 @@ export declare interface TuningJob {
     supervisedTuningSpec?: SupervisedTuningSpec;
     /** Tuning Spec for Preference Optimization. */
     preferenceOptimizationSpec?: PreferenceOptimizationSpec;
+    distillationSamplingSpec?: DistillationSamplingSpec;
     /** Tuning Spec for Distillation. */
     distillationSpec?: DistillationSpec;
+    /** Tuning Spec for Reinforcement Tuning. */
     reinforcementTuningSpec?: ReinforcementTuningSpec;
     /** Output only. The tuning data statistics associated with this TuningJob. */
     tuningDataStats?: TuningDataStats;
@@ -11773,15 +13961,14 @@ export declare interface TuningJob {
     serviceAccount?: string;
     /** Optional. The display name of the TunedModel. The name can be up to 128 characters long and can consist of any UTF-8 characters. For continuous tuning, tuned_model_display_name will by default use the same display name as the pre-tuned model. If a new display name is provided, the tuning job will create a new model instead of a new version. */
     tunedModelDisplayName?: string;
-    /** Output only. The detail state of the tuning job (while the overall `JobState` is running). */
-    tuningJobState?: TuningJobState;
-    /** Tuning Spec for Veo Tuning. */
-    veoTuningSpec?: VeoTuningSpec;
     /** Output only. Tuning Job metadata. */
     tuningJobMetadata?: TuningJobMetadata;
+    /** Output only. The detail state of the tuning job (while the overall `JobState` is running). */
+    tuningJobState?: TuningJobState;
     /** Tuning Spec for Veo LoRA Tuning. */
     veoLoraTuningSpec?: VeoLoraTuningSpec;
-    distillationSamplingSpec?: DistillationSamplingSpec;
+    /** Tuning Spec for Veo Tuning. */
+    veoTuningSpec?: VeoTuningSpec;
 }
 
 /** Tuning job metadata. This data type is not supported in Gemini API. */
@@ -11970,6 +14157,20 @@ export declare interface TuningValidationDataset {
     vertexDatasetResource?: string;
 }
 
+/**
+ * @deprecated class: This will be removed in a future release, please migrate away from it as soon as possible.
+ */
+declare type Turn = {
+    content?: Array<Content_2> | string | undefined;
+    /**
+     * The originator of this turn. Must be user for input or model for
+     *
+     * @remarks
+     * model output.
+     */
+    role?: string | undefined;
+};
+
 /** The reason why the turn is complete. */
 export declare enum TurnCompleteReason {
     /**
@@ -12086,6 +14287,8 @@ export declare enum TurnCompleteReason {
     MAX_REGENERATION_REACHED = "MAX_REGENERATION_REACHED"
 }
 
+declare type TurnContent = Array<Content_2> | string;
+
 /** Options about which input is included in the user's turn. */
 export declare enum TurnCoverage {
     /**
@@ -12159,10 +14362,11 @@ declare namespace types {
         Language,
         FunctionResponseScheduling,
         Type,
-        Environment,
         AuthType,
         HttpElementLocation,
         ApiSpec,
+        Environment,
+        SafetyPolicy,
         PhishBlockThreshold,
         Behavior,
         DynamicRetrievalConfigMode,
@@ -12179,23 +14383,30 @@ declare namespace types {
         UrlRetrievalStatus,
         BlockedReason,
         TrafficType,
-        Modality,
+        MediaModality,
         ModelStage,
         MediaResolution,
+        Modality,
+        Delivery,
+        AspectRatio,
+        ImageSize,
         TuningMode,
         AdapterSize,
+        ResponseParseType,
+        MatchOperation,
+        ReinforcementTuningThinkingLevel,
         JobState,
         TuningJobState,
         AggregationMetric,
         PairwiseChoice,
+        VideoOrientation,
         TuningSpeed,
         TuningTask,
-        VideoOrientation,
         DocumentState,
+        ServiceTier,
         PartMediaResolutionLevel,
         ToolType,
         ResourceScope,
-        ServiceTier,
         FeatureSelectionPreference,
         EmbeddingApiType,
         SafetyFilterLevel,
@@ -12209,14 +14420,10 @@ declare namespace types {
         VideoGenerationMaskMode,
         VideoCompressionQuality,
         ImageResizeMode,
-        ResponseParseType,
-        MatchOperation,
-        ReinforcementTuningThinkingLevel,
         TuningMethod,
         FileState,
         FileSource,
         TurnCompleteReason,
-        MediaModality,
         VadSignalType,
         VoiceActivityType,
         StartSensitivity,
@@ -12229,13 +14436,15 @@ declare namespace types {
         PartMediaResolution,
         ToolCall,
         ToolResponse,
+        WordInfo,
+        Transcription,
         CodeExecutionResult,
         ExecutableCode,
         FileData,
         PartialArg,
         FunctionCall,
-        FunctionResponseBlob,
         FunctionResponseFileData,
+        FunctionResponseBlob,
         FunctionResponsePart,
         FunctionResponse,
         Blob_2 as Blob,
@@ -12246,13 +14455,15 @@ declare namespace types {
         HttpOptions,
         Schema,
         ModelSelectionConfig,
-        ComputerUse,
         ApiKeyConfig,
         AuthConfigGoogleServiceAccountConfig,
         AuthConfigHttpBasicAuthConfig,
         AuthConfigOauthConfig,
         AuthConfigOidcConfig,
         AuthConfig,
+        GoogleMapsPlaces,
+        GoogleMapsRouting,
+        GoogleMapsGroundingTypes,
         GoogleMaps,
         ApiAuthApiKeyConfig,
         ApiAuth,
@@ -12270,22 +14481,25 @@ declare namespace types {
         RagRetrievalConfig,
         VertexRagStore,
         Retrieval,
-        FileSearch,
-        WebSearch,
+        StreamableHttpTransport,
+        McpServer,
+        ToolCodeExecution,
+        ComputerUse,
+        EnterpriseWebSearch,
+        ToolExaAiSearch,
+        FunctionDeclaration,
         ImageSearch,
+        WebSearch,
         SearchTypes,
         Interval,
         GoogleSearch,
-        ToolCodeExecution,
-        EnterpriseWebSearch,
-        FunctionDeclaration,
         DynamicRetrievalConfig,
         GoogleSearchRetrieval,
         ToolParallelAiSearch,
         UrlContext,
-        StreamableHttpTransport,
-        McpServer,
+        FileSearch,
         Tool,
+        VoiceConsentSignature,
         ReplicatedVoiceConfig,
         PrebuiltVoiceConfig,
         VoiceConfig,
@@ -12300,10 +14514,13 @@ declare namespace types {
         GenerationConfigRoutingConfigManualRoutingMode,
         GenerationConfigRoutingConfig,
         SafetySetting,
+        FunctionCallingConfig,
         LatLng,
         RetrievalConfig,
-        FunctionCallingConfig,
         ToolConfig,
+        LanguageAuto,
+        LanguageHints,
+        AudioTranscriptionConfig,
         ModelArmorConfig,
         GenerateContentConfig,
         GenerateContentParameters,
@@ -12390,6 +14607,12 @@ declare namespace types {
         DeleteModelConfig,
         DeleteModelParameters,
         DeleteModelResponse,
+        AudioResponseFormat,
+        ImageResponseFormat,
+        TextResponseFormat,
+        VideoResponseFormat,
+        ResponseFormat,
+        TranslationConfig,
         GenerationConfig,
         CountTokensConfig,
         CountTokensParameters,
@@ -12422,14 +14645,14 @@ declare namespace types {
         DistillationSpec,
         AutoraterConfig,
         ReinforcementTuningParseResponseConfig,
-        ReinforcementTuningAutoraterScorerParsedResponseConversionScorer,
         ReinforcementTuningAutoraterScorerExactMatchScorer,
+        ReinforcementTuningAutoraterScorerParsedResponseConversionScorer,
         ReinforcementTuningAutoraterScorer,
+        ReinforcementTuningCloudRunRewardScorer,
         ReinforcementTuningCodeExecutionRewardScorer,
         ReinforcementTuningStringMatchRewardScorerStringMatchExpression,
         ReinforcementTuningStringMatchRewardScorerJsonMatchExpression,
         ReinforcementTuningStringMatchRewardScorer,
-        ReinforcementTuningCloudRunRewardScorer,
         SingleReinforcementTuningRewardConfig,
         CompositeReinforcementTuningRewardConfigWeightedRewardConfig,
         CompositeReinforcementTuningRewardConfig,
@@ -12439,6 +14662,8 @@ declare namespace types {
         PreTunedModel,
         DatasetDistributionDistributionBucket,
         DatasetDistribution,
+        ReinforcementTuningExample,
+        ReinforcementTuningUserDatasetExamples,
         DatasetStats,
         DistillationDataStats,
         GeminiPreferenceExampleCompletion,
@@ -12467,10 +14692,10 @@ declare namespace types {
         EvaluateDatasetResponse,
         EvaluateDatasetRun,
         FullFineTuningSpec,
-        VeoHyperParameters,
-        VeoTuningSpec,
         TuningJobMetadata,
+        VeoHyperParameters,
         VeoLoraTuningSpec,
+        VeoTuningSpec,
         TuningJob,
         ListTuningJobsConfig,
         ListTuningJobsParameters,
@@ -12484,7 +14709,6 @@ declare namespace types {
         CreateTuningJobConfig,
         CreateTuningJobParametersPrivate,
         TuningOperation,
-        ReinforcementTuningExample,
         ValidateRewardConfig,
         ValidateRewardParameters,
         ReinforcementTuningRewardInfo,
@@ -12597,7 +14821,6 @@ declare namespace types {
         SubjectReferenceImage,
         ContentReferenceImage,
         LiveServerSetupComplete,
-        Transcription,
         LiveServerContent,
         LiveServerToolCall,
         LiveServerToolCallCancellation,
@@ -12615,8 +14838,8 @@ declare namespace types {
         SessionResumptionConfig,
         SlidingWindow,
         ContextWindowCompressionConfig,
-        AudioTranscriptionConfig,
         ProactivityConfig,
+        HistoryConfig,
         CustomizedAvatar,
         AvatarConfig,
         LiveClientSetup,
@@ -12626,7 +14849,6 @@ declare namespace types {
         LiveClientRealtimeInput,
         LiveClientToolResponse,
         LiveClientMessage,
-        TranslationConfig,
         LiveConnectConfig,
         LiveConnectParameters,
         CreateChatParameters,
@@ -12679,37 +14901,6 @@ declare namespace types {
     }
 }
 
-/** @ts-ignore For users with undici */
-declare type UndiciRequestInit = NotAny<import('../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../node_modules/undici/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../../node_modules/undici/index.d.ts').RequestInit>;
-
-/**
- * These imports attempt to get types from a parent package's dependencies.
- * Unresolved bare specifiers can trigger [automatic type acquisition][1] in some projects, which
- * would cause typescript to show types not present at runtime. To avoid this, we import
- * directly from parent node_modules folders.
- *
- * We need to check multiple levels because we don't know what directory structure we'll be in.
- * For example, pnpm generates directories like this:
- * ```
- * node_modules
- * ├── .pnpm
- * │   └── pkg@1.0.0
- * │       └── node_modules
- * │           └── pkg
- * │               └── internal
- * │                   └── types.d.ts
- * ├── pkg -> .pnpm/pkg@1.0.0/node_modules/pkg
- * └── undici
- * ```
- *
- * [1]: https://www.typescriptlang.org/tsconfig/#typeAcquisition
- */
-/** @ts-ignore For users with \@types/node */
-declare type UndiciTypesRequestInit = NotAny<import('../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../node_modules/undici-types/index.d.ts').RequestInit> | NotAny<import('../../../../../../../../../../node_modules/undici-types/index.d.ts').RequestInit>;
-
-declare class UnprocessableEntityError extends APIError<422, Headers> {
-}
-
 /** Optional parameters for caches.update method. */
 export declare interface UpdateCachedContentConfig {
     /** Used to override HTTP request options. */
@@ -12757,6 +14948,20 @@ export declare interface UpdateModelParameters {
     model: string;
     config?: UpdateModelConfig;
 }
+
+declare type UpdateTriggerParams = Omit<UpdateTriggerRequest, "id" | "body"> & UpdateTriggerRequest["body"];
+
+declare type UpdateTriggerRequest = {
+    /**
+     * Which version of the API to use.
+     */
+    api_version?: string | undefined;
+    /**
+     * Resource name of the trigger.
+     */
+    id: string;
+    body: triggers.TriggerUpdate;
+};
 
 declare interface Uploader {
     /**
@@ -12956,75 +15161,115 @@ export declare class UpscaleImageResponse {
     generatedImages?: GeneratedImage[];
 }
 
+declare type URLCitation$ = URLCitation;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * A URL citation annotation.
  */
-declare interface URLCitation {
-    type: 'url_citation';
+declare type URLCitation = {
     /**
      * End of the attributed segment, exclusive.
      */
-    end_index?: number;
+    end_index?: number | undefined;
     /**
      * Start of segment of the response that is attributed to this source.
      *
+     * @remarks
+     *
      * Index indicates the start of the segment, measured in bytes.
      */
-    start_index?: number;
+    start_index?: number | undefined;
     /**
      * The title of the URL.
      */
-    title?: string;
+    title?: string | undefined;
+    type: "url_citation";
     /**
      * The URL.
      */
-    url?: string;
-}
+    url?: string | undefined;
+};
+
+declare type URLContext$ = URLContext;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * A tool that can be used by the model to fetch URL context.
+ */
+declare type URLContext = {
+    type: "url_context";
+};
 
 /** Tool to support URL context. */
 export declare interface UrlContext {
 }
 
+declare type URLContextCall$ = URLContextCallDelta;
+
+declare type URLContextCallArguments$ = URLContextCallArguments;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
 /**
  * The arguments to pass to the URL context.
  */
-declare interface URLContextCallArguments {
+declare type URLContextCallArguments = {
     /**
      * The URLs to fetch.
      */
-    urls?: Array<string>;
-}
+    urls?: Array<string> | undefined;
+};
+
+declare type URLContextCallDelta = {
+    /**
+     * The arguments to pass to the URL context.
+     */
+    arguments: URLContextCallArguments;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "url_context_call";
+};
+
+declare type URLContextCallStep$ = URLContextCallStep;
 
 /**
  * URL context call step.
  */
-declare interface URLContextCallStep {
+declare type URLContextCallStep = {
+    /**
+     * The arguments to pass to the URL context.
+     */
+    arguments: URLContextCallArguments;
     /**
      * Required. A unique ID for this specific tool call.
      */
     id: string;
     /**
-     * Required. The arguments to pass to the URL context.
-     */
-    arguments: URLContextCallStep.Arguments;
-    type: 'url_context_call';
-    /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
-
-declare namespace URLContextCallStep {
-    /**
-     * Required. The arguments to pass to the URL context.
-     */
-    interface Arguments {
-        /**
-         * The URLs to fetch.
-         */
-        urls?: Array<string>;
-    }
-}
+    signature?: string | undefined;
+    type: "url_context_call";
+};
 
 /** Metadata returned when the model uses the `url_context` tool to get information from a user-provided URL. */
 export declare interface UrlContextMetadata {
@@ -13032,58 +15277,70 @@ export declare interface UrlContextMetadata {
     urlMetadata?: UrlMetadata[];
 }
 
+declare type URLContextResult$ = URLContextResult;
+
+declare type URLContextResult$2 = URLContextResultDelta;
+
 /**
  * The result of the URL context.
  */
-declare interface URLContextResult {
+declare type URLContextResult = {
     /**
      * The status of the URL retrieval.
      */
-    status?: 'success' | 'error' | 'paywall' | 'unsafe';
+    status?: URLContextResultStatus | undefined;
     /**
      * The URL that was fetched.
      */
-    url?: string;
-}
+    url?: string | undefined;
+};
+
+declare type URLContextResultDelta = {
+    is_error?: boolean | undefined;
+    result: Array<URLContextResult>;
+    /**
+     * A signature hash for backend validation.
+     */
+    signature?: string | undefined;
+    type: "url_context_result";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The status of the URL retrieval.
+ */
+declare type URLContextResultStatus = "success" | "error" | "paywall" | "unsafe" | (string & {});
+
+declare type URLContextResultStep$ = URLContextResultStep;
 
 /**
  * URL context result step.
  */
-declare interface URLContextResultStep {
+declare type URLContextResultStep = {
     /**
      * Required. ID to match the ID from the function call block.
      */
     call_id: string;
     /**
-     * Required. The results of the URL context.
-     */
-    result: Array<URLContextResultStep.Result>;
-    type: 'url_context_result';
-    /**
      * Whether the URL context resulted in an error.
      */
-    is_error?: boolean;
+    is_error?: boolean | undefined;
+    /**
+     * Required. The results of the URL context.
+     */
+    result: Array<URLContextResult>;
     /**
      * A signature hash for backend validation.
      */
-    signature?: string;
-}
-
-declare namespace URLContextResultStep {
-    /**
-     * The result of the URL context.
-     */
-    interface Result {
-        /**
-         * The status of the URL retrieval.
-         */
-        status?: 'success' | 'error' | 'paywall' | 'unsafe';
-        /**
-         * The URL that was fetched.
-         */
-        url?: string;
-    }
-}
+    signature?: string | undefined;
+    type: "url_context_result";
+};
 
 /** The metadata for a single URL retrieval. */
 export declare interface UrlMetadata {
@@ -13117,159 +15374,98 @@ export declare enum UrlRetrievalStatus {
     URL_RETRIEVAL_STATUS_UNSAFE = "URL_RETRIEVAL_STATUS_UNSAFE"
 }
 
+declare type Usage$ = Usage;
+
 /**
  * Statistics on the interaction request's token usage.
  */
-declare interface Usage {
+declare type Usage = {
     /**
      * A breakdown of cached token usage by modality.
      */
-    cached_tokens_by_modality?: Array<Usage.CachedTokensByModality>;
+    cached_tokens_by_modality?: Array<ModalityTokens> | undefined;
     /**
      * Grounding tool count.
      */
-    grounding_tool_count?: Array<Usage.GroundingToolCount>;
+    grounding_tool_count?: Array<GroundingToolCount> | undefined;
     /**
      * A breakdown of input token usage by modality.
      */
-    input_tokens_by_modality?: Array<Usage.InputTokensByModality>;
+    input_tokens_by_modality?: Array<ModalityTokens> | undefined;
     /**
      * A breakdown of output token usage by modality.
      */
-    output_tokens_by_modality?: Array<Usage.OutputTokensByModality>;
+    output_tokens_by_modality?: Array<ModalityTokens> | undefined;
     /**
      * A breakdown of tool-use token usage by modality.
      */
-    tool_use_tokens_by_modality?: Array<Usage.ToolUseTokensByModality>;
+    tool_use_tokens_by_modality?: Array<ModalityTokens> | undefined;
     /**
      * Number of tokens in the cached part of the prompt (the cached content).
      */
-    total_cached_tokens?: number;
+    total_cached_tokens?: number | undefined;
     /**
      * Number of tokens in the prompt (context).
      */
-    total_input_tokens?: number;
+    total_input_tokens?: number | undefined;
     /**
      * Total number of tokens across all the generated responses.
      */
-    total_output_tokens?: number;
+    total_output_tokens?: number | undefined;
     /**
      * Number of tokens of thoughts for thinking models.
      */
-    total_thought_tokens?: number;
+    total_thought_tokens?: number | undefined;
     /**
      * Total token count for the interaction request (prompt + responses + other
+     *
+     * @remarks
      * internal tokens).
      */
-    total_tokens?: number;
+    total_tokens?: number | undefined;
     /**
      * Number of tokens present in tool-use prompt(s).
      */
-    total_tool_use_tokens?: number;
-}
-
-declare namespace Usage {
-    /**
-     * The token count for a single response modality.
-     */
-    interface CachedTokensByModality {
-        /**
-         * The modality associated with the token count.
-         */
-        modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
-        /**
-         * Number of tokens for the modality.
-         */
-        tokens?: number;
-    }
-    /**
-     * The number of grounding tool counts.
-     */
-    interface GroundingToolCount {
-        /**
-         * The number of grounding tool counts.
-         */
-        count?: number;
-        /**
-         * The grounding tool type associated with the count.
-         */
-        type?: 'google_search' | 'google_maps' | 'retrieval';
-    }
-    /**
-     * The token count for a single response modality.
-     */
-    interface InputTokensByModality {
-        /**
-         * The modality associated with the token count.
-         */
-        modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
-        /**
-         * Number of tokens for the modality.
-         */
-        tokens?: number;
-    }
-    /**
-     * The token count for a single response modality.
-     */
-    interface OutputTokensByModality {
-        /**
-         * The modality associated with the token count.
-         */
-        modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
-        /**
-         * Number of tokens for the modality.
-         */
-        tokens?: number;
-    }
-    /**
-     * The token count for a single response modality.
-     */
-    interface ToolUseTokensByModality {
-        /**
-         * The modality associated with the token count.
-         */
-        modality?: 'text' | 'image' | 'audio' | 'video' | 'document';
-        /**
-         * Number of tokens for the modality.
-         */
-        tokens?: number;
-    }
-}
+    total_tool_use_tokens?: number | undefined;
+};
 
 /** Usage metadata about response(s). */
 export declare interface UsageMetadata {
-    /** Number of tokens in the prompt. When `cached_content` is set, this is still the total effective prompt size meaning this includes the number of tokens in the cached content. */
-    promptTokenCount?: number;
-    /** Number of tokens in the cached part of the prompt (the cached content). */
-    cachedContentTokenCount?: number;
     /** Total number of tokens across all the generated response candidates. */
     responseTokenCount?: number;
-    /** Number of tokens present in tool-use prompt(s). */
-    toolUsePromptTokenCount?: number;
-    /** Number of tokens of thoughts for thinking models. */
-    thoughtsTokenCount?: number;
-    /** Total token count for prompt, response candidates, and tool-use prompts(if present). */
-    totalTokenCount?: number;
-    /** List of modalities that were processed in the request input. */
-    promptTokensDetails?: ModalityTokenCount[];
-    /** List of modalities that were processed in the cache input. */
-    cacheTokensDetails?: ModalityTokenCount[];
     /** List of modalities that were returned in the response. */
     responseTokensDetails?: ModalityTokenCount[];
-    /** List of modalities that were processed in the tool-use prompt. */
+    /** Output only. A detailed breakdown of the token count for each modality in the cached content. */
+    cacheTokensDetails?: ModalityTokenCount[];
+    /** Output only. The number of tokens in the cached content that was used for this request. */
+    cachedContentTokenCount?: number;
+    /** The total number of tokens in the prompt. This includes any text, images, or other media provided in the request. When `cached_content` is set, this also includes the number of tokens in the cached content. */
+    promptTokenCount?: number;
+    /** Output only. A detailed breakdown of the token count for each modality in the prompt. */
+    promptTokensDetails?: ModalityTokenCount[];
+    /** Output only. The number of tokens that were part of the model's generated "thoughts" output, if applicable. */
+    thoughtsTokenCount?: number;
+    /** Output only. The number of tokens in the results from tool executions, which are provided back to the model as input, if applicable. */
+    toolUsePromptTokenCount?: number;
+    /** Output only. A detailed breakdown by modality of the token counts from the results of tool executions, which are provided back to the model as input. */
     toolUsePromptTokensDetails?: ModalityTokenCount[];
-    /** Traffic type. This shows whether a request consumes Pay-As-You-Go
-     or Provisioned Throughput quota. */
+    /** The total number of tokens for the entire request. This is the sum of `prompt_token_count`, `candidates_token_count`, `tool_use_prompt_token_count`, and `thoughts_token_count`. */
+    totalTokenCount?: number;
+    /** Output only. The traffic type for this request. This field is not supported in Gemini API. */
     trafficType?: TrafficType;
+    /** Output only. Service tier of the request. This field is not supported in Vertex AI. */
+    serviceTier?: ServiceTier;
 }
+
+declare type UserInputStep$ = UserInputStep;
 
 /**
  * Input provided by the user.
  */
-declare interface UserInputStep {
-    type: 'user_input';
-    content?: Array<Content_2>;
-}
+declare type UserInputStep = {
+    content?: Array<Content_2> | undefined;
+    type: "user_input";
+};
 
 /** The type of the VAD signal. */
 export declare enum VadSignalType {
@@ -13336,18 +15532,18 @@ export declare class ValidateRewardResponse {
 
 /** Hyperparameters for Veo. This data type is not supported in Gemini API. */
 export declare interface VeoHyperParameters {
+    /** Optional. The adapter size for LoRA tuning. */
+    adapterSize?: AdapterSize;
     /** Optional. Number of complete passes the model makes over the entire training dataset during training. */
     epochCount?: string;
     /** Optional. Multiplier for adjusting the default learning rate. */
     learningRateMultiplier?: number;
+    /** The speed of the tuning job. Only supported for Veo 3.0 models. */
+    tuningSpeed?: TuningSpeed;
     /** The tuning task for Veo. */
     tuningTask?: TuningTask;
     /** Optional. The ratio of Google internal dataset to use in the training mixture, in range of `[0, 1)`. If `0.2`, it means 20% of Google internal dataset and 80% of user dataset will be used for training. If not set, the default value is 0.1. */
     veoDataMixtureRatio?: number;
-    /** Optional. The adapter size for LoRA tuning. */
-    adapterSize?: AdapterSize;
-    /** The speed of the tuning job. Only supported for Veo 3.0 models. */
-    tuningSpeed?: TuningSpeed;
 }
 
 /** Tuning Spec for Veo LoRA Model Tuning. This data type is not supported in Gemini API. */
@@ -13385,6 +15581,29 @@ export declare interface VertexAISearch {
     /** Optional. Number of search results to return per query. The default value is 10. The maximumm allowed value is 10. */
     maxResults?: number;
 }
+
+declare type VertexAISearchConfig$ = VertexAISearchConfig;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Used to specify configuration for VertexAISearch.
+ */
+declare type VertexAISearchConfig = {
+    /**
+     * Optional. Used to specify Vertex AI Search datastores.
+     */
+    datastores?: Array<string> | undefined;
+    /**
+     * Optional. Used to specify Vertex AI Search engine.
+     */
+    engine?: string | undefined;
+};
 
 /** Define data stores within engine to filter on in a search call and configurations for those data stores. For more information, see https://cloud.google.com/generative-ai-app-builder/docs/reference/rpc/google.cloud.discoveryengine.v1#datastorespec. This data type is not supported in Gemini API. */
 export declare interface VertexAISearchDataStoreSpec {
@@ -13428,6 +15647,8 @@ export declare interface VertexRagStoreRagResource {
     ragFileIds?: string[];
 }
 
+declare type Video$ = VideoDelta;
+
 /** A generated video. */
 export declare interface Video {
     /** Path to another storage. */
@@ -13453,28 +15674,58 @@ export declare enum VideoCompressionQuality {
     LOSSLESS = "LOSSLESS"
 }
 
+declare type VideoConfig$ = VideoConfig;
+
+/**
+ * Configuration options for video generation.
+ */
+declare type VideoConfig = {
+    /**
+     * Optional task mode for video generation. If not specified, the model
+     *
+     * @remarks
+     * automatically determines the appropriate mode based on the provided text
+     * prompt and input media.
+     */
+    task?: Task | undefined;
+};
+
+declare type VideoContent$ = VideoContent;
+
 /**
  * A video content block.
  */
-declare interface VideoContent {
-    type: 'video';
+declare type VideoContent = {
     /**
      * The video content.
      */
-    data?: string;
+    data?: string | undefined;
     /**
      * The mime type of the video.
      */
-    mime_type?: 'video/mp4' | 'video/mpeg' | 'video/mpg' | 'video/mov' | 'video/avi' | 'video/x-flv' | 'video/webm' | 'video/wmv' | 'video/3gpp';
-    /**
-     * The resolution of the media.
-     */
-    resolution?: 'low' | 'medium' | 'high' | 'ultra_high';
+    mime_type?: VideoContentMimeType | undefined;
+    resolution?: MediaResolution_2 | undefined;
+    type: "video";
     /**
      * The URI of the video.
      */
-    uri?: string;
-}
+    uri?: string | undefined;
+};
+
+/**
+ * The mime type of the video.
+ */
+declare type VideoContentMimeType = "video/mp4" | "video/mpeg" | "video/mpg" | "video/mov" | "video/avi" | "video/x-flv" | "video/webm" | "video/wmv" | "video/3gpp" | (string & {});
+
+declare type VideoDelta = {
+    data?: string | undefined;
+    mime_type?: VideoDeltaMimeType | undefined;
+    resolution?: MediaResolution_2 | undefined;
+    type: "video";
+    uri?: string | undefined;
+};
+
+declare type VideoDeltaMimeType = "video/mp4" | "video/mpeg" | "video/mpg" | "video/mov" | "video/avi" | "video/x-flv" | "video/webm" | "video/wmv" | "video/3gpp" | (string & {});
 
 /** A mask for video generation. */
 export declare interface VideoGenerationMask {
@@ -13563,10 +15814,74 @@ export declare enum VideoOrientation {
     PORTRAIT = "PORTRAIT"
 }
 
+declare type VideoResponseFormat$ = VideoResponseFormat_2;
+
+/** Configuration for video-specific output formatting. This data type is not supported in Gemini API. */
+export declare class VideoResponseFormat {
+    /** The aspect ratio for the video output. */
+    aspectRatio?: AspectRatio;
+    /** Optional. Delivery mode for the generated content. */
+    delivery?: Delivery;
+    /** Optional. The duration for the video output. */
+    duration?: string;
+    /** Optional. The Google Cloud Storage URI to store the video output. Required for Vertex if delivery is URI. */
+    gcsUri?: string;
+}
+
+/**
+ * Configuration for video output format.
+ */
+declare type VideoResponseFormat_2 = {
+    /**
+     * The aspect ratio for the video output.
+     */
+    aspect_ratio?: VideoResponseFormatAspectRatio | undefined;
+    /**
+     * The delivery mode for the video output.
+     */
+    delivery?: VideoResponseFormatDelivery | undefined;
+    /**
+     * The duration for the video output.
+     */
+    duration?: string | undefined;
+    /**
+     * The GCS URI to store the video output. Required for Vertex if delivery mode
+     *
+     * @remarks
+     * is URI.
+     */
+    gcs_uri?: string | undefined;
+    type: "video";
+};
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * The aspect ratio for the video output.
+ */
+declare type VideoResponseFormatAspectRatio = "16:9" | "9:16" | (string & {});
+
+/**
+ * The delivery mode for the video output.
+ */
+declare type VideoResponseFormatDelivery = "inline" | "uri" | (string & {});
+
+/**
+ * Whether to include visualizations in the response.
+ */
+declare type Visualization = "off" | "auto" | (string & {});
+
 /** Voice activity signal. */
 export declare interface VoiceActivity {
     /** The type of the voice activity signal. */
     voiceActivityType?: VoiceActivityType;
+    /** The time voice activity detected in audio time, relative to the start of the audio stream. */
+    audioOffset?: string;
 }
 
 export declare interface VoiceActivityDetectionSignal {
@@ -13600,13 +15915,48 @@ export declare interface VoiceConfig {
     prebuiltVoiceConfig?: PrebuiltVoiceConfig;
 }
 
+/** The signature of the voice consent check. */
+export declare interface VoiceConsentSignature {
+    /** The signature string.
+     */
+    signature?: string;
+}
+
+declare type Webhook$ = Webhook;
+
 /**
  * A Webhook resource.
  */
-declare interface Webhook {
+declare type Webhook = {
     /**
-     * Required. The events that the webhook is subscribed to. Available events:
+     * Output only. The timestamp when the webhook was created.
+     */
+    create_time?: string | undefined;
+    /**
+     * Output only. The ID of the webhook.
+     */
+    id?: string | undefined;
+    /**
+     * Optional. The user-provided name of the webhook.
+     */
+    name?: string | undefined;
+    /**
+     * Output only. The new signing secret for the webhook. Only populated on create.
+     */
+    new_signing_secret?: string | undefined;
+    /**
+     * Output only. The signing secrets associated with this webhook.
+     */
+    signing_secrets?: Array<SigningSecret> | undefined;
+    /**
+     * Output only. The state of the webhook.
+     */
+    state?: WebhookState | undefined;
+    /**
+     * Required. The events that the webhook is subscribed to.
      *
+     * @remarks
+     * Available events:
      * - batch.succeeded
      * - batch.expired
      * - batch.failed
@@ -13615,40 +15965,18 @@ declare interface Webhook {
      * - interaction.failed
      * - video.generated
      */
-    subscribed_events: Array<'batch.succeeded' | 'batch.expired' | 'batch.failed' | 'interaction.requires_action' | 'interaction.completed' | 'interaction.failed' | 'video.generated' | (string & {})>;
+    subscribed_events: Array<WebhookSubscribedEvent>;
+    /**
+     * Output only. The timestamp when the webhook was last updated.
+     */
+    update_time?: string | undefined;
     /**
      * Required. The URI to which webhook events will be sent.
      */
     uri: string;
-    /**
-     * Output only. The ID of the webhook.
-     */
-    id?: string;
-    /**
-     * Output only. The timestamp when the webhook was created.
-     */
-    create_time?: string;
-    /**
-     * Optional. The user-provided name of the webhook.
-     */
-    name?: string;
-    /**
-     * Output only. The new signing secret for the webhook. Only populated on create.
-     */
-    new_signing_secret?: string;
-    /**
-     * Output only. The signing secrets associated with this webhook.
-     */
-    signing_secrets?: Array<SigningSecret>;
-    /**
-     * Output only. The state of the webhook.
-     */
-    state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
-    /**
-     * Output only. The timestamp when the webhook was last updated.
-     */
-    update_time?: string;
-}
+};
+
+declare type WebhookConfig$ = WebhookConfig_2;
 
 /** Configuration for webhook notifications.
 
@@ -13665,32 +15993,57 @@ export declare interface WebhookConfig {
 }
 
 /**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
  * Message for configuring webhook events for a request.
  */
-declare interface WebhookConfig_2 {
+declare type WebhookConfig_2 = {
     /**
-     * Optional. If set, these webhook URIs will be used for webhook events instead of
-     * the registered webhooks.
+     * Optional. If set, these webhook URIs will be used for webhook events instead of the
+     *
+     * @remarks
+     * registered webhooks.
      */
-    uris?: Array<string>;
+    uris?: Array<string> | undefined;
     /**
      * Optional. The user metadata that will be returned on each event emission to the
+     *
+     * @remarks
      * webhooks.
      */
     user_metadata?: {
-        [key: string]: unknown;
-    };
-}
+        [k: string]: any;
+    } | undefined;
+};
 
-declare interface WebhookCreateParams {
+declare type WebhookCreateParams$ = CreateWebhookParams;
+
+declare type WebhookDeleteParams$ = DeleteWebhookParams;
+
+declare type WebhookDeleteResponse$ = Empty;
+
+declare type WebhookGetParams$ = GetWebhookParams;
+
+declare type WebhookInput$ = WebhookInput;
+
+/**
+ * A Webhook resource.
+ */
+declare type WebhookInput = {
     /**
-     * Path param: Which version of the API to use.
+     * Optional. The user-provided name of the webhook.
      */
-    api_version?: string;
+    name?: string | undefined;
     /**
-     * Body param: Required. The events that the webhook is subscribed to. Available
-     * events:
+     * Required. The events that the webhook is subscribed to.
      *
+     * @remarks
+     * Available events:
      * - batch.succeeded
      * - batch.expired
      * - batch.failed
@@ -13699,150 +16052,148 @@ declare interface WebhookCreateParams {
      * - interaction.failed
      * - video.generated
      */
-    subscribed_events: Array<'batch.succeeded' | 'batch.expired' | 'batch.failed' | 'interaction.requires_action' | 'interaction.completed' | 'interaction.failed' | 'video.generated' | (string & {})>;
+    subscribed_events: Array<WebhookSubscribedEvent>;
     /**
-     * Body param: Required. The URI to which webhook events will be sent.
+     * Required. The URI to which webhook events will be sent.
      */
     uri: string;
-    /**
-     * Body param: Optional. The user-provided name of the webhook.
-     */
-    name?: string;
-}
+};
 
-declare interface WebhookDeleteParams {
-    /**
-     * Which version of the API to use.
-     */
+declare type WebhookListParams$ = ListWebhooksParams;
+
+declare type WebhookListParams = {
     api_version?: string;
-}
-
-/**
- * A generic empty message that you can re-use to avoid defining duplicated empty
- * messages in your APIs. A typical example is to use it as the request or the
- * response type of an API method. For instance:
- *
- *     service Foo {
- *       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- *     }
- */
-declare interface WebhookDeleteResponse {
-}
-
-declare interface WebhookGetParams {
-    /**
-     * Which version of the API to use.
-     */
-    api_version?: string;
-}
-
-declare interface WebhookListParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Query param: Optional. The maximum number of webhooks to return. The service may
-     * return fewer than this value. If unspecified, at most 50 webhooks will be
-     * returned. The maximum value is 1000.
-     */
     page_size?: number;
-    /**
-     * Query param: Optional. A page token, received from a previous `ListWebhooks`
-     * call. Provide this to retrieve the subsequent page.
-     */
     page_token?: string;
-}
+};
+
+declare type WebhookListResponse$ = WebhookListResponse;
 
 /**
  * Response message for WebhookService.ListWebhooks.
  */
-declare interface WebhookListResponse {
+declare type WebhookListResponse = {
     /**
-     * A token, which can be sent as `page_token` to retrieve the next page. If this
-     * field is omitted, there are no subsequent pages.
+     * A token, which can be sent as `page_token` to retrieve the next page.
+     *
+     * @remarks
+     * If this field is omitted, there are no subsequent pages.
      */
-    next_page_token?: string;
+    next_page_token?: string | undefined;
     /**
      * The webhooks.
      */
-    webhooks?: Array<Webhook>;
-}
+    webhooks?: Array<Webhook> | undefined;
+};
 
-declare interface WebhookPingParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
+declare type WebhookPingParams$ = PingWebhookRequest;
+
+declare type WebhookPingParams = {
     api_version?: string;
+    body?: webhooks.PingWebhookRequest;
+};
+
+declare type WebhookPingResponse$ = WebhookPingResponse;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Response message for WebhookService.PingWebhook.
+ */
+declare type WebhookPingResponse = {};
+
+declare type WebhookRotateSigningSecretParams$ = RotateSigningSecretRequest;
+
+declare type WebhookRotateSigningSecretParams = webhooks.RotateSigningSecretRequest & {
+    api_version?: string;
+};
+
+declare type WebhookRotateSigningSecretResponse$ = WebhookRotateSigningSecretResponse;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Response message for WebhookService.RotateSigningSecret.
+ */
+declare type WebhookRotateSigningSecretResponse = {
     /**
-     * Body param: Request message for WebhookService.PingWebhook.
+     * Output only. The newly generated signing secret.
      */
-    body?: WebhookPingParams.Body;
+    secret?: string | undefined;
+};
+
+export declare namespace Webhooks {
+    export type PingWebhookRequest = PingWebhookRequest$;
+    export type RotateSigningSecretRequest = RotateSigningSecretRequest$;
+    export type SigningSecret = SigningSecret$;
+    export type Webhook = Webhook$;
+    export type WebhookCreateParams = WebhookCreateParams$;
+    export type WebhookDeleteParams = WebhookDeleteParams$;
+    export type WebhookDeleteResponse = WebhookDeleteResponse$;
+    export type WebhookGetParams = WebhookGetParams$;
+    export type WebhookInput = WebhookInput$;
+    export type WebhookListParams = WebhookListParams$;
+    export type WebhookListResponse = WebhookListResponse$;
+    export type WebhookPingParams = WebhookPingParams$;
+    export type WebhookPingResponse = WebhookPingResponse$;
+    export type WebhookRotateSigningSecretParams = WebhookRotateSigningSecretParams$;
+    export type WebhookRotateSigningSecretResponse = WebhookRotateSigningSecretResponse$;
+    export type WebhookUpdate = WebhookUpdate$;
+    export type WebhookUpdateParams = WebhookUpdateParams$;
 }
 
-declare namespace WebhookPingParams {
-    /**
-     * Request message for WebhookService.PingWebhook.
-     */
-    interface Body {
+declare namespace webhooks {
+    export {
+        PingWebhookRequest,
+        RevocationBehavior,
+        RotateSigningSecretRequest,
+        SigningSecret,
+        WebhookListResponse,
+        WebhookPingResponse,
+        WebhookRotateSigningSecretResponse,
+        WebhookUpdateState,
+        WebhookUpdateSubscribedEvent,
+        WebhookUpdate,
+        WebhookState,
+        WebhookSubscribedEvent,
+        Webhook,
+        WebhookInput
     }
 }
 
 /**
- * Response message for WebhookService.PingWebhook.
+ * Output only. The state of the webhook.
  */
-declare interface WebhookPingResponse {
-}
+declare type WebhookState = "enabled" | "disabled" | "disabled_due_to_failed_deliveries" | (string & {});
 
-declare interface WebhookRotateSigningSecretParams {
-    /**
-     * Path param: Which version of the API to use.
-     */
-    api_version?: string;
-    /**
-     * Body param: Optional. The revocation behavior for previous signing secrets.
-     */
-    revocation_behavior?: 'revoke_previous_secrets_after_h24' | 'revoke_previous_secrets_immediately';
-}
+declare type WebhookSubscribedEvent = "batch.succeeded" | "batch.expired" | "batch.failed" | "interaction.requires_action" | "interaction.completed" | "interaction.failed" | "video.generated" | (string & {});
 
-/**
- * Response message for WebhookService.RotateSigningSecret.
- */
-declare interface WebhookRotateSigningSecretResponse {
-    /**
-     * Output only. The newly generated signing secret.
-     */
-    secret?: string;
-}
+declare type WebhookUpdate$ = WebhookUpdate;
 
-export declare class Webhooks extends BaseWebhooks {
-}
-
-export declare namespace Webhooks {
-    export { type SigningSecret as SigningSecret, type Webhook as Webhook, type WebhookListResponse as WebhookListResponse, type WebhookDeleteResponse as WebhookDeleteResponse, type WebhookPingResponse as WebhookPingResponse, type WebhookRotateSigningSecretResponse as WebhookRotateSigningSecretResponse, type WebhookCreateParams as WebhookCreateParams, type WebhookUpdateParams as WebhookUpdateParams, type WebhookListParams as WebhookListParams, type WebhookDeleteParams as WebhookDeleteParams, type WebhookGetParams as WebhookGetParams, type WebhookPingParams as WebhookPingParams, type WebhookRotateSigningSecretParams as WebhookRotateSigningSecretParams, };
-}
-
-declare interface WebhookUpdateParams {
+declare type WebhookUpdate = {
     /**
-     * Path param: Which version of the API to use.
+     * Optional. The user-provided name of the webhook.
      */
-    api_version?: string;
+    name?: string | undefined;
     /**
-     * Query param: Optional. The list of fields to update.
+     * Optional. The state of the webhook.
      */
-    update_mask?: string;
+    state?: WebhookUpdateState | undefined;
     /**
-     * Body param: Optional. The user-provided name of the webhook.
-     */
-    name?: string;
-    /**
-     * Body param: Optional. The state of the webhook.
-     */
-    state?: 'enabled' | 'disabled' | 'disabled_due_to_failed_deliveries';
-    /**
-     * Body param: Optional. The events that the webhook is subscribed to. Available
-     * events:
+     * Optional. The events that the webhook is subscribed to.
      *
+     * @remarks
+     * Available events:
      * - batch.succeeded
      * - batch.expired
      * - batch.failed
@@ -13851,12 +16202,33 @@ declare interface WebhookUpdateParams {
      * - interaction.failed
      * - video.generated
      */
-    subscribed_events?: Array<'batch.succeeded' | 'batch.expired' | 'batch.failed' | 'interaction.requires_action' | 'interaction.completed' | 'interaction.failed' | 'video.generated' | (string & {})>;
+    subscribed_events?: Array<WebhookUpdateSubscribedEvent> | undefined;
     /**
-     * Body param: Optional. The URI to which webhook events will be sent.
+     * Optional. The URI to which webhook events will be sent.
      */
-    uri?: string;
-}
+    uri?: string | undefined;
+};
+
+declare type WebhookUpdateParams$ = WebhookUpdate;
+
+declare type WebhookUpdateParams = {
+    api_version?: string;
+    update_mask?: string;
+} & webhooks.WebhookUpdate;
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Optional. The state of the webhook.
+ */
+declare type WebhookUpdateState = "enabled" | "disabled" | "disabled_due_to_failed_deliveries";
+
+declare type WebhookUpdateSubscribedEvent = "batch.succeeded" | "batch.expired" | "batch.failed" | "interaction.requires_action" | "interaction.completed" | "interaction.failed" | "video.generated" | (string & {});
 
 /** Standard web search for grounding and related configurations. Only text results are returned. */
 export declare interface WebSearch {
@@ -13916,5 +16288,74 @@ export declare interface WhiteSpaceConfig {
     /** Maximum number of overlapping tokens between two adjacent chunks. */
     maxOverlapTokens?: number;
 }
+
+declare type WordInfo$ = WordInfo_2;
+
+/** Information about a single recognized word. */
+export declare interface WordInfo {
+    /** Transcript of the word.
+     */
+    word?: string;
+    /** Start offset in time of the word relative to the start of the audio.
+     */
+    startOffset?: string;
+    /** End offset in time of the word relative to the start of the audio.
+     */
+    endOffset?: string;
+}
+
+/**
+ * @license
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * g3-prettier-ignore-file
+ */
+/**
+ * Word-level ASR annotation for transcription output.
+ *
+ * @remarks
+ * Carries the word text, optional timing, and optional speaker attribution.
+ */
+declare type WordInfo_2 = {
+    /**
+     * End of the attributed segment, exclusive.
+     */
+    end_index?: number | undefined;
+    /**
+     * End offset in time of the word relative to the start of the audio.
+     *
+     * @remarks
+     * Present when timestamp_granularities contains "word".
+     */
+    end_offset?: string | undefined;
+    /**
+     * Optional. Speaker label for this word (e.g. "spk_1", "spk_2").
+     *
+     * @remarks
+     * Present when diarization_mode is set in TranscriptionConfig.
+     */
+    speaker?: string | undefined;
+    /**
+     * Start of segment of the response that is attributed to this source.
+     *
+     * @remarks
+     *
+     * Index indicates the start of the segment, measured in bytes.
+     */
+    start_index?: number | undefined;
+    /**
+     * Start offset in time of the word relative to the start of the audio.
+     *
+     * @remarks
+     * Present when timestamp_granularities contains "word".
+     */
+    start_offset?: string | undefined;
+    /**
+     * The transcribed word.
+     */
+    text?: string | undefined;
+    type: "word_info";
+};
 
 export { }

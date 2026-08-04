@@ -1,18 +1,21 @@
 //#region semantic-embedder-api-polyfill.js
-var e = "onnx-community/embeddinggemma-300m-ONNX", t = "q8", n = 2048, r = {
-	query: "task: search result | query: ",
-	document: "title: none | text: ",
-	classification: "task: classification | text: "
-}, i = /* @__PURE__ */ new Set(), a = null;
-async function o() {
-	return a || (a = await import("@huggingface/transformers"), a.env.experimental_useCrossOriginStorage = !0), a;
+var e = "onnx-community/embeddinggemma-300m-ONNX", t = {
+	"semantic-similarity": "task: sentence similarity | query: ",
+	"retrieval-query": "task: search result | query: ",
+	"retrieval-document": "title: none | text: ",
+	classification: "task: classification | query: ",
+	clustering: "task: clustering | query: "
+}, n = new Set(Object.keys(t)), r = /* @__PURE__ */ new Set(), i = null;
+async function a() {
+	return i || (i = await import("@huggingface/transformers"), i.env.experimental_useCrossOriginStorage = !0), i;
 }
-function s(e, t) {
-	return `${r[t] ?? r.document}${e}`;
+function o(e, n) {
+	let r = n ? t[n] : void 0;
+	return r ? `${r}${e}` : e;
 }
-async function c(e, t) {
+async function s(e, t) {
 	try {
-		let { ModelRegistry: n } = await o(), r = (await n.is_cached_files(e, {
+		let { ModelRegistry: n } = await a(), r = (await n.is_cached_files(e, {
 			dtype: t,
 			include_processor: !1
 		})).files.filter((e) => e.file !== "generation_config.json");
@@ -21,8 +24,8 @@ async function c(e, t) {
 		return !1;
 	}
 }
-var l = typeof WorkerGlobalScope < "u" && self instanceof WorkerGlobalScope;
-function u() {
+var c = typeof WorkerGlobalScope < "u" && self instanceof WorkerGlobalScope;
+function l() {
 	let e = import.meta.url;
 	try {
 		if (typeof globalThis < "u" && globalThis.location && new URL(e).origin !== globalThis.location.origin) {
@@ -32,8 +35,8 @@ function u() {
 	} catch {}
 	return e;
 }
-function d(e, t = {}) {
-	let n = u(), r = new Worker(n, { type: "module" });
+function u(e, t = {}) {
+	let n = l(), r = new Worker(n, { type: "module" });
 	return new Promise((i, a) => {
 		r.onmessage = (e) => {
 			let { type: t, result: o, error: s } = e.data;
@@ -46,24 +49,24 @@ function d(e, t = {}) {
 		});
 	});
 }
-if (l) {
-	let e = /* @__PURE__ */ new Set(), t = null, r = null, i = null, a = async (e, n, a) => {
-		let { AutoModel: s, AutoTokenizer: c } = await o(), l = null;
-		a && (l = (e) => {
+if (c) {
+	let e = /* @__PURE__ */ new Set(), t = null, n = null, r = async (e, r, i) => {
+		let { AutoModel: o, AutoTokenizer: s } = await a(), c = null;
+		i && (c = (e) => {
 			e.status === "progress_total" && self.postMessage({
 				type: "progress",
 				loaded: e.total > 0 ? e.loaded / e.total : 0
 			});
-		}), [t, r] = await Promise.all([c.from_pretrained(e, { progress_callback: l }), s.from_pretrained(e, {
-			dtype: n,
-			progress_callback: l
-		})]), i = e;
-	}, l = async (e, t) => typeof WebAssembly > "u" ? "unavailable" : await c(e, t) ? "available" : "downloadable";
-	self.onmessage = async (o) => {
-		let c = o.data;
-		if (c.action === "availability") {
+		}), [t, n] = await Promise.all([s.from_pretrained(e, { progress_callback: c }), o.from_pretrained(e, {
+			dtype: r,
+			progress_callback: c
+		})]);
+	}, i = async (e, t) => typeof WebAssembly > "u" ? "unavailable" : await s(e, t) ? "available" : "downloadable";
+	self.onmessage = async (a) => {
+		let s = a.data;
+		if (s.action === "availability") {
 			try {
-				let { modelId: e, dtype: t } = c.payload, n = await l(e, t);
+				let { modelId: e, dtype: t } = s.payload, n = await i(e, t);
 				self.postMessage({
 					type: "response",
 					result: n
@@ -76,8 +79,8 @@ if (l) {
 			}
 			return;
 		}
-		if (c.type === "init") try {
-			await a(c.modelId, c.dtype, c.hasMonitor), self.postMessage({ type: "ready" });
+		if (s.type === "init") try {
+			await r(s.modelId, s.dtype, s.hasMonitor), self.postMessage({ type: "ready" });
 		} catch (e) {
 			self.postMessage({
 				type: "init-error",
@@ -85,83 +88,61 @@ if (l) {
 				name: e.name || "Error"
 			});
 		}
-		else if (c.type === "embed") {
-			let { requestId: a, inputs: o, options: l } = c;
+		else if (s.type === "embed") {
+			let { requestId: r, inputs: i, options: a } = s;
 			try {
-				if (!r || !t) throw Error("Model is not initialized in the worker.");
-				let c = l.taskType ?? "document", u = o.map((e) => s(e, c)), d = await t(u, {
+				if (!n || !t) throw Error("Model is not initialized in the worker.");
+				let s = i.map((e) => o(e, a.taskType)), c = await t(s, {
 					padding: !0,
 					truncation: !0,
-					max_length: n
+					max_length: 2048
 				});
-				if (e.has(a)) throw e.delete(a), new DOMException("Aborted", "AbortError");
-				let { sentence_embedding: f } = await r(d);
-				if (e.has(a)) throw e.delete(a), new DOMException("Aborted", "AbortError");
-				let p = f.dims[1], m = f.data, h = [];
-				if (d.attention_mask) {
-					let e = d.attention_mask.data, t = d.attention_mask.dims[1];
-					for (let n = 0; n < o.length; n++) {
-						let r = 0, i = n * t, a = i + t;
-						for (let t = i; t < a; t++) Number(e[t]) === 1 && r++;
-						h.push(r);
-					}
-				} else {
-					let e = d.input_ids.dims[1];
-					for (let t = 0; t < o.length; t++) h.push(e);
-				}
-				let g = {
-					embeddings: o.map((e, t) => ({
-						values: m.slice(t * p, (t + 1) * p),
-						statistics: { tokenCount: h[t] }
-					})),
-					metadata: {
-						embeddingSpace: i,
-						maxInputTokens: n
-					}
-				};
+				if (e.has(r)) throw e.delete(r), new DOMException("Aborted", "AbortError");
+				let { sentence_embedding: l } = await n(c);
+				if (e.has(r)) throw e.delete(r), new DOMException("Aborted", "AbortError");
+				let u = l.dims[1], d = l.data, f = { embeddings: i.map((e, t) => ({ values: d.slice(t * u, (t + 1) * u) })) };
 				self.postMessage({
 					type: "embed-response",
-					requestId: a,
-					result: g
+					requestId: r,
+					result: f
 				});
 			} catch (t) {
-				e.delete(a), self.postMessage({
+				e.delete(r), self.postMessage({
 					type: "embed-error",
-					requestId: a,
+					requestId: r,
 					error: t.message,
 					name: t.name || "Error"
 				});
 			}
-		} else c.type === "abort-embed" && e.add(c.requestId);
+		} else s.type === "abort-embed" && e.add(s.requestId);
 	};
 }
-var f = class {
+var d = class {
 	#e = null;
-	#t = e;
-	#n = !1;
-	#r = null;
-	#i = /* @__PURE__ */ new Map();
-	#a = 0;
-	constructor(e, t) {
-		this.#e = e, this.#t = t, this.#e.onmessage = (e) => {
-			if (this.#n) return;
+	#t = !1;
+	#n = null;
+	#r = /* @__PURE__ */ new Map();
+	#i = 0;
+	constructor(e) {
+		this.#e = e, this.#e.onmessage = (e) => {
+			if (this.#t) return;
 			let t = e.data;
 			if (t.type === "embed-response") {
-				let e = this.#i.get(t.requestId);
-				e && (this.#i.delete(t.requestId), e.resolve(t.result));
+				let e = this.#r.get(t.requestId);
+				e && (this.#r.delete(t.requestId), e.resolve(t.result));
 			} else if (t.type === "embed-error") {
-				let e = this.#i.get(t.requestId);
+				let e = this.#r.get(t.requestId);
 				if (e) {
-					this.#i.delete(t.requestId);
+					this.#r.delete(t.requestId);
 					let n = globalThis[t.name] || DOMException || Error;
 					e.reject(new n(t.error, t.name));
 				}
 			}
 		}, this.#e.onerror = (e) => {
-			if (this.#n) return;
+			if (this.#t) return;
 			let t = /* @__PURE__ */ Error("Web Worker error: " + e.message);
-			for (let e of this.#i.values()) e.reject(t);
-			this.#i.clear(), this.destroy(t);
+			for (let e of this.#r.values()) e.reject(t);
+			this.#r.clear(), this.destroy(t);
 		};
 	}
 	static _checkContext() {
@@ -185,26 +166,26 @@ var f = class {
 		this.constructor._checkContext();
 	}
 	static availability() {
-		let n = (async () => {
+		let t = (async () => {
 			if (this._checkContext(), typeof WebAssembly > "u") return "unavailable";
-			let n = e;
-			return i.has(n) ? "downloading" : await d("availability", {
-				modelId: n,
-				dtype: t
+			let t = e;
+			return r.has(t) ? "downloading" : await u("availability", {
+				modelId: t,
+				dtype: "q8"
 			});
 		})();
-		return n.catch(() => {}), n;
+		return t.catch(() => {}), t;
 	}
 	static create(e = {}) {
 		let t = this._createInternal(e);
 		return t.catch(() => {}), t;
 	}
-	static async _createInternal(n = {}) {
-		if (this._checkContext(), n.signal?.aborted) throw n.signal.reason || new DOMException("Aborted", "AbortError");
-		let r = n.model || e, a = n.dtype || t, o = null;
-		if (n.monitor) {
+	static async _createInternal(t = {}) {
+		if (this._checkContext(), t.signal?.aborted) throw t.signal.reason || new DOMException("Aborted", "AbortError");
+		let n = t.model || e, i = t.dtype || "q8", a = null;
+		if (t.monitor) {
 			let e = new EventTarget();
-			n.monitor(e), o = (t) => {
+			t.monitor(e), a = (t) => {
 				e.dispatchEvent(new ProgressEvent("downloadprogress", {
 					loaded: t,
 					total: 1,
@@ -212,68 +193,63 @@ var f = class {
 				}));
 			};
 		}
-		o?.(0), i.add(r);
-		let s = u(), c = new Worker(s, { type: "module" }), l = null, d = new Promise((e, t) => {
+		a?.(0), r.add(n);
+		let o = l(), s = new Worker(o, { type: "module" }), c = null, u = new Promise((e, t) => {
 			let n = (n) => {
 				let r = n.data;
-				r.type === "progress" ? o?.(r.loaded) : r.type === "ready" ? (s.startsWith("blob:") && URL.revokeObjectURL(s), e()) : r.type === "init-error" && (s.startsWith("blob:") && URL.revokeObjectURL(s), t(new (globalThis[r.name] || DOMException || Error)(r.error, r.name)));
+				r.type === "progress" ? a?.(r.loaded) : r.type === "ready" ? (o.startsWith("blob:") && URL.revokeObjectURL(o), e()) : r.type === "init-error" && (o.startsWith("blob:") && URL.revokeObjectURL(o), t(new (globalThis[r.name] || DOMException || Error)(r.error, r.name)));
 			}, r = (e) => {
-				s.startsWith("blob:") && URL.revokeObjectURL(s), t(e);
+				o.startsWith("blob:") && URL.revokeObjectURL(o), t(e);
 			};
-			c.addEventListener("message", n), c.addEventListener("error", r), l = () => {
-				c.removeEventListener("message", n), c.removeEventListener("error", r);
+			s.addEventListener("message", n), s.addEventListener("error", r), c = () => {
+				s.removeEventListener("message", n), s.removeEventListener("error", r);
 			};
-		}), f = null;
-		n.signal && (f = () => {
-			l?.(), c.terminate(), s.startsWith("blob:") && URL.revokeObjectURL(s), i.delete(r);
-		}, n.signal.addEventListener("abort", f, { once: !0 }));
+		}), d = null;
+		t.signal && (d = () => {
+			c?.(), s.terminate(), o.startsWith("blob:") && URL.revokeObjectURL(o), r.delete(n);
+		}, t.signal.addEventListener("abort", d, { once: !0 }));
 		try {
-			c.postMessage({
+			s.postMessage({
 				type: "init",
-				modelId: r,
-				dtype: a,
-				hasMonitor: !!n.monitor
-			}), await d;
+				modelId: n,
+				dtype: i,
+				hasMonitor: !!t.monitor
+			}), await u;
 		} catch (e) {
-			throw c.terminate(), e;
+			throw s.terminate(), e;
 		} finally {
-			l?.(), n.signal && f && n.signal.removeEventListener("abort", f), i.delete(r);
+			c?.(), t.signal && d && t.signal.removeEventListener("abort", d), r.delete(n);
 		}
-		o?.(1);
-		let p = new this(c, r);
-		return n.signal && n.signal.addEventListener("abort", () => {
-			p.destroy(n.signal.reason);
-		}, { once: !0 }), p;
+		a?.(1);
+		let f = new this(s);
+		return t.signal && t.signal.addEventListener("abort", () => {
+			f.destroy(t.signal.reason);
+		}, { once: !0 }), f;
 	}
 	embed(e, t = {}) {
-		if (this.#n) {
-			let e = Promise.reject(this.#r || new DOMException("The embedder has been destroyed.", "AbortError"));
+		if (this.#t) {
+			let e = Promise.reject(this.#n || new DOMException("The embedder has been destroyed.", "AbortError"));
 			return e.catch(() => {}), e;
 		}
-		let n = this.#o(e, t);
+		let n = this.#a(e, t);
 		return n.catch(() => {}), n;
 	}
-	async #o(e, t = {}) {
+	async #a(e, t = {}) {
 		this._checkContext();
 		let r = t.signal;
 		if (r?.aborted) throw r.reason || new DOMException("Aborted", "AbortError");
+		if (t.taskType !== void 0 && !n.has(t.taskType)) throw TypeError(`Failed to execute 'embed': The provided value '${t.taskType}' is not a valid enum value of type EmbedderTaskType.`);
 		let i = Array.isArray(e) ? e : [e];
-		if (i.length === 0) return {
-			embeddings: [],
-			metadata: {
-				embeddingSpace: this.#t,
-				maxInputTokens: n
-			}
-		};
-		let a = ++this.#a;
+		if (i.length === 0) return { embeddings: [] };
+		let a = ++this.#i;
 		return new Promise((e, n) => {
 			let o = null;
 			r && (o = () => {
-				this.#i.delete(a), this.#e?.postMessage({
+				this.#r.delete(a), this.#e?.postMessage({
 					type: "abort-embed",
 					requestId: a
 				}), n(r.reason || new DOMException("Aborted", "AbortError"));
-			}, r.addEventListener("abort", o, { once: !0 })), this.#i.set(a, {
+			}, r.addEventListener("abort", o, { once: !0 })), this.#r.set(a, {
 				resolve: (t) => {
 					o && r.removeEventListener("abort", o), e(t);
 				},
@@ -284,34 +260,30 @@ var f = class {
 				type: "embed",
 				requestId: a,
 				inputs: i,
-				options: { taskType: t.taskType ?? "document" }
+				options: { taskType: t.taskType }
 			});
 		});
 	}
-	static cosineSimilarity(e, t) {
-		if (e.length !== t.length) throw RangeError("Embedding vectors must have the same dimension.");
-		let n = 0, r = 0, i = 0;
-		for (let a = 0; a < e.length; a++) n += e[a] * t[a], r += e[a] * e[a], i += t[a] * t[a];
-		return r === 0 || i === 0 ? 0 : n / (Math.sqrt(r) * Math.sqrt(i));
-	}
-	get inputQuota() {
-		return n;
-	}
 	destroy(e) {
-		if (this.#n) return;
-		this.#n = !0, this.#r = e || new DOMException("The embedder has been destroyed.", "AbortError");
-		let t = this.#r;
-		for (let e of this.#i.values()) e.reject(t);
-		this.#i.clear(), this.#e?.terminate(), this.#e = null;
+		if (this.#t) return;
+		this.#t = !0, this.#n = e || new DOMException("The embedder has been destroyed.", "AbortError");
+		let t = this.#n;
+		for (let e of this.#r.values()) e.reject(t);
+		this.#r.clear(), this.#e?.terminate(), this.#e = null;
 	}
 };
 if (typeof globalThis < "u" && globalThis.document) {
 	let e = "SemanticEmbedder", t = !!globalThis.__FORCE_SEMANTIC_EMBEDDER_POLYFILL__, n = (n) => {
 		try {
-			if (!n || n[e] && !n[e].__isPolyfill) return;
+			if (!n || n[e] && n[e].__isPolyfill) return;
 			if (!(e in n) || t) {
-				let t = { [e]: class extends f {} }[e];
-				t.prototype[Symbol.toStringTag] = e, t.__window = n, t.__isPolyfill = !0, t.create = t.create.bind(t), t.availability = t.availability.bind(t), n[e] = t;
+				let t = { [e]: class extends d {} }[e];
+				t.prototype[Symbol.toStringTag] = e, t.__window = n, t.__isPolyfill = !0, t.create = t.create.bind(t), t.availability = t.availability.bind(t), Object.defineProperty(n, e, {
+					value: t,
+					writable: !0,
+					configurable: !0,
+					enumerable: !1
+				});
 			}
 		} catch {}
 	};
@@ -336,4 +308,4 @@ if (typeof globalThis < "u" && globalThis.document) {
 	})), globalThis[e]?.__isPolyfill && console.log(`Polyfill: window.${e} is now backed by the ${e} API polyfill.`);
 }
 //#endregion
-export { f as SemanticEmbedder };
+export { d as SemanticEmbedder };

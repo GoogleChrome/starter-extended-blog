@@ -72,11 +72,6 @@ const EXCHANGE_RECAPTCHA_ENTERPRISE_TOKEN_METHOD = 'exchangeRecaptchaEnterpriseT
 const EXCHANGE_DEBUG_TOKEN_METHOD = 'exchangeDebugToken';
 const TOKEN_REFRESH_TIME = {
     /**
-     * The offset time before token natural expiration to run the refresh.
-     * This is currently 5 minutes.
-     */
-    OFFSET_DURATION: 5 * 60 * 1000,
-    /**
      * This is the first retrial wait after an error. This is currently
      * 30 seconds.
      */
@@ -1057,7 +1052,7 @@ function internalFactory(appCheck) {
 }
 
 const name = "@firebase/app-check";
-const version = "0.11.4";
+const version = "0.13.0";
 
 /**
  * @license
@@ -1191,7 +1186,8 @@ function loadReCAPTCHAV3Script(onload) {
 }
 function loadReCAPTCHAEnterpriseScript(onload) {
     const script = document.createElement('script');
-    script.src = RECAPTCHA_ENTERPRISE_URL;
+    // This param is required when we plan to render a widget explicitly.
+    script.src = RECAPTCHA_ENTERPRISE_URL + '?render=explicit';
     script.onload = onload;
     document.head.appendChild(script);
 }
@@ -1511,9 +1507,10 @@ function initializeAppCheck(app$1 = app.getApp(), options) {
     if (provider.isInitialized()) {
         const existingInstance = provider.getImmediate();
         const initialOptions = provider.getOptions();
-        if (initialOptions.isTokenAutoRefreshEnabled ===
-            options.isTokenAutoRefreshEnabled &&
-            initialOptions.provider.isEqual(options.provider)) {
+        if (initialOptions &&
+            !!initialOptions.isTokenAutoRefreshEnabled ===
+                !!options.isTokenAutoRefreshEnabled &&
+            initialOptions.provider?.isEqual(options.provider)) {
             return existingInstance;
         }
         else {
@@ -1676,6 +1673,22 @@ onCompletion) {
  * `CustomProvider` and write your own attestation method.
  *
  * @packageDocumentation
+ */
+/**
+ * @license
+ * Copyright 2021 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 const APP_CHECK_NAME = 'app-check';
 const APP_CHECK_NAME_INTERNAL = 'app-check-internal';

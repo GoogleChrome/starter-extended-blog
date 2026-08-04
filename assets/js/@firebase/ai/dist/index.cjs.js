@@ -8,7 +8,7 @@ var util = require('@firebase/util');
 var logger$1 = require('@firebase/logger');
 
 var name = "@firebase/ai";
-var version = "2.13.0";
+var version = "2.14.0";
 
 /**
  * @license
@@ -27,7 +27,8 @@ var version = "2.13.0";
  * limitations under the License.
  */
 const AI_TYPE = 'AI';
-const DEFAULT_LOCATION = 'us-central1';
+const LEGACY_DEFAULT_LOCATION = 'us-central1';
+const DEFAULT_LOCATION = 'global';
 const DEFAULT_DOMAIN = 'firebasevertexai.googleapis.com';
 const DEFAULT_API_VERSION = 'v1beta';
 const PACKAGE_VERSION = version;
@@ -677,7 +678,7 @@ const SchemaType = {
  * Text prompts provided as inputs and images (generated or uploaded) through Imagen on Vertex AI
  * are assessed against a list of safety filters, which include 'harmful categories' (for example,
  * `violence`, `sexual`, `derogatory`, and `toxic`). This filter level controls how aggressively to
- * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * and the {@link https://cloud.google.com/vertex-ai/generative-ai/docs/image/responsible-ai-imagen#safety-filters | Responsible AI and usage guidelines}
  * for more details.
  *
@@ -712,7 +713,7 @@ const ImagenSafetyFilterLevel = {
 /**
  * A filter level controlling whether generation of images containing people or faces is allowed.
  *
- * See the <a href="http://firebase.google.com/docs/vertex-ai/generate-images">personGeneration</a>
+ * See the <a href="http://firebase.google.com/docs/ai-logic/generate-images">personGeneration</a>
  * documentation for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -750,7 +751,7 @@ const ImagenPersonFilterLevel = {
  * To specify an aspect ratio for generated images, set the `aspectRatio` property in your
  * {@link ImagenGenerationConfig}.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details and examples of the supported aspect ratios.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -802,19 +803,26 @@ const ImagenAspectRatio = {
 /**
  * An enum-like object containing constants that represent the supported backends
  * for the Firebase AI SDK.
- * This determines which backend service (Vertex AI Gemini API or Gemini Developer API)
+ * This determines which backend service (Gemini Developer API or Agent Platform Gemini API)
  * the SDK will communicate with.
  *
  * These values are assigned to the `backendType` property within the specific backend
- * configuration objects ({@link GoogleAIBackend} or {@link VertexAIBackend}) to identify
+ * configuration objects ({@link GoogleAIBackend} or {@link AgentPlatformBackend}) to identify
  * which service to target.
  *
  * @public
  */
 const BackendType = {
     /**
-     * Identifies the backend service for the Vertex AI Gemini API provided through Google Cloud.
+     * Identifies the backend service for the Agent Platform Gemini API provided through Google Cloud.
+     * Use this constant when creating a {@link AgentPlatformBackend} configuration.
+     */
+    AGENT_PLATFORM: 'AGENT_PLATFORM',
+    /**
+     * Identifies the backend service for the Agent Platform Gemini API
+     * (formerly known as Vertex AI Gemini API) provided through Google Cloud.
      * Use this constant when creating a {@link VertexAIBackend} configuration.
+     * @deprecated - Use {@link AgentPlatformBackend} instead.
      */
     VERTEX_AI: 'VERTEX_AI',
     /**
@@ -843,8 +851,8 @@ const BackendType = {
 /**
  * Abstract base class representing the configuration for an AI service backend.
  * This class should not be instantiated directly. Use its subclasses; {@link GoogleAIBackend} for
- * the Gemini Developer API (via {@link https://ai.google/ | Google AI}), and
- * {@link VertexAIBackend} for the Vertex AI Gemini API.
+ * the Gemini Developer API (via {@link https://ai.google/ | Google AI}) and {@link AgentPlatformBackend}
+ * for the Agent Platform Gemini API.
  *
  * @public
  */
@@ -886,27 +894,75 @@ class GoogleAIBackend extends Backend {
     }
 }
 /**
- * Configuration class for the Vertex AI Gemini API.
+ * Configuration class for the Agent Platform Gemini API (formerly known as the
+ * Vertex AI Gemini API).
  *
  * Use this with {@link AIOptions} when initializing the AI service via
- * {@link getAI | getAI()} to specify the Vertex AI Gemini API as the backend.
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @deprecated - Use {@link AgentPlatformBackend} instead.
  *
  * @public
  */
 class VertexAIBackend extends Backend {
     /**
-     * Creates a configuration object for the Vertex AI backend.
+     * Creates a configuration object for the Agent Platform Gemini API (formerly
+     * known as the Vertex AI Gemini API) backend.
      *
      * @param location - The region identifier, defaulting to `us-central1`;
-     * see {@link https://firebase.google.com/docs/vertex-ai/locations#available-locations | Vertex AI locations}
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
      * for a list of supported locations.
      */
-    constructor(location = DEFAULT_LOCATION) {
+    constructor(location) {
         super(BackendType.VERTEX_AI);
-        if (!location) {
-            this.location = DEFAULT_LOCATION;
+        /**
+         * The region identifier.
+         * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
+         * for a list of supported locations.
+         */
+        this.location = LEGACY_DEFAULT_LOCATION;
+        if (location) {
+            this.location = location;
         }
-        else {
+    }
+    /**
+     * @internal
+     */
+    _getModelPath(project, model) {
+        return `/${DEFAULT_API_VERSION}/projects/${project}/locations/${this.location}/${model}`;
+    }
+    /**
+     * @internal
+     */
+    _getTemplatePath(project, templateId) {
+        return `/${DEFAULT_API_VERSION}/projects/${project}/locations/${this.location}/templates/${templateId}`;
+    }
+}
+/**
+ * Configuration class for the Agent Platform Gemini API.
+ *
+ * Use this with {@link AIOptions} when initializing the AI service via
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @public
+ */
+class AgentPlatformBackend extends Backend {
+    /**
+     * Creates a configuration object for the Agent Platform backend.
+     *
+     * @param location - The region identifier, defaulting to `global`;
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
+     * for a list of supported locations.
+     */
+    constructor(location) {
+        super(BackendType.AGENT_PLATFORM);
+        /**
+         * The region identifier.
+         * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
+         * for a list of supported locations.
+         */
+        this.location = DEFAULT_LOCATION;
+        if (location) {
             this.location = location;
         }
     }
@@ -953,6 +1009,9 @@ function encodeInstanceIdentifier(backend) {
     else if (backend instanceof VertexAIBackend) {
         return `${AI_TYPE}/vertexai/${backend.location}`;
     }
+    else if (backend instanceof AgentPlatformBackend) {
+        return `${AI_TYPE}/agentplatform/${backend.location}`;
+    }
     else {
         throw new AIError(AIErrorCode.ERROR, `Invalid backend: ${JSON.stringify(backend.backendType)}`);
     }
@@ -970,11 +1029,17 @@ function decodeInstanceIdentifier(instanceIdentifier) {
     const backendType = identifierParts[1];
     switch (backendType) {
         case 'vertexai':
+            const vertexLocation = identifierParts[2];
+            if (!vertexLocation) {
+                throw new AIError(AIErrorCode.ERROR, `Invalid instance identifier, unknown location '${instanceIdentifier}'`);
+            }
+            return new VertexAIBackend(vertexLocation);
+        case 'agentplatform':
             const location = identifierParts[2];
             if (!location) {
                 throw new AIError(AIErrorCode.ERROR, `Invalid instance identifier, unknown location '${instanceIdentifier}'`);
             }
-            return new VertexAIBackend(location);
+            return new AgentPlatformBackend(location);
         case 'googleai':
             return new GoogleAIBackend();
         default:
@@ -1375,7 +1440,8 @@ class AIService {
         const auth = authProvider?.getImmediate({ optional: true });
         this.auth = auth || null;
         this.appCheck = appCheck || null;
-        if (backend instanceof VertexAIBackend) {
+        if (backend instanceof VertexAIBackend ||
+            backend instanceof AgentPlatformBackend) {
             this.location = backend.location;
         }
         else {
@@ -1818,7 +1884,7 @@ function hasValidCandidates(response) {
  */
 function createEnhancedContentResponse(response, inferenceSource = InferenceSource.IN_CLOUD) {
     /**
-     * The Vertex AI backend omits default values.
+     * The AgentPlatform backend omits default values.
      * This causes the `index` property to be omitted from the first candidate in the
      * response, since it has index 0, and 0 is a default value.
      * See: https://github.com/firebase/firebase-js-sdk/issues/8566
@@ -2049,18 +2115,18 @@ async function handlePredictResponse(response) {
  * limitations under the License.
  */
 /**
- * This SDK supports both the Vertex AI Gemini API and the Gemini Developer API (using Google AI).
- * The public API prioritizes the format used by the Vertex AI Gemini API.
+ * This SDK supports both the Agent Platform Gemini API and the Gemini Developer API (using Google AI).
+ * The public API prioritizes the format used by the Agent Platform Gemini API.
  * We avoid having two sets of types by translating requests and responses between the two API formats.
- * This translation allows developers to switch between the Vertex AI Gemini API and the Gemini Developer API
+ * This translation allows developers to switch between the Agent Platform Gemini API and the Gemini Developer API
  * with minimal code changes.
  *
  * In here are functions that map requests and responses between the two API formats.
- * Requests in the Vertex AI format are mapped to the Google AI format before being sent.
- * Responses from the Google AI backend are mapped back to the Vertex AI format before being returned to the user.
+ * Requests in the AgentPlatform format are mapped to the Google AI format before being sent.
+ * Responses from the Google AI backend are mapped back to the AgentPlatform format before being returned to the user.
  */
 /**
- * Maps a Vertex AI {@link GenerateContentRequest} to a format that can be sent to Google AI.
+ * Maps a AgentPlatform {@link GenerateContentRequest} to a format that can be sent to Google AI.
  *
  * @param generateContentRequest The {@link GenerateContentRequest} to map.
  * @returns A {@link GenerateContentResponse} that conforms to the Google AI format.
@@ -2086,7 +2152,7 @@ function mapGenerateContentRequest(generateContentRequest) {
 }
 /**
  * Maps a {@link GenerateContentResponse} from Google AI to the format of the
- * {@link GenerateContentResponse} that we get from VertexAI that is exposed in the public API.
+ * {@link GenerateContentResponse} that we get from AgentPlatform that is exposed in the public API.
  *
  * @param googleAIResponse The {@link GenerateContentResponse} from Google AI.
  * @returns A {@link GenerateContentResponse} that conforms to the public API's format.
@@ -2106,7 +2172,7 @@ function mapGenerateContentResponse(googleAIResponse) {
     return generateContentResponse;
 }
 /**
- * Maps a Vertex AI {@link CountTokensRequest} to a format that can be sent to Google AI.
+ * Maps a AgentPlatform {@link CountTokensRequest} to a format that can be sent to Google AI.
  *
  * @param countTokensRequest The {@link CountTokensRequest} to map.
  * @param model The model to count tokens with.
@@ -2125,10 +2191,10 @@ function mapCountTokensRequest(countTokensRequest, model) {
 }
 /**
  * Maps a Google AI {@link GoogleAIGenerateContentCandidate} to a format that conforms
- * to the Vertex AI API format.
+ * to the AgentPlatform API format.
  *
  * @param candidates The {@link GoogleAIGenerateContentCandidate} to map.
- * @returns A {@link GenerateContentCandidate} that conforms to the Vertex AI format.
+ * @returns A {@link GenerateContentCandidate} that conforms to the AgentPlatform format.
  *
  * @throws If any {@link Part} in the candidates has a `videoMetadata` property.
  *
@@ -3144,6 +3210,12 @@ class ChatSession extends ChatSessionBase {
         if (params?.history) {
             validateChatHistory(params.history);
             this._history = params.history;
+        }
+        if (this.params?.systemInstruction != null) {
+            this.params = {
+                ...this.params,
+                systemInstruction: formatSystemInstruction(this.params.systemInstruction)
+            };
         }
     }
     /**
@@ -4422,7 +4494,8 @@ class TemplateImagenModel {
 /**
  * Parent class encompassing all Schema types, with static methods that
  * allow building specific Schema types. This class can be converted with
- * `JSON.stringify()` into a JSON string accepted by Vertex AI REST endpoints.
+ * `JSON.stringify()` into a JSON string accepted by Agent Platform Gemini
+ * API and Gemini Developer API REST endpoints.
  * (This string conversion is automatically done when calling SDK methods.)
  * @public
  */
@@ -5107,8 +5180,8 @@ async function startAudioConversation(liveSession, options = {}) {
  *
  * @example
  * ```javascript
- * // Get an AI instance configured to use the Vertex AI Gemini API.
- * const ai = getAI(app, { backend: new VertexAIBackend() });
+ * // Get an AI instance configured to use the Agent Platform Gemini API.
+ * const ai = getAI(app, { backend: new AgentPlatformBackend() });
  * ```
  *
  * @param app - The {@link @firebase/app#FirebaseApp} to use.
@@ -5253,6 +5326,22 @@ function getTemplateImagenModel(ai, requestOptions) {
  *
  * @packageDocumentation
  */
+/**
+ * @license
+ * Copyright 2025 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 function registerAI() {
     app._registerComponent(new component.Component(AI_TYPE, factory, "PUBLIC" /* ComponentType.PUBLIC */).setMultipleInstances(true));
     app.registerVersion(name, version);
@@ -5264,6 +5353,7 @@ registerAI();
 exports.AIError = AIError;
 exports.AIErrorCode = AIErrorCode;
 exports.AIModel = AIModel;
+exports.AgentPlatformBackend = AgentPlatformBackend;
 exports.AnyOfSchema = AnyOfSchema;
 exports.ArraySchema = ArraySchema;
 exports.Backend = Backend;

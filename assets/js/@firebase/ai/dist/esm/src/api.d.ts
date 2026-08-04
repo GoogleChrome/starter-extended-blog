@@ -30,7 +30,7 @@ export { LiveSession } from './methods/live-session';
 export * from './requests/schema-builder';
 export { ImagenImageFormat } from './requests/imagen-image-format';
 export { AIModel, GenerativeModel, LiveGenerativeModel, ImagenModel, TemplateGenerativeModel, TemplateImagenModel, AIError };
-export { Backend, VertexAIBackend, GoogleAIBackend } from './backend';
+export { Backend, VertexAIBackend, GoogleAIBackend, AgentPlatformBackend } from './backend';
 export { startAudioConversation, AudioConversationController, StartAudioConversationOptions } from './methods/live-session-helpers';
 declare module '@firebase/component' {
     interface NameServiceMapping {
@@ -55,8 +55,8 @@ declare module '@firebase/component' {
  *
  * @example
  * ```javascript
- * // Get an AI instance configured to use the Vertex AI Gemini API.
- * const ai = getAI(app, { backend: new VertexAIBackend() });
+ * // Get an AI instance configured to use the Agent Platform Gemini API.
+ * const ai = getAI(app, { backend: new AgentPlatformBackend() });
  * ```
  *
  * @param app - The {@link @firebase/app#FirebaseApp} to use.

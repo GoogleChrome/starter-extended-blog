@@ -1,19 +1,31 @@
 import { OpenAIError } from '../error';
 import type OpenAI from '../index';
 import type { RequestOptions } from '../internal/request-options';
+import { uuid4 } from '../internal/utils/uuid';
 import { isAutoParsableTool, parseChatCompletion } from '../lib/parser';
 import type {
   ChatCompletion,
+  ChatCompletionAssistantMessageParam,
   ChatCompletionCreateParams,
   ChatCompletionMessage,
   ChatCompletionMessageFunctionToolCall,
   ChatCompletionMessageParam,
+  ChatCompletionMessageToolCall,
   ChatCompletionTool,
+  ChatCompletionToolMessageParam,
   ParsedChatCompletion,
 } from '../resources/chat/completions';
 import type { CompletionUsage } from '../resources/completions';
-import type { ChatCompletionToolRunnerParams } from './ChatCompletionRunner';
-import type { ChatCompletionStreamingToolRunnerParams } from './ChatCompletionStreamingRunner';
+import type {
+  ChatCompletionRunner,
+  ChatCompletionToolRunnerParamsWithContext,
+  ChatCompletionToolRunnerParamsWithoutContext,
+} from './ChatCompletionRunner';
+import type {
+  ChatCompletionStreamingRunner,
+  ChatCompletionStreamingToolRunnerParamsWithContext,
+  ChatCompletionStreamingToolRunnerParamsWithoutContext,
+} from './ChatCompletionStreamingRunner';
 import { isAssistantMessage, isToolMessage } from './chatCompletionUtils';
 import { BaseEvents, EventStream } from './EventStream';
 import {
@@ -24,9 +36,76 @@ import {
 } from './RunnableFunction';
 
 const DEFAULT_MAX_CHAT_COMPLETIONS = 10;
+
+function normalizeToolCallIds(chatCompletion: ChatCompletion): void {
+  for (const choice of chatCompletion.choices) {
+    for (const toolCall of choice.message.tool_calls ?? []) {
+      // Some OpenAI-compatible providers omit tool call IDs or return an empty string.
+      // Generate a unique ID before the completion is stored or emitted so the assistant
+      // tool call and its result message always reference the same value.
+      if (!toolCall.id) {
+        toolCall.id = `call_${uuid4()}`;
+      }
+    }
+  }
+}
+
+/**
+ * Parsed completions contain response-only and helper-only fields. Keep those
+ * on runner.messages for callers, but only replay valid request fields.
+ */
+function toRequestMessage(message: ChatCompletionMessageParam): ChatCompletionMessageParam {
+  if (!isAssistantMessage(message)) return message;
+
+  const requestMessage: ChatCompletionAssistantMessageParam = { role: 'assistant' };
+
+  if (message.audio != null) requestMessage.audio = { id: message.audio.id };
+  if (message.content !== undefined) requestMessage.content = message.content;
+  if (message.function_call != null) requestMessage.function_call = message.function_call;
+  if (message.name !== undefined) requestMessage.name = message.name;
+  if (message.refusal != null) requestMessage.refusal = message.refusal;
+  if (message.tool_calls !== undefined) {
+    requestMessage.tool_calls = message.tool_calls.map((toolCall) => {
+      if (toolCall.type === 'custom') {
+        return {
+          id: toolCall.id,
+          type: toolCall.type,
+          custom: {
+            input: toolCall.custom.input,
+            name: toolCall.custom.name,
+          },
+        };
+      }
+
+      return {
+        id: toolCall.id,
+        type: toolCall.type,
+        function: {
+          arguments: toolCall.function.arguments,
+          name: toolCall.function.name,
+        },
+      };
+    });
+  }
+
+  return requestMessage;
+}
+
+export interface ChatCompletionRunnerContext {
+  messages: ChatCompletionMessageParam[];
+  abort(): void;
+}
+
 export interface RunnerOptions extends RequestOptions {
   /** How many requests to make before canceling. Default 10. */
   maxChatCompletions?: number;
+  /**
+   * A callback that runs after each chat completion and after any tool calls from
+   * that completion have finished. The callback is awaited before the next
+   * request starts or before the runner ends. The runner's mutable `messages`
+   * array can be used to add context for the next request.
+   */
+  afterCompletion?: (completion: ChatCompletion, runner: ChatCompletionRunnerContext) => void | Promise<void>;
 }
 
 export class AbstractChatCompletionRunner<
@@ -40,6 +119,7 @@ export class AbstractChatCompletionRunner<
     this: AbstractChatCompletionRunner<AbstractChatCompletionRunnerEvents, ParsedT>,
     chatCompletion: ParsedChatCompletion<ParsedT>,
   ): ParsedChatCompletion<ParsedT> {
+    normalizeToolCallIds(chatCompletion);
     this._chatCompletions.push(chatCompletion);
     this._emit('chatCompletion', chatCompletion);
     const message = chatCompletion.choices[0]?.message;
@@ -113,7 +193,7 @@ export class AbstractChatCompletionRunner<
   }
 
   /**
-   * @returns a promise that resolves with the the final assistant ChatCompletionMessage response,
+   * @returns a promise that resolves with the final assistant ChatCompletionMessage response,
    * or rejects if an error occurred or the stream ended prematurely without producing a ChatCompletionMessage.
    */
   async finalMessage(): Promise<ChatCompletionMessage> {
@@ -125,7 +205,12 @@ export class AbstractChatCompletionRunner<
     for (let i = this.messages.length - 1; i >= 0; i--) {
       const message = this.messages[i];
       if (isAssistantMessage(message) && message?.tool_calls?.length) {
-        return message.tool_calls.filter((x) => x.type === 'function').at(-1)?.function;
+        for (let j = message.tool_calls.length - 1; j >= 0; j--) {
+          const toolCall = message.tool_calls[j];
+          if (toolCall?.type === 'function') {
+            return toolCall.function;
+          }
+        }
       }
     }
 
@@ -225,11 +310,7 @@ export class AbstractChatCompletionRunner<
     params: ChatCompletionCreateParams,
     options?: RequestOptions,
   ): Promise<ParsedChatCompletion<ParsedT>> {
-    const signal = options?.signal;
-    if (signal) {
-      if (signal.aborted) this.controller.abort();
-      signal.addEventListener('abort', () => this.controller.abort());
-    }
+    this._listenForAbort(options?.signal);
     this.#validateParams(params);
 
     const chatCompletion = await client.chat.completions.create(
@@ -251,18 +332,22 @@ export class AbstractChatCompletionRunner<
     return await this._createChatCompletion(client, params, options);
   }
 
-  protected async _runTools<FunctionsArgs extends BaseFunctionsArgs>(
+  protected async _runTools<FunctionsArgs extends BaseFunctionsArgs, ToolContext>(
     client: OpenAI,
     params:
-      | ChatCompletionToolRunnerParams<FunctionsArgs>
-      | ChatCompletionStreamingToolRunnerParams<FunctionsArgs>,
+      | ChatCompletionToolRunnerParamsWithContext<FunctionsArgs, ToolContext>
+      | ChatCompletionToolRunnerParamsWithoutContext<FunctionsArgs>
+      | ChatCompletionStreamingToolRunnerParamsWithContext<FunctionsArgs, ToolContext>
+      | ChatCompletionStreamingToolRunnerParamsWithoutContext<FunctionsArgs>,
+    runner: ChatCompletionRunner<any> | ChatCompletionStreamingRunner<any>,
     options?: RunnerOptions,
   ) {
     const role = 'tool' as const;
-    const { tool_choice = 'auto', stream, ...restParams } = params;
+    const { tool_choice = 'auto', stream, toolContext: inputToolContext, ...restParams } = params;
+    const toolContext = inputToolContext as ToolContext;
     const singleFunctionToCall =
       typeof tool_choice !== 'string' && tool_choice.type === 'function' && tool_choice?.function?.name;
-    const { maxChatCompletions = DEFAULT_MAX_CHAT_COMPLETIONS } = options || {};
+    const { maxChatCompletions = DEFAULT_MAX_CHAT_COMPLETIONS, afterCompletion } = options || {};
 
     // TODO(someday): clean this logic up
     const inputTools = params.tools.map((tool): RunnableToolFunction<any> => {
@@ -287,7 +372,7 @@ export class AbstractChatCompletionRunner<
       return tool as any as RunnableToolFunction<any>;
     });
 
-    const functionsByName: Record<string, RunnableFunction<any>> = {};
+    const functionsByName: Record<string, RunnableFunction<any, ToolContext>> = {};
     for (const f of inputTools) {
       if (f.type === 'function') {
         functionsByName[f.function.name || f.function.function.name] = f.function;
@@ -315,6 +400,54 @@ export class AbstractChatCompletionRunner<
       this._addMessage(message, false);
     }
 
+    type ToolCallResult = {
+      message: ChatCompletionToolMessageParam | undefined;
+      functionCalled: boolean;
+    };
+
+    const runToolCall = async (toolCall: ChatCompletionMessageToolCall): Promise<ToolCallResult> => {
+      if (toolCall.type !== 'function') return { message: undefined, functionCalled: false };
+
+      const tool_call_id = toolCall.id;
+      const { name, arguments: args } = toolCall.function;
+      const fn = functionsByName[name];
+
+      if (!fn) {
+        const content = `Invalid tool_call: ${JSON.stringify(name)}. Available options are: ${Object.keys(
+          functionsByName,
+        )
+          .map((name) => JSON.stringify(name))
+          .join(', ')}. Please try again`;
+
+        return { message: { role, tool_call_id, content }, functionCalled: false };
+      }
+
+      if (singleFunctionToCall && singleFunctionToCall !== name) {
+        const content = `Invalid tool_call: ${JSON.stringify(name)}. ${JSON.stringify(
+          singleFunctionToCall,
+        )} requested. Please try again`;
+
+        return { message: { role, tool_call_id, content }, functionCalled: false };
+      }
+
+      let rawContent: unknown;
+      if (isRunnableFunctionWithParse(fn)) {
+        let parsed;
+        try {
+          parsed = await fn.parse(args);
+        } catch (error) {
+          const content = error instanceof Error ? error.message : String(error);
+          return { message: { role, tool_call_id, content }, functionCalled: false };
+        }
+        rawContent = await fn.function(parsed, runner, toolContext);
+      } else {
+        rawContent = await fn.function(args, runner, toolContext);
+      }
+
+      const content = this.#stringifyFunctionCallResult(rawContent);
+      return { message: { role, tool_call_id, content }, functionCalled: true };
+    };
+
     for (let i = 0; i < maxChatCompletions; ++i) {
       const chatCompletion: ChatCompletion = await this._createChatCompletion(
         client,
@@ -322,7 +455,7 @@ export class AbstractChatCompletionRunner<
           ...restParams,
           tool_choice,
           tools,
-          messages: [...this.messages],
+          messages: this.messages.map(toRequestMessage),
         },
         options,
       );
@@ -331,51 +464,39 @@ export class AbstractChatCompletionRunner<
         throw new OpenAIError(`missing message in ChatCompletion response`);
       }
       if (!message.tool_calls?.length) {
+        await afterCompletion?.(chatCompletion, runner);
         return;
       }
 
-      for (const tool_call of message.tool_calls) {
-        if (tool_call.type !== 'function') continue;
-        const tool_call_id = tool_call.id;
-        const { name, arguments: args } = tool_call.function;
-        const fn = functionsByName[name];
+      if (singleFunctionToCall || params.parallel_tool_calls === false) {
+        for (const toolCall of message.tool_calls) {
+          const result = await runToolCall(toolCall);
+          if (result.message) this._addMessage(result.message);
 
-        if (!fn) {
-          const content = `Invalid tool_call: ${JSON.stringify(name)}. Available options are: ${Object.keys(
-            functionsByName,
-          )
-            .map((name) => JSON.stringify(name))
-            .join(', ')}. Please try again`;
+          if (singleFunctionToCall && result.functionCalled) {
+            await afterCompletion?.(chatCompletion, runner);
+            return;
+          }
+        }
+      } else {
+        const results = await Promise.allSettled(message.tool_calls.map(runToolCall));
 
-          this._addMessage({ role, tool_call_id, content });
-          continue;
-        } else if (singleFunctionToCall && singleFunctionToCall !== name) {
-          const content = `Invalid tool_call: ${JSON.stringify(name)}. ${JSON.stringify(
-            singleFunctionToCall,
-          )} requested. Please try again`;
-
-          this._addMessage({ role, tool_call_id, content });
-          continue;
+        // Wait for every concurrently running tool to settle before surfacing an
+        // error so tool side effects cannot continue after the runner has ended.
+        for (const result of results) {
+          if (result.status === 'rejected') throw result.reason;
         }
 
-        let parsed;
-        try {
-          parsed = isRunnableFunctionWithParse(fn) ? await fn.parse(args) : args;
-        } catch (error) {
-          const content = error instanceof Error ? error.message : String(error);
-          this._addMessage({ role, tool_call_id, content });
-          continue;
-        }
-
-        // @ts-expect-error it can't rule out `never` type.
-        const rawContent = await fn.function(parsed, this);
-        const content = this.#stringifyFunctionCallResult(rawContent);
-        this._addMessage({ role, tool_call_id, content });
-
-        if (singleFunctionToCall) {
-          return;
+        // Promise.allSettled preserves input order, so the next request receives
+        // tool result messages in the same order as the assistant's tool calls.
+        for (const result of results) {
+          if (result.status === 'fulfilled' && result.value.message) {
+            this._addMessage(result.value.message);
+          }
         }
       }
+
+      await afterCompletion?.(chatCompletion, runner);
     }
 
     return;

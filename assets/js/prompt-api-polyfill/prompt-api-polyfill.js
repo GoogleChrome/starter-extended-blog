@@ -223,7 +223,7 @@ var i = class i extends EventTarget {
 		try {
 			if (!e || !e.document || e.document.defaultView !== e || e !== globalThis && e !== e.top && (!e.frameElement || !e.frameElement.isConnected)) throw Error();
 		} catch {
-			throw new (e?.DOMException || globalThis.DOMException)("The execution context is not valid.", "InvalidStateError");
+			throw new ((e?.DOMException) || globalThis.DOMException)("The execution context is not valid.", "InvalidStateError");
 		}
 	}
 	#l() {
@@ -272,6 +272,7 @@ var i = class i extends EventTarget {
 		return n(i.#d(e).path);
 	}
 	static async #p(e = {}, t = globalThis) {
+		if (e.samplingMode !== void 0 && typeof e.samplingMode != "string") throw TypeError("The samplingMode option must be a string.");
 		if (e.expectedInputs) for (let t of e.expectedInputs) {
 			if (t.type !== "text" && t.type !== "image" && t.type !== "audio") throw TypeError(`Invalid input type: ${t.type}`);
 			t.languages && i.#m(t.languages);
@@ -312,7 +313,7 @@ var i = class i extends EventTarget {
 	}
 	static async create(e = {}) {
 		let t = this.__window || globalThis;
-		if (i.#c(t), await i.#p(e, t), e.signal?.aborted) throw e.signal.reason || new (t.DOMException || globalThis.DOMException)("Aborted", "AbortError");
+		if (i.#c(t), await i.#p(e, t), e.samplingMode !== void 0 && console.warn(`Prompt API Polyfill: The samplingMode option ("${e.samplingMode}") is not supported and will be silently ignored.`), e.signal?.aborted) throw e.signal.reason || new (t.DOMException || globalThis.DOMException)("Aborted", "AbortError");
 		let n = await this.availability(e);
 		if (n === "unavailable") throw new (t.DOMException || globalThis.DOMException)("The model is not available for the given options.", "NotSupportedError");
 		if (n === "downloadable" || n === "downloading") throw new (t.DOMException || globalThis.DOMException)("Requires a user gesture when availability is \"downloading\" or \"downloadable\".", "NotAllowedError");
@@ -664,7 +665,12 @@ var a = (e) => {
 	try {
 		if (!e || e.LanguageModel?.__isPolyfill) return;
 		let t = class extends i {};
-		t.__window = e, t.__isPolyfill = !0, e.LanguageModel = t, e.DOMException && (e.QuotaExceededError = e.DOMException);
+		t.__window = e, t.__isPolyfill = !0, Object.defineProperty(e, "LanguageModel", {
+			value: t,
+			writable: !0,
+			configurable: !0,
+			enumerable: !1
+		}), e.DOMException && (e.QuotaExceededError = e.DOMException);
 	} catch {}
 };
 if (typeof HTMLIFrameElement < "u") try {
@@ -680,11 +686,18 @@ if (typeof HTMLIFrameElement < "u") try {
 var o = new MutationObserver((e) => {
 	for (let t of e) for (let e of t.addedNodes) e.tagName === "IFRAME" && (a(e.contentWindow), e.addEventListener("load", () => a(e.contentWindow), { once: !1 }));
 });
-globalThis.document?.documentElement && (o.observe(globalThis.document.documentElement, {
+if (globalThis.document?.documentElement && (o.observe(globalThis.document.documentElement, {
 	childList: !0,
 	subtree: !0
 }), globalThis.document.querySelectorAll("iframe").forEach((e) => {
 	a(e.contentWindow);
-})), (!("LanguageModel" in globalThis) || globalThis.__FORCE_PROMPT_API_POLYFILL__) && (globalThis.LanguageModel = i, i.__isPolyfill = !0, console.log("Polyfill: window.LanguageModel is now backed by the Prompt API polyfill."));
+})), !("LanguageModel" in globalThis) || globalThis.__FORCE_PROMPT_API_POLYFILL__) try {
+	i.__isPolyfill = !0, Object.defineProperty(globalThis, "LanguageModel", {
+		value: i,
+		writable: !0,
+		configurable: !0,
+		enumerable: !1
+	}), console.log("Polyfill: window.LanguageModel is now backed by the Prompt API polyfill.");
+} catch {}
 //#endregion
 export { i as LanguageModel };

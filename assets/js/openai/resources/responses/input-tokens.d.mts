@@ -81,18 +81,19 @@ export interface InputTokenCountParams {
     /**
      * Controls which tool the model should use, if any.
      */
-    tool_choice?: ResponsesAPI.ToolChoiceOptions | ResponsesAPI.ToolChoiceAllowed | ResponsesAPI.ToolChoiceTypes | ResponsesAPI.ToolChoiceFunction | ResponsesAPI.ToolChoiceMcp | ResponsesAPI.ToolChoiceCustom | ResponsesAPI.ToolChoiceApplyPatch | ResponsesAPI.ToolChoiceShell | null;
+    tool_choice?: ResponsesAPI.ToolChoiceOptions | ResponsesAPI.ToolChoiceAllowed | ResponsesAPI.ToolChoiceTypes | ResponsesAPI.ToolChoiceFunction | ResponsesAPI.ToolChoiceMcp | ResponsesAPI.ToolChoiceCustom | InputTokenCountParams.SpecificProgrammaticToolCallingParam | ResponsesAPI.ToolChoiceApplyPatch | ResponsesAPI.ToolChoiceShell | null;
     /**
      * An array of tools the model may call while generating a response. You can
      * specify which tool to use by setting the `tool_choice` parameter.
      */
     tools?: Array<ResponsesAPI.Tool> | null;
     /**
-     * The truncation strategy to use for the model response. - `auto`: If the input to
-     * this Response exceeds the model's context window size, the model will truncate
-     * the response to fit the context window by dropping items from the beginning of
-     * the conversation. - `disabled` (default): If the input size will exceed the
-     * context window size for a model, the request will fail with a 400 error.
+     * @deprecated The truncation strategy to use for the model response. - `auto`: If
+     * the input to this Response exceeds the model's context window size, the model
+     * will truncate the response to fit the context window by dropping items from the
+     * beginning of the conversation. - `disabled` (default): If the input size will
+     * exceed the context window size for a model, the request will fail with a 400
+     * error.
      */
     truncation?: 'auto' | 'disabled';
 }
@@ -124,9 +125,16 @@ export declare namespace InputTokenCountParams {
         /**
          * Constrains the verbosity of the model's response. Lower values will result in
          * more concise responses, while higher values will result in more verbose
-         * responses. Currently supported values are `low`, `medium`, and `high`.
+         * responses. Currently supported values are `low`, `medium`, and `high`. The
+         * default is `medium`.
          */
         verbosity?: 'low' | 'medium' | 'high' | null;
+    }
+    interface SpecificProgrammaticToolCallingParam {
+        /**
+         * The tool to call. Always `programmatic_tool_calling`.
+         */
+        type: 'programmatic_tool_calling';
     }
 }
 export declare namespace InputTokens {

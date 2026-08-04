@@ -10,6 +10,33 @@ import { FirebaseAuthTokenData } from '@firebase/auth-interop-types';
 import { FirebaseError } from '@firebase/util';
 
 /**
+ * Configuration class for the Agent Platform Gemini API.
+ *
+ * Use this with {@link AIOptions} when initializing the AI service via
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @public
+ */
+export declare class AgentPlatformBackend extends Backend {
+    /**
+     * The region identifier.
+     * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
+     * for a list of supported locations.
+     */
+    readonly location: string;
+    /**
+     * Creates a configuration object for the Agent Platform backend.
+     *
+     * @param location - The region identifier, defaulting to `global`;
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
+     * for a list of supported locations.
+     */
+    constructor(location?: string);
+    /* Excluded from this release type: _getModelPath */
+    /* Excluded from this release type: _getTemplatePath */
+}
+
+/**
  * An instance of the Firebase AI SDK.
  *
  * Do not create this instance directly. Instead, use {@link getAI | getAI()}.
@@ -24,7 +51,7 @@ export declare interface AI {
     /**
      * A {@link Backend} instance that specifies the configuration for the target backend,
      * either the Gemini Developer API (using {@link GoogleAIBackend}) or the
-     * Vertex AI Gemini API (using {@link VertexAIBackend}).
+     * Agent Platform Gemini API (using {@link AgentPlatformBackend}).
      */
     backend: Backend;
     /**
@@ -34,7 +61,8 @@ export declare interface AI {
     /**
      * @deprecated use `AI.backend.location` instead.
      *
-     * The location configured for this AI service instance, relevant for Vertex AI backends.
+     * The location configured for this AI service instance, relevant for
+     * Agent Platform Gemini API backends.
      */
     location: string;
 }
@@ -123,8 +151,8 @@ export declare abstract class AIModel {
 
 /**
  * Options for initializing the AI service using {@link getAI | getAI()}.
- * This allows specifying which backend to use (Vertex AI Gemini API or Gemini Developer API)
- * and configuring its specific options (like location for Vertex AI).
+ * This allows specifying which backend to use (Gemini Developer API or Agent Platform Gemini API)
+ * and configuring its specific options (like location for Agent Platform).
  *
  * @public
  */
@@ -195,6 +223,8 @@ export declare interface AudioConversationController {
 
 /**
  * The audio transcription configuration.
+ *
+ * @beta
  */
 export declare interface AudioTranscriptionConfig {
 }
@@ -202,8 +232,8 @@ export declare interface AudioTranscriptionConfig {
 /**
  * Abstract base class representing the configuration for an AI service backend.
  * This class should not be instantiated directly. Use its subclasses; {@link GoogleAIBackend} for
- * the Gemini Developer API (via {@link https://ai.google/ | Google AI}), and
- * {@link VertexAIBackend} for the Vertex AI Gemini API.
+ * the Gemini Developer API (via {@link https://ai.google/ | Google AI}) and {@link AgentPlatformBackend}
+ * for the Agent Platform Gemini API.
  *
  * @public
  */
@@ -224,19 +254,26 @@ export declare abstract class Backend {
 /**
  * An enum-like object containing constants that represent the supported backends
  * for the Firebase AI SDK.
- * This determines which backend service (Vertex AI Gemini API or Gemini Developer API)
+ * This determines which backend service (Gemini Developer API or Agent Platform Gemini API)
  * the SDK will communicate with.
  *
  * These values are assigned to the `backendType` property within the specific backend
- * configuration objects ({@link GoogleAIBackend} or {@link VertexAIBackend}) to identify
+ * configuration objects ({@link GoogleAIBackend} or {@link AgentPlatformBackend}) to identify
  * which service to target.
  *
  * @public
  */
 export declare const BackendType: {
     /**
-     * Identifies the backend service for the Vertex AI Gemini API provided through Google Cloud.
+     * Identifies the backend service for the Agent Platform Gemini API provided through Google Cloud.
+     * Use this constant when creating a {@link AgentPlatformBackend} configuration.
+     */
+    readonly AGENT_PLATFORM: "AGENT_PLATFORM";
+    /**
+     * Identifies the backend service for the Agent Platform Gemini API
+     * (formerly known as Vertex AI Gemini API) provided through Google Cloud.
      * Use this constant when creating a {@link VertexAIBackend} configuration.
+     * @deprecated - Use {@link AgentPlatformBackend} instead.
      */
     readonly VERTEX_AI: "VERTEX_AI";
     /**
@@ -248,7 +285,7 @@ export declare const BackendType: {
 
 /**
  * Type alias representing valid backend types.
- * It can be either `'VERTEX_AI'` or `'GOOGLE_AI'`.
+ * It should be either `'AGENT_PLATFORM'` or `'GOOGLE_AI'` (`'VERTEX_AI'` is deprecated).
  *
  * @public
  */
@@ -261,6 +298,16 @@ export declare type BackendType = (typeof BackendType)[keyof typeof BackendType]
 export declare interface BaseParams {
     safetySettings?: SafetySetting[];
     generationConfig?: GenerationConfig;
+}
+
+/**
+ * Base configuration for speech synthesis.
+ *
+ * @beta
+ */
+export declare interface BaseSpeechConfig {
+    /** IETF BCP-47 language code. */
+    languageCode?: string;
 }
 
 /**
@@ -406,13 +453,13 @@ export declare interface Citation {
     /**
      * The title of the cited source, if available.
      *
-     * This property is only supported in the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported in the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      */
     title?: string;
     /**
      * The publication date of the cited source, if available.
      *
-     * This property is only supported in the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported in the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      */
     publicationDate?: Date_2;
 }
@@ -1019,6 +1066,12 @@ export declare interface GenerationConfig {
     presencePenalty?: number;
     frequencyPenalty?: number;
     /**
+     * Configuration for speech synthesis for text-to-speech (TTS) models.
+     *
+     * @beta
+     */
+    speechConfig?: SpeechConfig;
+    /**
      * Output response MIME type of the generated candidate text.
      * Supported MIME types are `text/plain` (default, text output),
      * `application/json` (JSON response in the candidates), and
@@ -1048,7 +1101,7 @@ export declare interface GenerationConfig {
      * Generation modalities to be returned in generation responses.
      *
      * @remarks
-     *  - Multimodal response generation is only supported by some Gemini models and versions; see {@link https://firebase.google.com/docs/vertex-ai/models | model versions}.
+     *  - Multimodal response generation is only supported by some Gemini models and versions; see {@link https://firebase.google.com/docs/ai-logic/models | model versions}.
      *  - Only image generation (`ResponseModality.IMAGE`) is supported.
      *
      * @beta
@@ -1160,8 +1213,8 @@ export declare class GenerativeModel extends AIModel {
  *
  * @example
  * ```javascript
- * // Get an AI instance configured to use the Vertex AI Gemini API.
- * const ai = getAI(app, { backend: new VertexAIBackend() });
+ * // Get an AI instance configured to use the Agent Platform Gemini API.
+ * const ai = getAI(app, { backend: new AgentPlatformBackend() });
  * ```
  *
  * @param app - The {@link @firebase/app#FirebaseApp} to use.
@@ -1271,6 +1324,12 @@ export declare class GoogleAIBackend extends Backend {
  * @public
  */
 export declare interface GoogleMaps {
+    /**
+     * @deprecated The `enableWidget` feature has been deprecated by the Grounding for Google Maps
+     * service.
+     *
+     * If true, include the widget context token in the response.
+     */
     enableWidget?: boolean;
 }
 
@@ -1308,7 +1367,7 @@ export declare interface GoogleMapsGroundingChunk {
  *
  * Important: If using Grounding with Google Maps, you are required to comply with the
  * "Grounding with Google Maps" usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-maps | Gemini Developer API}
- * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+ * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
  * section within the Service Specific Terms).
  *
  * @public
@@ -1319,7 +1378,7 @@ export declare interface GoogleMapsTool {
      *
      * When using this feature, you are required to comply with the "Grounding with Google Maps"
      * usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-maps | Gemini Developer API}
-     * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+     * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
      * section within the Service Specific Terms).
      */
     googleMaps: GoogleMaps;
@@ -1341,7 +1400,7 @@ export declare interface GoogleSearch {
  *
  * Important: If using Grounding with Google Search, you are required to comply with the
  * "Grounding with Google Search" usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-search | Gemini Developer API}
- * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+ * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
  * section within the Service Specific Terms).
  *
  * @public
@@ -1353,7 +1412,7 @@ export declare interface GoogleSearchTool {
      *
      * When using this feature, you are required to comply with the "Grounding with Google Search"
      * usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-search | Gemini Developer API}
-     * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+     * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
      * section within the Service Specific Terms).
      */
     googleSearch: GoogleSearch;
@@ -1384,12 +1443,12 @@ export declare interface GroundingChunk {
  *
  * Important: If using Grounding with Google Search, you are required to comply with the
  * "Grounding with Google Search" usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-search | Gemini Developer API}
- * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+ * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
  * section within the Service Specific Terms).
  *
  * Important: If using Grounding with Google Maps, you are required to comply with the
  * "Grounding with Google Maps" usage requirements for your chosen API provider: {@link https://ai.google.dev/gemini-api/terms#grounding-with-google-maps | Gemini Developer API}
- * or Vertex AI Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
+ * or Agent Platform Gemini API (see {@link https://cloud.google.com/terms/service-terms | Service Terms}
  * section within the Service Specific Terms).
  *
  * @public
@@ -1672,7 +1731,7 @@ export declare type ImageConfigImageSize = (typeof ImageConfigImageSize)[keyof t
  * To specify an aspect ratio for generated images, set the `aspectRatio` property in your
  * {@link ImagenGenerationConfig}.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details and examples of the supported aspect ratios.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -1711,7 +1770,7 @@ export declare const ImagenAspectRatio: {
  * To specify an aspect ratio for generated images, set the `aspectRatio` property in your
  * {@link ImagenGenerationConfig}.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details and examples of the supported aspect ratios.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -1753,7 +1812,7 @@ export declare interface ImagenGCSImage {
 /**
  * Configuration options for generating images with Imagen.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images-imagen | documentation} for
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images-imagen | documentation} for
  * more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -1769,7 +1828,7 @@ export declare interface ImagenGenerationConfig {
      *
      * Support for negative prompts depends on the Imagen model.
      *
-     * See the {@link http://firebase.google.com/docs/vertex-ai/model-parameters#imagen | documentation} for more details.
+     * See the {@link http://firebase.google.com/docs/ai-logic/model-parameters#imagen | documentation} for more details.
      *
      * This is no longer supported in the Gemini Developer API ({@link GoogleAIBackend}) in versions
      * greater than `imagen-3.0-generate-002`.
@@ -1779,7 +1838,7 @@ export declare interface ImagenGenerationConfig {
      * The number of images to generate. The default value is 1.
      *
      * The number of sample images that may be generated in each request depends on the model
-     * (typically up to 4); see the <a href="http://firebase.google.com/docs/vertex-ai/model-parameters#imagen">sampleCount</a>
+     * (typically up to 4); see the <a href="http://firebase.google.com/docs/ai-logic/model-parameters#imagen">sampleCount</a>
      * documentation for more details.
      */
     numberOfImages?: number;
@@ -1801,7 +1860,7 @@ export declare interface ImagenGenerationConfig {
      * If set to `true`, an invisible SynthID watermark is embedded in generated images to indicate
      * that they are AI generated. If set to `false`, watermarking will be disabled.
      *
-     * For Imagen 3 models, the default value is `true`; see the <a href="http://firebase.google.com/docs/vertex-ai/model-parameters#imagen">addWatermark</a>
+     * For Imagen 3 models, the default value is `true`; see the <a href="http://firebase.google.com/docs/ai-logic/model-parameters#imagen">addWatermark</a>
      * documentation for more details.
      *
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this will default to true,
@@ -2035,7 +2094,7 @@ export declare interface ImagenModelParams {
      *
      * Only Imagen 3 models (named `imagen-3.0-*`) are supported.
      *
-     * See {@link https://firebase.google.com/docs/vertex-ai/models | model versions}
+     * See {@link https://firebase.google.com/docs/ai-logic/models | model versions}
      * for a full list of supported Imagen 3 models.
      */
     model: string;
@@ -2052,7 +2111,7 @@ export declare interface ImagenModelParams {
 /**
  * A filter level controlling whether generation of images containing people or faces is allowed.
  *
- * See the <a href="http://firebase.google.com/docs/vertex-ai/generate-images">personGeneration</a>
+ * See the <a href="http://firebase.google.com/docs/ai-logic/generate-images">personGeneration</a>
  * documentation for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -2088,7 +2147,7 @@ export declare const ImagenPersonFilterLevel: {
 /**
  * A filter level controlling whether generation of images containing people or faces is allowed.
  *
- * See the <a href="http://firebase.google.com/docs/vertex-ai/generate-images">personGeneration</a>
+ * See the <a href="http://firebase.google.com/docs/ai-logic/generate-images">personGeneration</a>
  * documentation for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -2106,7 +2165,7 @@ export declare type ImagenPersonFilterLevel = (typeof ImagenPersonFilterLevel)[k
  * Text prompts provided as inputs and images (generated or uploaded) through Imagen on Vertex AI
  * are assessed against a list of safety filters, which include 'harmful categories' (for example,
  * `violence`, `sexual`, `derogatory`, and `toxic`). This filter level controls how aggressively to
- * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * and the {@link https://cloud.google.com/vertex-ai/generative-ai/docs/image/responsible-ai-imagen#safety-filters | Responsible AI and usage guidelines}
  * for more details.
  *
@@ -2145,7 +2204,7 @@ export declare const ImagenSafetyFilterLevel: {
  * Text prompts provided as inputs and images (generated or uploaded) through Imagen on Vertex AI
  * are assessed against a list of safety filters, which include 'harmful categories' (for example,
  * `violence`, `sexual`, `derogatory`, and `toxic`). This filter level controls how aggressively to
- * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * and the {@link https://cloud.google.com/vertex-ai/generative-ai/docs/image/responsible-ai-imagen#safety-filters | Responsible AI and usage guidelines}
  * for more details.
  *
@@ -2161,7 +2220,7 @@ export declare type ImagenSafetyFilterLevel = (typeof ImagenSafetyFilterLevel)[k
 /**
  * Settings for controlling the aggressiveness of filtering out sensitive content.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -2411,7 +2470,7 @@ export declare interface LatLng {
  */
 export declare interface LiveGenerationConfig {
     /**
-     * Configuration for speech synthesis.
+     * Configuration for speech synthesis for Live API Models.
      */
     speechConfig?: SpeechConfig;
     /**
@@ -2863,6 +2922,27 @@ export declare interface ModelParams extends BaseParams {
 }
 
 /**
+ * Configuration for speech synthesis with multiple speakers.
+ * @beta
+ */
+export declare interface MultiSpeakerSpeechConfig extends BaseSpeechConfig {
+    /** Single-speaker voice configuration must not be set when using multiple speakers. */
+    voiceConfig?: never;
+    /** Configuration for multi-speaker setup. */
+    multiSpeakerVoiceConfig?: MultiSpeakerVoiceConfig;
+}
+
+/**
+ * Configuration for multi-speaker setup.
+ *
+ * @beta
+ */
+export declare interface MultiSpeakerVoiceConfig {
+    /** All the enabled speaker voices. */
+    speakerVoiceConfigs: SpeakerVoiceConfig[];
+}
+
+/**
  * Schema class for "number" types.
  * @public
  */
@@ -2953,7 +3033,7 @@ export declare const POSSIBLE_ROLES: readonly ["user", "model", "function", "sys
 export declare interface PrebuiltVoiceConfig {
     /**
      * The voice name to use for speech synthesis.
-     *
+     * @remarks
      * For a full list of names and demos of what each voice sounds like, see {@link https://cloud.google.com/text-to-speech/docs/chirp3-hd | Chirp 3: HD Voices}.
      */
     voiceName?: string;
@@ -2970,7 +3050,7 @@ export declare interface PromptFeedback {
     /**
      * A human-readable description of the `blockReason`.
      *
-     * This property is only supported in the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported in the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      */
     blockReasonMessage?: string;
 }
@@ -3087,21 +3167,21 @@ export declare interface SafetyRating {
     /**
      * The harm severity level.
      *
-     * This property is only supported when using the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported when using the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this property is not supported and will default to `HarmSeverity.UNSUPPORTED`.
      */
     severity: HarmSeverity;
     /**
      * The probability score of the harm category.
      *
-     * This property is only supported when using the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported when using the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this property is not supported and will default to 0.
      */
     probabilityScore: number;
     /**
      * The severity score of the harm category.
      *
-     * This property is only supported when using the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported when using the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this property is not supported and will default to 0.
      */
     severityScore: number;
@@ -3118,7 +3198,7 @@ export declare interface SafetySetting {
     /**
      * The harm block method.
      *
-     * This property is only supported in the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported in the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      * When using the Gemini Developer API ({@link GoogleAIBackend}), an {@link AIError} will be
      * thrown if this property is defined.
      */
@@ -3128,7 +3208,8 @@ export declare interface SafetySetting {
 /**
  * Parent class encompassing all Schema types, with static methods that
  * allow building specific Schema types. This class can be converted with
- * `JSON.stringify()` into a JSON string accepted by Vertex AI REST endpoints.
+ * `JSON.stringify()` into a JSON string accepted by Agent Platform Gemini
+ * API and Gemini Developer API REST endpoints.
  * (This string conversion is automatically done when calling SDK methods.)
  * @public
  */
@@ -3416,6 +3497,17 @@ export declare interface SingleRequestOptions extends RequestOptions {
 }
 
 /**
+ * Configuration for speech synthesis for a single speaker.
+ * @beta
+ */
+export declare interface SingleSpeakerSpeechConfig extends BaseSpeechConfig {
+    /** Configures the voice to be used in speech synthesis. */
+    voiceConfig?: VoiceConfig;
+    /** Multi-speaker configuration must not be set when using a single speaker. */
+    multiSpeakerVoiceConfig?: never;
+}
+
+/**
  * Configures the sliding window context compression mechanism.
  *
  * @remarks
@@ -3435,16 +3527,22 @@ export declare interface SlidingWindow {
 }
 
 /**
- * Configures speech synthesis.
+ * Configuration for a single speaker's voice.
  *
  * @beta
  */
-export declare interface SpeechConfig {
-    /**
-     * Configures the voice to be used in speech synthesis.
-     */
-    voiceConfig?: VoiceConfig;
+export declare interface SpeakerVoiceConfig {
+    /** The name of the speaker to use (same as in prompt). */
+    speaker: string;
+    /** The configuration for the voice to use. */
+    voiceConfig: VoiceConfig;
 }
+
+/**
+ * Configures speech synthesis.
+ * @beta
+ */
+export declare type SpeechConfig = SingleSpeakerSpeechConfig | MultiSpeakerSpeechConfig;
 
 /**
  * Starts a real-time, bidirectional audio conversation with the model. This helper function manages
@@ -4013,25 +4111,29 @@ export declare interface UsageMetadata {
 }
 
 /**
- * Configuration class for the Vertex AI Gemini API.
+ * Configuration class for the Agent Platform Gemini API (formerly known as the
+ * Vertex AI Gemini API).
  *
  * Use this with {@link AIOptions} when initializing the AI service via
- * {@link getAI | getAI()} to specify the Vertex AI Gemini API as the backend.
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @deprecated - Use {@link AgentPlatformBackend} instead.
  *
  * @public
  */
 export declare class VertexAIBackend extends Backend {
     /**
      * The region identifier.
-     * See {@link https://firebase.google.com/docs/vertex-ai/locations#available-locations | Vertex AI locations}
+     * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
      * for a list of supported locations.
      */
     readonly location: string;
     /**
-     * Creates a configuration object for the Vertex AI backend.
+     * Creates a configuration object for the Agent Platform Gemini API (formerly
+     * known as the Vertex AI Gemini API) backend.
      *
      * @param location - The region identifier, defaulting to `us-central1`;
-     * see {@link https://firebase.google.com/docs/vertex-ai/locations#available-locations | Vertex AI locations}
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
      * for a list of supported locations.
      */
     constructor(location?: string);
@@ -4057,7 +4159,7 @@ export declare interface VideoMetadata {
 }
 
 /**
- * Configuration for the voice to used in speech synthesis.
+ * Configuration for the voice to be used for speech synthesis.
  *
  * @beta
  */
@@ -4096,7 +4198,7 @@ export declare interface WebGroundingChunk {
     /**
      * The domain of the original URI from which the content was retrieved.
      *
-     * This property is only supported in the Vertex AI Gemini API ({@link VertexAIBackend}).
+     * This property is only supported in the Agent Platform Gemini API ({@link AgentPlatformBackend}).
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this property will be
      * `undefined`.
      */

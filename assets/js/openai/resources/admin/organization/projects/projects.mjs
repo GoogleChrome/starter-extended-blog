@@ -14,12 +14,14 @@ import * as RateLimitsAPI from "./rate-limits.mjs";
 import { RateLimits, } from "./rate-limits.mjs";
 import * as RolesAPI from "./roles.mjs";
 import { Roles, } from "./roles.mjs";
-import * as ServiceAccountsAPI from "./service-accounts.mjs";
-import { ServiceAccounts, } from "./service-accounts.mjs";
 import * as SpendAlertsAPI from "./spend-alerts.mjs";
 import { SpendAlerts, } from "./spend-alerts.mjs";
+import * as SpendLimitAPI from "./spend-limit.mjs";
+import { SpendLimit, } from "./spend-limit.mjs";
 import * as GroupsAPI from "./groups/groups.mjs";
 import { Groups, } from "./groups/groups.mjs";
+import * as ServiceAccountsAPI from "./service-accounts/service-accounts.mjs";
+import { ServiceAccounts, } from "./service-accounts/service-accounts.mjs";
 import * as UsersAPI from "./users/users.mjs";
 import { Users, } from "./users/users.mjs";
 import { ConversationCursorPage, } from "../../../../core/pagination.mjs";
@@ -36,6 +38,7 @@ export class Projects extends APIResource {
         this.groups = new GroupsAPI.Groups(this._client);
         this.roles = new RolesAPI.Roles(this._client);
         this.dataRetention = new DataRetentionAPI.DataRetention(this._client);
+        this.spendLimit = new SpendLimitAPI.SpendLimit(this._client);
         this.spendAlerts = new SpendAlertsAPI.SpendAlerts(this._client);
         this.certificates = new CertificatesAPI.Certificates(this._client);
     }
@@ -139,6 +142,7 @@ Projects.HostedToolPermissions = HostedToolPermissions;
 Projects.Groups = Groups;
 Projects.Roles = Roles;
 Projects.DataRetention = DataRetention;
+Projects.SpendLimit = SpendLimit;
 Projects.SpendAlerts = SpendAlerts;
 Projects.Certificates = Certificates;
 //# sourceMappingURL=projects.mjs.map

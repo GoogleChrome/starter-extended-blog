@@ -18,8 +18,8 @@ import { BackendType } from './public-types';
 /**
  * Abstract base class representing the configuration for an AI service backend.
  * This class should not be instantiated directly. Use its subclasses; {@link GoogleAIBackend} for
- * the Gemini Developer API (via {@link https://ai.google/ | Google AI}), and
- * {@link VertexAIBackend} for the Vertex AI Gemini API.
+ * the Gemini Developer API (via {@link https://ai.google/ | Google AI}) and {@link AgentPlatformBackend}
+ * for the Agent Platform Gemini API.
  *
  * @public
  */
@@ -65,25 +65,61 @@ export declare class GoogleAIBackend extends Backend {
     _getTemplatePath(project: string, templateId: string): string;
 }
 /**
- * Configuration class for the Vertex AI Gemini API.
+ * Configuration class for the Agent Platform Gemini API (formerly known as the
+ * Vertex AI Gemini API).
  *
  * Use this with {@link AIOptions} when initializing the AI service via
- * {@link getAI | getAI()} to specify the Vertex AI Gemini API as the backend.
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @deprecated - Use {@link AgentPlatformBackend} instead.
  *
  * @public
  */
 export declare class VertexAIBackend extends Backend {
     /**
      * The region identifier.
-     * See {@link https://firebase.google.com/docs/vertex-ai/locations#available-locations | Vertex AI locations}
+     * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
      * for a list of supported locations.
      */
     readonly location: string;
     /**
-     * Creates a configuration object for the Vertex AI backend.
+     * Creates a configuration object for the Agent Platform Gemini API (formerly
+     * known as the Vertex AI Gemini API) backend.
      *
      * @param location - The region identifier, defaulting to `us-central1`;
-     * see {@link https://firebase.google.com/docs/vertex-ai/locations#available-locations | Vertex AI locations}
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform Gemini API locations}
+     * for a list of supported locations.
+     */
+    constructor(location?: string);
+    /**
+     * @internal
+     */
+    _getModelPath(project: string, model: string): string;
+    /**
+     * @internal
+     */
+    _getTemplatePath(project: string, templateId: string): string;
+}
+/**
+ * Configuration class for the Agent Platform Gemini API.
+ *
+ * Use this with {@link AIOptions} when initializing the AI service via
+ * {@link getAI | getAI()} to specify the Agent Platform Gemini API as the backend.
+ *
+ * @public
+ */
+export declare class AgentPlatformBackend extends Backend {
+    /**
+     * The region identifier.
+     * See {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
+     * for a list of supported locations.
+     */
+    readonly location: string;
+    /**
+     * Creates a configuration object for the Agent Platform backend.
+     *
+     * @param location - The region identifier, defaulting to `global`;
+     * see {@link https://firebase.google.com/docs/ai-logic/locations?api=vertex#available-locations | Agent Platform locations}
      * for a list of supported locations.
      */
     constructor(location?: string);

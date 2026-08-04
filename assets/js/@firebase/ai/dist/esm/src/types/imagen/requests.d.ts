@@ -32,7 +32,7 @@ export interface ImagenModelParams {
      *
      * Only Imagen 3 models (named `imagen-3.0-*`) are supported.
      *
-     * See {@link https://firebase.google.com/docs/vertex-ai/models | model versions}
+     * See {@link https://firebase.google.com/docs/ai-logic/models | model versions}
      * for a full list of supported Imagen 3 models.
      */
     model: string;
@@ -48,7 +48,7 @@ export interface ImagenModelParams {
 /**
  * Configuration options for generating images with Imagen.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images-imagen | documentation} for
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images-imagen | documentation} for
  * more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -64,7 +64,7 @@ export interface ImagenGenerationConfig {
      *
      * Support for negative prompts depends on the Imagen model.
      *
-     * See the {@link http://firebase.google.com/docs/vertex-ai/model-parameters#imagen | documentation} for more details.
+     * See the {@link http://firebase.google.com/docs/ai-logic/model-parameters#imagen | documentation} for more details.
      *
      * This is no longer supported in the Gemini Developer API ({@link GoogleAIBackend}) in versions
      * greater than `imagen-3.0-generate-002`.
@@ -74,7 +74,7 @@ export interface ImagenGenerationConfig {
      * The number of images to generate. The default value is 1.
      *
      * The number of sample images that may be generated in each request depends on the model
-     * (typically up to 4); see the <a href="http://firebase.google.com/docs/vertex-ai/model-parameters#imagen">sampleCount</a>
+     * (typically up to 4); see the <a href="http://firebase.google.com/docs/ai-logic/model-parameters#imagen">sampleCount</a>
      * documentation for more details.
      */
     numberOfImages?: number;
@@ -96,7 +96,7 @@ export interface ImagenGenerationConfig {
      * If set to `true`, an invisible SynthID watermark is embedded in generated images to indicate
      * that they are AI generated. If set to `false`, watermarking will be disabled.
      *
-     * For Imagen 3 models, the default value is `true`; see the <a href="http://firebase.google.com/docs/vertex-ai/model-parameters#imagen">addWatermark</a>
+     * For Imagen 3 models, the default value is `true`; see the <a href="http://firebase.google.com/docs/ai-logic/model-parameters#imagen">addWatermark</a>
      * documentation for more details.
      *
      * When using the Gemini Developer API ({@link GoogleAIBackend}), this will default to true,
@@ -110,7 +110,7 @@ export interface ImagenGenerationConfig {
  * Text prompts provided as inputs and images (generated or uploaded) through Imagen on Vertex AI
  * are assessed against a list of safety filters, which include 'harmful categories' (for example,
  * `violence`, `sexual`, `derogatory`, and `toxic`). This filter level controls how aggressively to
- * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * and the {@link https://cloud.google.com/vertex-ai/generative-ai/docs/image/responsible-ai-imagen#safety-filters | Responsible AI and usage guidelines}
  * for more details.
  *
@@ -148,7 +148,7 @@ export declare const ImagenSafetyFilterLevel: {
  * Text prompts provided as inputs and images (generated or uploaded) through Imagen on Vertex AI
  * are assessed against a list of safety filters, which include 'harmful categories' (for example,
  * `violence`, `sexual`, `derogatory`, and `toxic`). This filter level controls how aggressively to
- * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * filter out potentially harmful content from responses. See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * and the {@link https://cloud.google.com/vertex-ai/generative-ai/docs/image/responsible-ai-imagen#safety-filters | Responsible AI and usage guidelines}
  * for more details.
  *
@@ -163,7 +163,7 @@ export type ImagenSafetyFilterLevel = (typeof ImagenSafetyFilterLevel)[keyof typ
 /**
  * A filter level controlling whether generation of images containing people or faces is allowed.
  *
- * See the <a href="http://firebase.google.com/docs/vertex-ai/generate-images">personGeneration</a>
+ * See the <a href="http://firebase.google.com/docs/ai-logic/generate-images">personGeneration</a>
  * documentation for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -198,7 +198,7 @@ export declare const ImagenPersonFilterLevel: {
 /**
  * A filter level controlling whether generation of images containing people or faces is allowed.
  *
- * See the <a href="http://firebase.google.com/docs/vertex-ai/generate-images">personGeneration</a>
+ * See the <a href="http://firebase.google.com/docs/ai-logic/generate-images">personGeneration</a>
  * documentation for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -212,7 +212,7 @@ export type ImagenPersonFilterLevel = (typeof ImagenPersonFilterLevel)[keyof typ
 /**
  * Settings for controlling the aggressiveness of filtering out sensitive content.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -239,7 +239,7 @@ export interface ImagenSafetySettings {
  * To specify an aspect ratio for generated images, set the `aspectRatio` property in your
  * {@link ImagenGenerationConfig}.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details and examples of the supported aspect ratios.
  *
  * @deprecated All Imagen models are deprecated and will shut down as
@@ -277,7 +277,7 @@ export declare const ImagenAspectRatio: {
  * To specify an aspect ratio for generated images, set the `aspectRatio` property in your
  * {@link ImagenGenerationConfig}.
  *
- * See the {@link http://firebase.google.com/docs/vertex-ai/generate-images | documentation }
+ * See the {@link http://firebase.google.com/docs/ai-logic/generate-images | documentation }
  * for more details and examples of the supported aspect ratios.
  *
  * @deprecated All Imagen models are deprecated and will shut down as

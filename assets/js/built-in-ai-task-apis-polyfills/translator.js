@@ -1,2 +1,2 @@
-import { t as e } from "./translator-api-polyfill-D_-LH5dw.js";
+import { t as e } from "./translator-api-polyfill-B455QRdB.js";
 export { e as Translator };

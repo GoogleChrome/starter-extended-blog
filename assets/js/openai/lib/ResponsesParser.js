@@ -12,7 +12,7 @@ const error_1 = require("../error.js");
 const parser_1 = require("../lib/parser.js");
 function maybeParseResponse(response, params) {
     if (!params || !hasAutoParseableInput(params)) {
-        return {
+        const parsed = {
             ...response,
             output_parsed: null,
             output: response.output.map((item) => {
@@ -36,23 +36,25 @@ function maybeParseResponse(response, params) {
                 }
             }),
         };
+        if (needsOutputText(response, parsed)) {
+            addOutputText(parsed);
+        }
+        return parsed;
     }
     return parseResponse(response, params);
 }
 function parseResponse(response, params) {
+    const shouldParse = !response.status || response.status === 'completed';
     const output = response.output.map((item) => {
         if (item.type === 'function_call') {
-            return {
-                ...item,
-                parsed_arguments: parseToolCall(params, item),
-            };
+            return shouldParse ? parseToolCall(params, item) : { ...item, parsed_arguments: null };
         }
         if (item.type === 'message') {
             const content = item.content.map((content) => {
                 if (content.type === 'output_text') {
                     return {
                         ...content,
-                        parsed: parseTextFormat(params, content.text),
+                        parsed: shouldParse ? parseTextFormat(params, content.text) : null,
                     };
                 }
                 return content;
@@ -65,7 +67,7 @@ function parseResponse(response, params) {
         return item;
     });
     const parsed = Object.assign({}, response, { output });
-    if (!Object.getOwnPropertyDescriptor(response, 'output_text')) {
+    if (needsOutputText(response, parsed)) {
         addOutputText(parsed);
     }
     Object.defineProperty(parsed, 'output_parsed', {
@@ -100,7 +102,8 @@ function hasAutoParseableInput(params) {
     if ((0, parser_1.isAutoParsableResponseFormat)(params.text?.format)) {
         return true;
     }
-    return false;
+    return (Array.isArray(params.tools) &&
+        params.tools.some((tool) => isAutoParsableTool(tool) || (tool.type === 'function' && tool.strict === true)));
 }
 function makeParseableResponseTool(tool, { parser, callback, }) {
     const obj = { ...tool };
@@ -152,6 +155,9 @@ function validateInputTools(tools) {
             throw new error_1.OpenAIError(`The \`${tool.function.name}\` tool is not marked with \`strict: true\`. Only strict function tools can be auto-parsed`);
         }
     }
+}
+function needsOutputText(response, target) {
+    return !Object.getOwnPropertyDescriptor(response, 'output_text') || target.output_text == null;
 }
 function addOutputText(rsp) {
     const texts = [];

@@ -1,7 +1,7 @@
 "use strict";
 // File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Users = exports.SpendAlerts = exports.ServiceAccounts = exports.Roles = exports.RateLimits = exports.Projects = exports.ModelPermissions = exports.HostedToolPermissions = exports.Groups = exports.DataRetention = exports.Certificates = exports.APIKeys = void 0;
+exports.Users = exports.SpendLimit = exports.SpendAlerts = exports.ServiceAccounts = exports.Roles = exports.RateLimits = exports.Projects = exports.ModelPermissions = exports.HostedToolPermissions = exports.Groups = exports.DataRetention = exports.Certificates = exports.APIKeys = void 0;
 var api_keys_1 = require("./api-keys.js");
 Object.defineProperty(exports, "APIKeys", { enumerable: true, get: function () { return api_keys_1.APIKeys; } });
 var certificates_1 = require("./certificates.js");
@@ -20,10 +20,12 @@ var rate_limits_1 = require("./rate-limits.js");
 Object.defineProperty(exports, "RateLimits", { enumerable: true, get: function () { return rate_limits_1.RateLimits; } });
 var roles_1 = require("./roles.js");
 Object.defineProperty(exports, "Roles", { enumerable: true, get: function () { return roles_1.Roles; } });
-var service_accounts_1 = require("./service-accounts.js");
-Object.defineProperty(exports, "ServiceAccounts", { enumerable: true, get: function () { return service_accounts_1.ServiceAccounts; } });
+var index_2 = require("./service-accounts/index.js");
+Object.defineProperty(exports, "ServiceAccounts", { enumerable: true, get: function () { return index_2.ServiceAccounts; } });
 var spend_alerts_1 = require("./spend-alerts.js");
 Object.defineProperty(exports, "SpendAlerts", { enumerable: true, get: function () { return spend_alerts_1.SpendAlerts; } });
-var index_2 = require("./users/index.js");
-Object.defineProperty(exports, "Users", { enumerable: true, get: function () { return index_2.Users; } });
+var spend_limit_1 = require("./spend-limit.js");
+Object.defineProperty(exports, "SpendLimit", { enumerable: true, get: function () { return spend_limit_1.SpendLimit; } });
+var index_3 = require("./users/index.js");
+Object.defineProperty(exports, "Users", { enumerable: true, get: function () { return index_3.Users; } });
 //# sourceMappingURL=index.js.map

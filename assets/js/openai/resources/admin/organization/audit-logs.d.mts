@@ -34,7 +34,7 @@ export interface AuditLogListResponse {
     /**
      * The event type.
      */
-    type: 'api_key.created' | 'api_key.updated' | 'api_key.deleted' | 'certificate.created' | 'certificate.updated' | 'certificate.deleted' | 'certificates.activated' | 'certificates.deactivated' | 'checkpoint.permission.created' | 'checkpoint.permission.deleted' | 'external_key.registered' | 'external_key.removed' | 'group.created' | 'group.updated' | 'group.deleted' | 'invite.sent' | 'invite.accepted' | 'invite.deleted' | 'ip_allowlist.created' | 'ip_allowlist.updated' | 'ip_allowlist.deleted' | 'ip_allowlist.config.activated' | 'ip_allowlist.config.deactivated' | 'login.succeeded' | 'login.failed' | 'logout.succeeded' | 'logout.failed' | 'organization.updated' | 'project.created' | 'project.updated' | 'project.archived' | 'project.deleted' | 'rate_limit.updated' | 'rate_limit.deleted' | 'resource.deleted' | 'tunnel.created' | 'tunnel.updated' | 'tunnel.deleted' | 'workload_identity_provider.created' | 'workload_identity_provider.updated' | 'workload_identity_provider.deleted' | 'workload_identity_provider_mapping.created' | 'workload_identity_provider_mapping.updated' | 'workload_identity_provider_mapping.deleted' | 'role.created' | 'role.updated' | 'role.deleted' | 'role.assignment.created' | 'role.assignment.deleted' | 'scim.enabled' | 'scim.disabled' | 'service_account.created' | 'service_account.updated' | 'service_account.deleted' | 'user.added' | 'user.updated' | 'user.deleted';
+    type: 'api_key.created' | 'api_key.updated' | 'api_key.deleted' | 'certificate.created' | 'certificate.updated' | 'certificate.deleted' | 'certificates.activated' | 'certificates.deactivated' | 'checkpoint.permission.created' | 'checkpoint.permission.deleted' | 'external_key.registered' | 'external_key.removed' | 'group.created' | 'group.updated' | 'group.deleted' | 'invite.sent' | 'invite.accepted' | 'invite.deleted' | 'ip_allowlist.created' | 'ip_allowlist.updated' | 'ip_allowlist.deleted' | 'ip_allowlist.config.activated' | 'ip_allowlist.config.deactivated' | 'login.succeeded' | 'login.failed' | 'logout.succeeded' | 'logout.failed' | 'organization.updated' | 'project.created' | 'project.updated' | 'project.archived' | 'project.deleted' | 'rate_limit.updated' | 'rate_limit.deleted' | 'resource.deleted' | 'tunnel.created' | 'tunnel.updated' | 'tunnel.deleted' | 'workload_identity_provider.created' | 'workload_identity_provider.updated' | 'workload_identity_provider.deleted' | 'workload_identity_provider_mapping.created' | 'workload_identity_provider_mapping.updated' | 'workload_identity_provider_mapping.deleted' | 'role.created' | 'role.updated' | 'role.deleted' | 'role.assignment.created' | 'role.assignment.deleted' | 'role.bound_to_resource' | 'role.unbound_from_resource' | 'scim.enabled' | 'scim.disabled' | 'service_account.created' | 'service_account.updated' | 'service_account.deleted' | 'user.added' | 'user.updated' | 'user.deleted' | 'tenant.metadata.updated' | 'tenant.microsoft_entra_mapping.upserted' | 'tenant.microsoft_entra_mapping.deleted' | 'tenant.workload_identity.provider.created' | 'tenant.workload_identity.provider.updated' | 'tenant.workload_identity.provider.archived' | 'tenant.workload_identity.mapping.created' | 'tenant.workload_identity.mapping.updated' | 'tenant.workload_identity.mapping.archived' | 'tenant.workload_identity.binding.created' | 'tenant.workload_identity.principal.provisioned' | 'tenant.admin_api_key.created' | 'tenant.admin_api_key.updated' | 'tenant.admin_api_key.deleted' | 'tenant.project_api_key.created' | 'tenant.chatgpt_access_token.revoked' | 'tenant.migration.completed' | 'tenant.sso.migrated' | 'tenant.domains.migrated' | 'tenant.sso_connection.created' | 'tenant.sso_connection.updated' | 'tenant.sso_connection.deleted' | 'tenant.sso_connection.setup.started' | 'tenant.policy.created' | 'tenant.policy.updated' | 'tenant.policy.deleted' | 'tenant.policy.attached' | 'tenant.policy.detached' | 'tenant.principal_authentication_policy.resolved' | 'tenant.scim.setup.started' | 'tenant.scim.deletion.requested' | 'tenant.scim.directory.created' | 'tenant.product_access_policy.updated' | 'tenant.resource_share_grant.created' | 'tenant.resource_share_grant.updated' | 'tenant.resource_share_grant.accepted' | 'tenant.resource_share_grant.declined' | 'tenant.resource_share_grant.revoked' | 'tenant.resource_share_grant.deleted' | 'tenant.service_account.updated' | 'tenant.service_account.deleted' | 'tenant.service_account.token.revoked' | 'tenant.billing.overage_limit.updated' | 'tenant.billing.alerts.updated' | 'tenant.billing.info.updated' | 'tenant.usage_limit.workspace.updated' | 'tenant.usage_limit.group.updated' | 'tenant.usage_limit.user.updated' | 'tenant.usage_limit.increase_request.updated' | 'tenant.usage_limit.increase_request.resolved' | 'tenant.group.created' | 'tenant.group.updated' | 'tenant.group.deleted' | 'tenant.group.member.added' | 'tenant.group.member.removed' | 'tenant.migration_rollout.status.updated' | 'tenant.migration_rollout.tier.updated' | 'tenant.role.metadata.updated' | 'tenant.custom_role.created' | 'tenant.custom_role.updated' | 'tenant.custom_role.deleted' | 'tenant.role_assignment.created' | 'tenant.role_assignment.deleted' | 'tenant.resource_role_assignment.created' | 'tenant.resource_role_assignment.deleted' | 'tenant.resource_access.updated' | 'tenant.resource_access.deleted' | 'tenant.session_policy.created' | 'tenant.session_policy.updated' | 'tenant.session_policy.deleted' | 'tenant.session_revocation.started' | 'tenant.third_party_app_policy.updated' | 'tenant.user.added' | 'tenant.user.updated' | 'tenant.user.removed' | 'tenant.user.looked_up' | 'tenant.user.invited' | 'tenant.membership.revoked' | 'tenant.api_organization_invite.upserted' | 'tenant.api_organization_invite.deleted' | 'tenant.chatgpt_workspace_invite.upserted' | 'tenant.membership.accepted' | 'tenant.membership.declined' | 'tenant.workspace_invite_email_settings.updated';
     /**
      * The actor who performed the audit logged action.
      */
@@ -193,11 +193,19 @@ export interface AuditLogListResponse {
     /**
      * The details for events with this `type`.
      */
+    'role.bound_to_resource'?: AuditLogListResponse.RoleBoundToResource;
+    /**
+     * The details for events with this `type`.
+     */
     'role.created'?: AuditLogListResponse.RoleCreated;
     /**
      * The details for events with this `type`.
      */
     'role.deleted'?: AuditLogListResponse.RoleDeleted;
+    /**
+     * The details for events with this `type`.
+     */
+    'role.unbound_from_resource'?: AuditLogListResponse.RoleUnboundFromResource;
     /**
      * The details for events with this `type`.
      */
@@ -1010,6 +1018,53 @@ export declare namespace AuditLogListResponse {
     /**
      * The details for events with this `type`.
      */
+    interface RoleBoundToResource {
+        /**
+         * The ID of the resource the role was bound to. ChatGPT workspace connector
+         * resources use `<workspace_id>__<connector_id>`.
+         */
+        id?: string;
+        /**
+         * The connector ID for a ChatGPT workspace connector resource.
+         */
+        connector_id?: string;
+        /**
+         * The connector display name for a ChatGPT workspace connector resource, or the
+         * connector ID when the display name could not be resolved.
+         */
+        connector_name?: string;
+        /**
+         * Whether the connector is enabled for the role.
+         */
+        enabled?: boolean;
+        /**
+         * The permissions granted to the role for the resource.
+         */
+        permissions?: Array<string>;
+        /**
+         * The ID of the resource the role was bound to.
+         */
+        resource_id?: string;
+        /**
+         * The type of resource the role was bound to.
+         */
+        resource_type?: string;
+        /**
+         * The ID of the role that was bound to the resource.
+         */
+        role_id?: string;
+        /**
+         * The connector role mutation path that produced the event.
+         */
+        source?: 'role_toggle' | 'role_connector_update' | 'role_delete' | 'workspace_permissions' | 'connector_publish';
+        /**
+         * The workspace ID for a ChatGPT workspace connector resource.
+         */
+        workspace_id?: string;
+    }
+    /**
+     * The details for events with this `type`.
+     */
     interface RoleCreated {
         /**
          * The role ID.
@@ -1040,6 +1095,53 @@ export declare namespace AuditLogListResponse {
          * The role ID.
          */
         id?: string;
+    }
+    /**
+     * The details for events with this `type`.
+     */
+    interface RoleUnboundFromResource {
+        /**
+         * The ID of the resource the role was unbound from. ChatGPT workspace connector
+         * resources use `<workspace_id>__<connector_id>`.
+         */
+        id?: string;
+        /**
+         * The connector ID for a ChatGPT workspace connector resource.
+         */
+        connector_id?: string;
+        /**
+         * The connector display name for a ChatGPT workspace connector resource, or the
+         * connector ID when the display name could not be resolved.
+         */
+        connector_name?: string;
+        /**
+         * Whether the connector is enabled for the role.
+         */
+        enabled?: boolean;
+        /**
+         * The permissions remaining for the role after the change.
+         */
+        permissions?: Array<string>;
+        /**
+         * The ID of the resource the role was unbound from.
+         */
+        resource_id?: string;
+        /**
+         * The type of resource the role was unbound from.
+         */
+        resource_type?: string;
+        /**
+         * The ID of the role that was unbound from the resource.
+         */
+        role_id?: string;
+        /**
+         * The connector role mutation path that produced the event.
+         */
+        source?: 'role_toggle' | 'role_connector_update' | 'role_delete' | 'workspace_permissions' | 'connector_publish';
+        /**
+         * The workspace ID for a ChatGPT workspace connector resource.
+         */
+        workspace_id?: string;
     }
     /**
      * The details for events with this `type`.
@@ -1342,16 +1444,24 @@ export interface AuditLogListParams extends ConversationCursorPageParams {
      * `project.created`. For all options, see the documentation for the
      * [audit log object](https://platform.openai.com/docs/api-reference/audit-logs/object).
      */
-    event_types?: Array<'api_key.created' | 'api_key.updated' | 'api_key.deleted' | 'certificate.created' | 'certificate.updated' | 'certificate.deleted' | 'certificates.activated' | 'certificates.deactivated' | 'checkpoint.permission.created' | 'checkpoint.permission.deleted' | 'external_key.registered' | 'external_key.removed' | 'group.created' | 'group.updated' | 'group.deleted' | 'invite.sent' | 'invite.accepted' | 'invite.deleted' | 'ip_allowlist.created' | 'ip_allowlist.updated' | 'ip_allowlist.deleted' | 'ip_allowlist.config.activated' | 'ip_allowlist.config.deactivated' | 'login.succeeded' | 'login.failed' | 'logout.succeeded' | 'logout.failed' | 'organization.updated' | 'project.created' | 'project.updated' | 'project.archived' | 'project.deleted' | 'rate_limit.updated' | 'rate_limit.deleted' | 'resource.deleted' | 'tunnel.created' | 'tunnel.updated' | 'tunnel.deleted' | 'workload_identity_provider.created' | 'workload_identity_provider.updated' | 'workload_identity_provider.deleted' | 'workload_identity_provider_mapping.created' | 'workload_identity_provider_mapping.updated' | 'workload_identity_provider_mapping.deleted' | 'role.created' | 'role.updated' | 'role.deleted' | 'role.assignment.created' | 'role.assignment.deleted' | 'scim.enabled' | 'scim.disabled' | 'service_account.created' | 'service_account.updated' | 'service_account.deleted' | 'user.added' | 'user.updated' | 'user.deleted'>;
+    event_types?: Array<'api_key.created' | 'api_key.updated' | 'api_key.deleted' | 'certificate.created' | 'certificate.updated' | 'certificate.deleted' | 'certificates.activated' | 'certificates.deactivated' | 'checkpoint.permission.created' | 'checkpoint.permission.deleted' | 'external_key.registered' | 'external_key.removed' | 'group.created' | 'group.updated' | 'group.deleted' | 'invite.sent' | 'invite.accepted' | 'invite.deleted' | 'ip_allowlist.created' | 'ip_allowlist.updated' | 'ip_allowlist.deleted' | 'ip_allowlist.config.activated' | 'ip_allowlist.config.deactivated' | 'login.succeeded' | 'login.failed' | 'logout.succeeded' | 'logout.failed' | 'organization.updated' | 'project.created' | 'project.updated' | 'project.archived' | 'project.deleted' | 'rate_limit.updated' | 'rate_limit.deleted' | 'resource.deleted' | 'tunnel.created' | 'tunnel.updated' | 'tunnel.deleted' | 'workload_identity_provider.created' | 'workload_identity_provider.updated' | 'workload_identity_provider.deleted' | 'workload_identity_provider_mapping.created' | 'workload_identity_provider_mapping.updated' | 'workload_identity_provider_mapping.deleted' | 'role.created' | 'role.updated' | 'role.deleted' | 'role.assignment.created' | 'role.assignment.deleted' | 'role.bound_to_resource' | 'role.unbound_from_resource' | 'scim.enabled' | 'scim.disabled' | 'service_account.created' | 'service_account.updated' | 'service_account.deleted' | 'user.added' | 'user.updated' | 'user.deleted' | 'tenant.metadata.updated' | 'tenant.microsoft_entra_mapping.upserted' | 'tenant.microsoft_entra_mapping.deleted' | 'tenant.workload_identity.provider.created' | 'tenant.workload_identity.provider.updated' | 'tenant.workload_identity.provider.archived' | 'tenant.workload_identity.mapping.created' | 'tenant.workload_identity.mapping.updated' | 'tenant.workload_identity.mapping.archived' | 'tenant.workload_identity.binding.created' | 'tenant.workload_identity.principal.provisioned' | 'tenant.admin_api_key.created' | 'tenant.admin_api_key.updated' | 'tenant.admin_api_key.deleted' | 'tenant.project_api_key.created' | 'tenant.chatgpt_access_token.revoked' | 'tenant.migration.completed' | 'tenant.sso.migrated' | 'tenant.domains.migrated' | 'tenant.sso_connection.created' | 'tenant.sso_connection.updated' | 'tenant.sso_connection.deleted' | 'tenant.sso_connection.setup.started' | 'tenant.policy.created' | 'tenant.policy.updated' | 'tenant.policy.deleted' | 'tenant.policy.attached' | 'tenant.policy.detached' | 'tenant.principal_authentication_policy.resolved' | 'tenant.scim.setup.started' | 'tenant.scim.deletion.requested' | 'tenant.scim.directory.created' | 'tenant.product_access_policy.updated' | 'tenant.resource_share_grant.created' | 'tenant.resource_share_grant.updated' | 'tenant.resource_share_grant.accepted' | 'tenant.resource_share_grant.declined' | 'tenant.resource_share_grant.revoked' | 'tenant.resource_share_grant.deleted' | 'tenant.service_account.updated' | 'tenant.service_account.deleted' | 'tenant.service_account.token.revoked' | 'tenant.billing.overage_limit.updated' | 'tenant.billing.alerts.updated' | 'tenant.billing.info.updated' | 'tenant.usage_limit.workspace.updated' | 'tenant.usage_limit.group.updated' | 'tenant.usage_limit.user.updated' | 'tenant.usage_limit.increase_request.updated' | 'tenant.usage_limit.increase_request.resolved' | 'tenant.group.created' | 'tenant.group.updated' | 'tenant.group.deleted' | 'tenant.group.member.added' | 'tenant.group.member.removed' | 'tenant.migration_rollout.status.updated' | 'tenant.migration_rollout.tier.updated' | 'tenant.role.metadata.updated' | 'tenant.custom_role.created' | 'tenant.custom_role.updated' | 'tenant.custom_role.deleted' | 'tenant.role_assignment.created' | 'tenant.role_assignment.deleted' | 'tenant.resource_role_assignment.created' | 'tenant.resource_role_assignment.deleted' | 'tenant.resource_access.updated' | 'tenant.resource_access.deleted' | 'tenant.session_policy.created' | 'tenant.session_policy.updated' | 'tenant.session_policy.deleted' | 'tenant.session_revocation.started' | 'tenant.third_party_app_policy.updated' | 'tenant.user.added' | 'tenant.user.updated' | 'tenant.user.removed' | 'tenant.user.looked_up' | 'tenant.user.invited' | 'tenant.membership.revoked' | 'tenant.api_organization_invite.upserted' | 'tenant.api_organization_invite.deleted' | 'tenant.chatgpt_workspace_invite.upserted' | 'tenant.membership.accepted' | 'tenant.membership.declined' | 'tenant.workspace_invite_email_settings.updated'>;
     /**
      * Return only events for these projects.
      */
     project_ids?: Array<string>;
     /**
      * Return only events performed on these targets. For example, a project ID
-     * updated.
+     * updated. For ChatGPT connector role events, use the workspace connector resource
+     * ID shown in `details.id`, such as `<workspace_id>__<connector_id>`.
      */
     resource_ids?: Array<string>;
+    /**
+     * Return only tenant-scoped events associated with this organization. Required for
+     * tenant-scoped events such as `role.bound_to_resource` and
+     * `role.unbound_from_resource`. When `true`, all supplied event types must be
+     * tenant-scoped.
+     */
+    tenant_only?: boolean;
 }
 export declare namespace AuditLogListParams {
     /**

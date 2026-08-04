@@ -1,4 +1,4 @@
-import { n as e, t } from "../chunks/defaults-n7NcZd-K.js";
+import { n as e, t } from "../chunks/defaults-DwNb0lWM.js";
 import { GoogleGenAI as n } from "@google/genai";
 //#region backends/gemini.js
 var r = class extends e {
